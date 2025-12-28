@@ -9,82 +9,101 @@
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
         body { font-family: 'Tajawal', sans-serif; background: #f3f4f6; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
         .card { background: white; padding: 2.5rem; border-radius: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); width: 100%; max-width: 420px; }
-        .input-group input { width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.75rem; outline: none; text-align: right; }
-        #msg { display: none; text-align: center; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
+        .input-style { width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.75rem; outline: none; text-align: right; margin-top: 10px; }
+        .hidden { display: none; }
+        .btn { width: 100%; color: white; font-bold; py-3; rounded-xl; transition: 0.3s; margin-top: 20px; }
     </style>
 </head>
 <body>
 
     <div class="card">
         <h1 class="text-3xl font-extrabold text-center text-blue-600 mb-6">SERVE MAROC</h1>
-        <div id="msg"></div>
 
-        <div class="space-y-4">
-            <div id="name-box" class="input-group hidden">
-                <input id="u-name" type="text" placeholder="الاسم الكامل">
-            </div>
-            <div class="input-group">
-                <input id="u-email" type="email" placeholder="البريد الإلكتروني">
-            </div>
-            <div class="input-group">
-                <input id="u-pass" type="password" placeholder="كلمة المرور">
-            </div>
-            <button onclick="handleSubmit()" id="main-btn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition">دخول</button>
+        <div id="login-section">
+            <h2 class="text-xl font-bold mb-4 text-gray-700">تسجيل الدخول</h2>
+            <input id="l-email" type="email" placeholder="البريد الإلكتروني" class="input-style">
+            <input id="l-pass" type="password" placeholder="كلمة المرور" class="input-style">
+            <button onclick="login()" class="btn bg-blue-600 hover:bg-blue-700 p-3 rounded-xl w-full text-white font-bold mt-4">دخول</button>
+            <p class="mt-4 text-center text-sm text-gray-600">
+                ليس لديك حساب؟ <span onclick="showRegister()" class="text-blue-600 font-bold cursor-pointer hover:underline">أنشئ حساباً جديداً</span>
+            </p>
         </div>
 
-        <div class="mt-6 text-center text-sm">
-            <p id="toggle-text">ليس لديك حساب؟ <span onclick="toggleMode()" class="text-blue-600 font-bold cursor-pointer">أنشئ حساباً</span></p>
+        <div id="register-section" class="hidden">
+            <h2 class="text-xl font-bold mb-4 text-gray-700">إنشاء حساب جديد</h2>
+            <input id="r-name" type="text" placeholder="الاسم الكامل" class="input-style">
+            <input id="r-email" type="email" placeholder="البريد الإلكتروني" class="input-style">
+            <input id="r-pass" type="password" placeholder="كلمة المرور" class="input-style">
+            <button onclick="register()" class="btn bg-green-600 hover:bg-green-700 p-3 rounded-xl w-full text-white font-bold mt-4">تسجيل الحساب</button>
+            <p class="mt-4 text-center text-sm text-gray-600">
+                لديك حساب بالفعل؟ <span onclick="showLogin()" class="text-blue-600 font-bold cursor-pointer hover:underline">سجل دخولك</span>
+            </p>
         </div>
     </div>
 
     <script>
-        // الرابط الخاص بك الذي نسخته
-        const scriptURL = "https://script.google.com/macros/s/AKfycbydUIEV-s7RsqJAVgGvODciYAr1rZetC1NOMTEYKHRAFhkZ-vgrFgrXis4ii-BiVwig/exec"; 
+        // الرابط الخاص بك
+        const scriptURL = "https://script.google.com/macros/s/AKfycbydUIEV-s7RsqJAVgGvODciYAr1rZetC1NOMTEYKHRAFhkZ-vgrFgrXis4ii-BiVwig/exec";
 
-        let isLoginMode = true;
-
-        // ميزة "يعقل": الدخول التلقائي
+        // ميزة "تذكرني": الدخول التلقائي
         window.onload = function() {
             const saved = localStorage.getItem("userSession");
             if (saved) {
                 const user = JSON.parse(saved);
-                performAction("login", user);
+                autoCheck(user.email, user.pass);
             }
         };
 
-        function toggleMode() {
-            isLoginMode = !isLoginMode;
-            document.getElementById('name-box').classList.toggle('hidden');
-            document.getElementById('main-btn').innerText = isLoginMode ? "دخول" : "تسجيل جديد";
+        function showRegister() {
+            document.getElementById('login-section').classList.add('hidden');
+            document.getElementById('register-section').classList.remove('hidden');
         }
 
-        function handleSubmit() {
-            const data = {
-                name: document.getElementById('u-name').value,
-                email: document.getElementById('u-email').value,
-                pass: document.getElementById('u-pass').value
-            };
-            performAction(isLoginMode ? "login" : "signup", data);
+        function showLogin() {
+            document.getElementById('register-section').classList.add('hidden');
+            document.getElementById('login-section').classList.remove('hidden');
         }
 
-        function performAction(action, data) {
-            const url = action === "login" ? `${scriptURL}?email=${data.email}&pass=${data.pass}` : scriptURL;
-            const options = action === "signup" ? { method: "POST", body: JSON.stringify(data) } : {};
+        // وظيفة تسجيل الدخول
+        function login() {
+            const email = document.getElementById('l-email').value;
+            const pass = document.getElementById('l-pass').value;
+            if(!email || !pass) return alert("يرجى ملء كافة الخانات");
+            autoCheck(email, pass);
+        }
 
-            fetch(url, options)
-            .then(res => action === "login" ? res.json() : res.text())
-            .then(resData => {
-                if(action === "login" && resData.status === "success") {
-                    localStorage.setItem("userSession", JSON.stringify(data));
+        function autoCheck(email, pass) {
+            fetch(`${scriptURL}?email=${email}&pass=${pass}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    localStorage.setItem("userSession", JSON.stringify({email, pass}));
                     window.location.href = "https://www.google.com";
-                } else if(action === "signup") {
-                    alert("تم إنشاء الحساب! يمكنك الدخول الآن");
-                    toggleMode();
                 } else {
-                    alert("خطأ في البيانات");
+                    alert("بيانات الدخول غير صحيحة");
                 }
             })
-            .catch(() => alert("تأكد من اختيار 'الجميع' عند النشر في جوجل"));
+            .catch(() => alert("خطأ: تأكد من إعداد 'الجميع' عند النشر"));
+        }
+
+        // وظيفة إنشاء الحساب (POST)
+        function register() {
+            const name = document.getElementById('r-name').value;
+            const email = document.getElementById('r-email').value;
+            const pass = document.getElementById('r-pass').value;
+
+            if(!name || !email || !pass) return alert("يرجى ملء كافة الخانات");
+
+            fetch(scriptURL, {
+                method: 'POST',
+                body: JSON.stringify({ name, email, pass })
+            })
+            .then(res => res.text())
+            .then(() => {
+                alert("تم إنشاء الحساب بنجاح! سجل دخولك الآن.");
+                showLogin();
+            })
+            .catch(() => alert("فشل الاتصال بالسيرفر"));
         }
     </script>
 </body>
