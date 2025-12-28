@@ -9,7 +9,6 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <style>
-        /* --- قسم التنسيقات العامة (CSS) --- */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
         
         body { 
@@ -22,7 +21,6 @@
             margin: 0; 
         }
 
-        /* حاوية البطاقة الرئيسية */
         .auth-card { 
             background: white; 
             border-radius: 4px; 
@@ -33,7 +31,6 @@
             border: 1px solid #e1e8ed; 
         }
 
-        /* تنسيق الشعار النصي */
         .logo-text { 
             font-size: 28px; 
             font-weight: 800; 
@@ -44,7 +41,6 @@
 
         .logo-blue { color: #3b82f6; }
 
-        /* تنسيق خانات الإدخال */
         .input-style { 
             width: 100%; 
             padding: 12px; 
@@ -53,10 +49,9 @@
             border: none; 
             outline: none; 
             margin-top: 5px; 
-            text-align: right; /* متناسب مع اللغة العربية */
+            text-align: right;
         }
 
-        /* تنسيق الأزرار */
         .btn-blue { 
             width: 100%; 
             padding: 14px; 
@@ -70,12 +65,6 @@
             transition: 0.3s ease;
         }
 
-        .btn-blue:hover {
-            background: #1d4ed8;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        /* تنبيهات النظام */
         #custom-alert { 
             position: fixed; 
             top: 20px; 
@@ -87,7 +76,6 @@
             border-radius: 6px; 
             display: none; 
             z-index: 1000; 
-            font-size: 14px;
         }
 
         .tab-btn {
@@ -103,12 +91,6 @@
         }
 
         .hidden { display: none; }
-
-        /* تفاصيل إضافية للجمالية */
-        .otp-box {
-            background-color: #f0f7ff;
-            border: 2px solid #bfdbfe;
-        }
     </style>
 </head>
 <body>
@@ -124,98 +106,65 @@
         </div>
 
         <div id="section-login">
-            <div class="mb-4">
-                <label class="text-xs font-bold text-gray-600">Email Address</label>
-                <input id="l-email" type="email" placeholder="email@example.com" class="input-style">
-            </div>
-            <div class="mb-2">
-                <label class="text-xs font-bold text-gray-600 block">Password</label>
-                <input id="l-pass" type="password" placeholder="•••••" class="input-style">
-            </div>
-            <button onclick="Server.login()" class="btn-blue">Sign In Now</button>
-            <p class="text-center text-xs text-gray-400 mt-6 italic">Secure authentication by Google Systems</p>
+            <label class="text-xs font-bold text-gray-600">Email Address</label>
+            <input id="l-email" type="email" placeholder="email@example.com" class="input-style">
+            <label class="text-xs font-bold text-gray-600 mt-4 block">Password</label>
+            <input id="l-pass" type="password" placeholder="•••••" class="input-style">
+            <button onclick="Server.login()" class="btn-blue">Sign In</button>
         </div>
 
         <div id="section-reg" class="hidden">
-            <div class="mb-4">
-                <label class="text-xs font-bold text-gray-600">Full Name</label>
-                <input id="r-name" type="text" placeholder="Your Name" class="input-style">
-            </div>
-            <div class="mb-4">
-                <label class="text-xs font-bold text-gray-600">Email</label>
-                <input id="r-email" type="email" placeholder="example@mail.com" class="input-style">
-            </div>
-            <div class="mb-2">
-                <label class="text-xs font-bold text-gray-600">Choose Password</label>
-                <input id="r-pass" type="password" placeholder="Password" class="input-style">
-            </div>
-            <button onclick="Server.register()" class="btn-blue">Create Account</button>
+            <input id="r-name" type="text" placeholder="Username" class="input-style mb-4">
+            <input id="r-email" type="email" placeholder="Email" class="input-style mb-4">
+            <input id="r-pass" type="password" placeholder="Password" class="input-style">
+            <button onclick="Server.register()" class="btn-blue">Send OTP</button>
         </div>
 
         <div id="section-otp" class="hidden text-center">
-            <p class="text-sm font-bold text-gray-500 mb-6">لقد أرسلنا كود التحقق إلى بريدك الإلكتروني</p>
-            <input id="otp-input" type="text" maxlength="6" placeholder="000000" class="w-full p-4 text-center text-3xl font-bold otp-box rounded outline-none">
-            <button onclick="Server.verify()" class="btn-blue">Verify & Register</button>
-            <button onclick="showTab('reg')" class="mt-4 text-xs text-blue-500 font-bold uppercase">Back to Signup</button>
+            <p class="text-sm font-bold text-gray-500 mb-4">أدخل كود التحقق المرسل لبريدك</p>
+            <input id="otp-input" type="text" maxlength="6" class="w-full p-4 text-center text-3xl font-bold bg-blue-50 border-2 border-blue-200 rounded">
+            <button onclick="Server.verify()" class="btn-blue">Verify Now</button>
         </div>
     </div>
 
     <script>
-        /* --- قسم البرمجة (JavaScript) --- */
-
-        // إعدادات EmailJS
         emailjs.init("WRpj_ZtTQw-eHAZDQ");
         
-        // رابط الـ Web App من Google Apps Script (رابط الـ exec)
-        // تأكد من وضعه هنا بدقة
-        const scriptURL = "https://script.google.com/macros/s/AKfycbzTB9_9V1bqrn4ZHv3ERsksHSNd4WsGFQVFaZOga_Qyk0OXUW8SmPDz5kNCNaJnsFhTIw/exec"; 
+        // الرابط الجديد الخاص بك
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxJ50ongvh4_a2fm6mh0J_eQA03r_7CbaL-FW2X0w-_drGBFxqlXctPQz0emJWr5sX8Pg/exec"; 
 
-        // دالة لإظهار التنبيهات
         function showNotify(msg) {
-            console.log("System Message: " + msg);
             const el = document.getElementById('custom-alert');
-            el.innerText = msg; 
-            el.style.display = 'block';
-            setTimeout(() => { el.style.display = 'none'; }, 4000);
+            el.innerText = msg; el.style.display = 'block';
+            setTimeout(() => el.style.display = 'none', 4000);
         }
 
-        // فحص الجلسة عند تحميل الصفحة (ميزة "يعقل")
+        // ميزة الدخول التلقائي
         window.onload = function() {
-            const savedSession = localStorage.getItem("userSession");
-            if (savedSession) {
-                const user = JSON.parse(savedSession);
-                showNotify("جاري تسجيل الدخول التلقائي...");
+            const saved = localStorage.getItem("userSession");
+            if (saved) {
+                const user = JSON.parse(saved);
                 Server.autoLogin(user.email, user.pass);
             }
         };
 
-        // نظام التعامل مع السيرفر
         const Server = {
-            generatedCode: "", 
-            userDataTemp: {},
-
-            // وظيفة الدخول التلقائي
+            code: "", temp: {},
+            
             autoLogin: function(email, pass) {
-                const url = `${scriptURL}?email=${email}&pass=${pass}`;
-                fetch(url)
-                .then(response => response.json())
-                .then(result => {
-                    if(result.status === "success") {
-                        window.location.href = "https://www.google.com";
-                    }
-                }).catch(err => console.error("Auto-login failed."));
+                fetch(`${scriptURL}?email=${email}&pass=${pass}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === "success") window.location.href = "https://www.google.com";
+                });
             },
 
-            // وظيفة تسجيل الدخول اليدوي
             login: function() {
                 const email = document.getElementById('l-email').value;
                 const pass = document.getElementById('l-pass').value;
-                
-                if(!email || !pass) {
-                    return showNotify("المرجو إدخال كافة البيانات");
-                }
+                if(!email || !pass) return showNotify("أدخل البيانات");
 
-                showNotify("جاري التحقق من البيانات...");
+                showNotify("جاري التحقق...");
                 fetch(`${scriptURL}?email=${email}&pass=${pass}`)
                 .then(res => res.json())
                 .then(data => {
@@ -223,89 +172,62 @@
                         localStorage.setItem("userSession", JSON.stringify({email, pass}));
                         window.location.href = "https://www.google.com";
                     } else {
-                        showNotify("بيانات الدخول غير صحيحة");
+                        showNotify("بيانات خاطئة");
                     }
-                }).catch(() => showNotify("خطأ: تأكد من إعدادات النشر (Anyone)"));
+                }).catch(() => showNotify("تأكد من اختيار 'الجميع' في النشر"));
             },
 
-            // وظيفة التسجيل الأولي وإرسال الكود
             register: function() {
-                this.userDataTemp = { 
+                this.temp = { 
                     name: document.getElementById('r-name').value, 
                     email: document.getElementById('r-email').value, 
                     pass: document.getElementById('r-pass').value 
                 };
-
-                if(!this.userDataTemp.name || !this.userDataTemp.email || !this.userDataTemp.pass) {
-                    return showNotify("المرجو ملء جميع الخانات");
-                }
-
-                // توليد كود عشوائي
-                this.generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+                if(!this.temp.name || !this.temp.email || !this.temp.pass) return showNotify("ملء الخانات");
                 
-                showNotify("جاري إرسال كود التحقق...");
+                this.code = Math.floor(100000 + Math.random() * 900000).toString();
+                showNotify("جاري إرسال الكود...");
                 
                 emailjs.send("service_dk24ksf", "template_14tc2a8", { 
-                    name: this.userDataTemp.name, 
-                    email: this.userDataTemp.email, 
-                    otp_code: this.generatedCode 
+                    name: this.temp.name, 
+                    email: this.temp.email, 
+                    otp_code: this.code 
                 })
-                .then(() => { 
-                    showNotify("تم إرسال الكود بنجاح!"); 
-                    showTab('otp'); 
-                })
-                .catch((error) => {
-                    console.log(error);
-                    showNotify("فشل إرسال الكود، حاول لاحقاً");
-                });
+                .then(() => { showNotify("تم الإرسال!"); showTab('otp'); })
+                .catch(() => showNotify("خطأ في إرسال البريد"));
             },
 
-            // وظيفة التحقق النهائي وحفظ البيانات في جوجل شيت
             verify: function() {
-                const userOTP = document.getElementById('otp-input').value;
-                
-                // نقبل الكود المولد أو كود المطور (123456) للتجربة
-                if(userOTP === this.generatedCode || userOTP === "123456") {
-                    
-                    showNotify("كود صحيح! جاري إنشاء الحساب...");
+                const inputCode = document.getElementById('otp-input').value;
+                if(inputCode === this.code || inputCode === "123456") {
+                    showNotify("جاري التحقق من توفر البريد...");
                     
                     fetch(scriptURL, { 
                         method: 'POST', 
-                        mode: 'no-cors', 
                         body: JSON.stringify(this.userDataTemp) 
+                    })
+                    .then(res => res.text())
+                    .then(response => {
+                        if(response === "exists") {
+                            showNotify("هذا البريد مسجل بالفعل!");
+                        } else {
+                            showNotify("تم التسجيل بنجاح!");
+                            setTimeout(() => location.reload(), 2000);
+                        }
                     });
-
-                    setTimeout(() => {
-                        showNotify("تم التسجيل بنجاح! سجل دخولك الآن");
-                        location.reload();
-                    }, 2500);
-
-                } else { 
-                    showNotify("كود التحقق غير صحيح"); 
-                }
+                } else { showNotify("كود خاطئ"); }
             }
         };
 
-        // دالة التبديل بين الأقسام
-        function showTab(target) {
-            // إخفاء الكل
-            document.getElementById('section-login').classList.add('hidden');
-            document.getElementById('section-reg').classList.add('hidden');
-            document.getElementById('section-otp').classList.add('hidden');
-            
-            // إظهار المطلوب
-            document.getElementById('section-' + target).classList.remove('hidden');
-            
-            // تحديث شكل التبويبات
-            if(target !== 'otp') {
-                document.getElementById('t-login').classList.toggle('active', target === 'login');
-                document.getElementById('t-reg').classList.toggle('active', target === 'reg');
+        function showTab(tab) {
+            document.getElementById('section-login').classList.toggle('hidden', tab !== 'login');
+            document.getElementById('section-reg').classList.toggle('hidden', tab !== 'reg');
+            document.getElementById('section-otp').classList.toggle('hidden', tab !== 'otp');
+            if(tab !== 'otp') {
+                document.getElementById('t-login').classList.toggle('active', tab === 'login');
+                document.getElementById('t-reg').classList.toggle('active', tab === 'reg');
             }
         }
-
-        // توثيق بسيط للمطور
-        console.log("SERVE MAROC Auth System v2.0 Initialized.");
-        console.log("Connected to Script: " + scriptURL);
     </script>
 </body>
 </html>
