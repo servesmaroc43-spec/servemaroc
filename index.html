@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SERVE MAROC | تسجيل الدخول</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
@@ -12,14 +13,21 @@
         body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         .main-card { background: #ffffff; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); width: 100%; max-width: 400px; padding: 40px; border: 1px solid #f1f5f9; position: relative; }
         .logo-area { font-size: 30px; font-weight: 800; text-align: center; margin-bottom: 30px; color: #1e293b; }
+        
         .tabs-container { position: relative; display: flex; border-bottom: 2px solid #f1f5f9; margin-bottom: 30px; }
         .tab-item { flex: 1; text-align: center; padding: 12px; cursor: pointer; font-weight: 700; color: #94a3b8; transition: 0.3s; z-index: 5; }
         .tab-item.active { color: #2563eb; }
-        .tab-indicator { position: absolute; bottom: -2px; right: 0; width: 50%; height: 2px; background: #2563eb; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10; }
+        
+        .tab-indicator { 
+            position: absolute; bottom: -2px; right: 0; width: 50%; height: 2px; 
+            background: #2563eb; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            z-index: 10; 
+        }
         .pos-signin { right: 0%; } 
         .pos-signup { right: 50%; }
+
         .input-box { width: 100%; padding: 14px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; outline: none; text-align: right; margin-bottom: 15px; }
-        .action-btn { width: 100%; padding: 16px; background: #2563eb; color: white; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; font-size: 16px; margin-top: 10px; }
+        .action-btn { width: 100%; padding: 16px; background: #2563eb; color: white; border-radius: 12px; font-weight: 700; border: none; cursor: pointer; font-size: 16px; }
         .hidden { display: none; }
         #alert-box { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 25px; border-radius: 10px; display: none; z-index: 1000; font-size: 14px; }
     </style>
@@ -57,22 +65,24 @@
             <p class="text-sm font-bold text-slate-600 mb-4">استعادة كلمة المرور</p>
             <input id="reset-email" type="email" placeholder="أدخل بريدك الإلكتروني" class="input-box">
             <button onclick="App.forgotPass()" class="action-btn">إرسال كود التحقق</button>
-            <p onclick="nav('login')" class="mt-4 text-xs text-slate-400 cursor-pointer">العودة للدخول</p>
+            <p onclick="nav('login')" class="mt-4 text-xs text-slate-400 cursor-pointer">العودة</p>
         </div>
 
         <div id="sec-otp" class="hidden text-center">
-            <p id="otp-title" class="text-sm font-bold text-slate-600 mb-6">أدخل كود التحقق</p>
-            <input id="otp-val" type="text" maxlength="6" class="w-full p-4 text-center text-3xl font-black bg-slate-50 border rounded-xl mb-4 outline-none">
+            <p id="otp-title" class="text-sm font-bold text-slate-600 mb-6 italic">أدخل كود التحقق</p>
+            <input id="otp-val" type="text" maxlength="6" class="w-full p-4 text-center text-3xl font-black bg-slate-50 border rounded-xl mb-4">
             <div id="new-pass-area" class="hidden">
                 <input id="new-pass" type="password" placeholder="كلمة السر الجديدة" class="input-box">
             </div>
-            <button id="btn-verify" onclick="App.verify()" class="action-btn">تأكيد</button>
+            <button onclick="App.verify()" class="action-btn">تأكيد</button>
         </div>
     </div>
 
     <script>
         emailjs.init("WRpj_ZtTQw-eHAZDQ");
-        const apiURL = "https://script.google.com/macros/s/AKfycbxumvVcaFNqDFxCpbaZB-n9MbFZz5qryEt23T8z2e-7mtlTo5Upp7d3QK4sERaJNJ3e5A/exec";
+        
+        // الرابط الجديد الذي أرسلته
+        const apiURL = "https://script.google.com/macros/s/AKfycbxBdkzn0mkPaGNLVlSr9B8PhD1V20B1r3TMyPW39GxJSGbK_C1CSQldo3xym16IUrJ_QA/exec";
 
         function showMsg(text) {
             const box = document.getElementById('alert-box');
@@ -84,9 +94,10 @@
             const line = document.getElementById('line');
             const sections = ['sec-login', 'sec-reg', 'sec-otp', 'sec-reset'];
             sections.forEach(s => document.getElementById(s).classList.add('hidden'));
-            
             document.getElementById('sec-' + target).classList.remove('hidden');
-            document.getElementById('tabs-nav').classList.toggle('hidden', target === 'otp' || target === 'reset');
+            
+            // إخفاء التبويبات في واجهات OTP و Reset
+            document.getElementById('tabs-nav').style.display = (target === 'login' || target === 'reg') ? 'flex' : 'none';
 
             if(target === 'login') {
                 line.className = 'tab-indicator pos-signin';
@@ -100,19 +111,19 @@
         }
 
         const App = {
-            otpCode: "", draft: {}, mode: "", // mode: 'reg' or 'reset'
+            otpCode: "", draft: {}, mode: "",
             
             login: function() {
                 const e = document.getElementById('l-email').value, p = document.getElementById('l-pass').value;
                 if(!e || !p) return showMsg("أدخل البيانات");
                 showMsg("جاري التحقق...");
-                fetch(`${apiURL}?email=${encodeURIComponent(e)}&pass=${encodeURIComponent(p)}&action=login`)
+                fetch(`${apiURL}?action=login&email=${encodeURIComponent(e)}&pass=${encodeURIComponent(p)}`)
                 .then(res => res.json()).then(data => {
                     if(data.status === "success") {
                         localStorage.setItem("userSession", JSON.stringify({email:e}));
                         window.location.href = "w/index.html";
                     } else { showMsg("بيانات غير صحيحة"); }
-                }).catch(() => showMsg("خطأ في الاتصال بالسيرفر"));
+                }).catch(() => showMsg("فشل الاتصال بالسيرفر"));
             },
 
             signup: function() {
@@ -136,7 +147,7 @@
                 emailjs.send("service_dk24ksf", "template_14tc2a8", {
                     name: name, email: email, otp_code: this.otpCode
                 }).then(() => {
-                    showMsg("تم إرسال الكود لبريدك");
+                    showMsg("تم إرسال الكود");
                     if(this.mode === 'reset') {
                         document.getElementById('new-pass-area').classList.remove('hidden');
                         document.getElementById('otp-title').innerText = "أدخل الكود وكلمة السر الجديدة";
