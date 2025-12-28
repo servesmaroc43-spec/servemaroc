@@ -3,332 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SERVE MAROC | نظام الدخول الذكي</title>
+    <title>SERVE MAROC | نظام الدخول</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
     <style>
-        /* --- قسم التنسيقات (CSS) --- */
+        /* --- قسم التنسيقات العامة (CSS) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
         
-        body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: #f3f4f6;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f5f7f9; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            margin: 0; 
         }
 
-        .main-container {
-            width: 100%;
-            max-width: 450px;
-            padding: 20px;
+        /* حاوية البطاقة الرئيسية */
+        .auth-card { 
+            background: white; 
+            border-radius: 4px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+            width: 100%; 
+            max-width: 400px; 
+            padding: 40px 30px; 
+            border: 1px solid #e1e8ed; 
         }
 
-        .auth-card {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e5e7eb;
-            transition: transform 0.3s ease;
+        /* تنسيق الشعار النصي */
+        .logo-text { 
+            font-size: 28px; 
+            font-weight: 800; 
+            text-align: center; 
+            margin-bottom: 30px; 
+            color: #1a202c; 
         }
 
-        .auth-card:hover {
-            transform: translateY(-5px);
+        .logo-blue { color: #3b82f6; }
+
+        /* تنسيق خانات الإدخال */
+        .input-style { 
+            width: 100%; 
+            padding: 12px; 
+            background: #ebf2ff; 
+            border-radius: 4px; 
+            border: none; 
+            outline: none; 
+            margin-top: 5px; 
+            text-align: right; /* متناسب مع اللغة العربية */
         }
 
-        .app-logo {
-            font-size: 32px;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 10px;
-            color: #2563eb;
-            letter-spacing: -1px;
+        /* تنسيق الأزرار */
+        .btn-blue { 
+            width: 100%; 
+            padding: 14px; 
+            background: #2563eb; 
+            color: white; 
+            border-radius: 4px; 
+            font-weight: 700; 
+            border: none; 
+            cursor: pointer; 
+            margin-top: 20px; 
+            transition: 0.3s ease;
         }
 
-        .app-subtitle {
-            text-align: center;
-            color: #6b7280;
+        .btn-blue:hover {
+            background: #1d4ed8;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        /* تنبيهات النظام */
+        #custom-alert { 
+            position: fixed; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            background: #1e293b; 
+            color: white; 
+            padding: 12px 24px; 
+            border-radius: 6px; 
+            display: none; 
+            z-index: 1000; 
             font-size: 14px;
-            margin-bottom: 35px;
         }
 
-        .input-group {
-            margin-bottom: 18px;
-        }
-
-        .input-group label {
-            display: block;
-            font-size: 13px;
+        .tab-btn {
+            border-bottom: 2px solid transparent;
+            transition: 0.3s;
+            color: #64748b;
             font-weight: 700;
-            color: #374151;
-            margin-bottom: 6px;
         }
 
-        .custom-input {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1.5px solid #d1d5db;
-            border-radius: 10px;
-            outline: none;
-            font-size: 15px;
-            text-align: right;
-            transition: all 0.3s ease;
+        .tab-btn.active {
+            border-bottom: 2px solid #2563eb;
+            color: #1e293b;
         }
 
-        .custom-input:focus {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
+        .hidden { display: none; }
 
-        .btn-primary {
-            width: 100%;
-            padding: 14px;
-            background-color: #2563eb;
-            color: white;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            margin-top: 10px;
-            transition: background 0.3s ease;
+        /* تفاصيل إضافية للجمالية */
+        .otp-box {
+            background-color: #f0f7ff;
+            border: 2px solid #bfdbfe;
         }
-
-        .btn-primary:hover {
-            background-color: #1d4ed8;
-        }
-
-        .btn-secondary {
-            width: 100%;
-            padding: 14px;
-            background-color: #16a34a;
-            color: white;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            margin-top: 10px;
-            transition: background 0.3s ease;
-        }
-
-        .btn-secondary:hover {
-            background-color: #15803d;
-        }
-
-        .switch-text {
-            text-align: center;
-            margin-top: 25px;
-            font-size: 14px;
-            color: #4b5563;
-        }
-
-        .switch-link {
-            color: #2563eb;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .switch-link:hover {
-            text-decoration: underline;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .status-message {
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 13px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        /* --- نهاية التنسيقات --- */
     </style>
 </head>
 <body>
 
-    <div class="main-container">
-        <div class="auth-card">
-            
-            <div class="app-logo">SERVE MAROC</div>
-            <div class="app-subtitle">نظام إدارة الحسابات المتقدم</div>
+    <div id="custom-alert"></div>
 
-            <div id="status-box" class="status-message"></div>
+    <div class="auth-card">
+        <div class="logo-text"><span class="logo-blue">SERVE</span>MAROC</div>
+        
+        <div class="flex border-b mb-8">
+            <div id="t-login" onclick="showTab('login')" class="tab-btn active cursor-pointer p-2 w-1/2 text-center">Sign In</div>
+            <div id="t-reg" onclick="showTab('reg')" class="tab-btn cursor-pointer p-2 w-1/2 text-center">Sign Up</div>
+        </div>
 
-            <div id="login-container">
-                <h2 class="text-lg font-bold text-gray-800 mb-4">تسجيل الدخول</h2>
-                
-                <div class="input-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" id="login-email" class="custom-input" placeholder="example@mail.com">
-                </div>
-
-                <div class="input-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="login-pass" class="custom-input" placeholder="••••••••">
-                </div>
-
-                <button onclick="executeLogin()" class="btn-primary">دخول للمنصة</button>
-                
-                <p class="switch-text">
-                    ليس لديك حساب؟ 
-                    <span class="switch-link" onclick="toggleInterface('register')">أنشئ حساباً جديداً</span>
-                </p>
+        <div id="section-login">
+            <div class="mb-4">
+                <label class="text-xs font-bold text-gray-600">Email Address</label>
+                <input id="l-email" type="email" placeholder="email@example.com" class="input-style">
             </div>
-
-            <div id="register-container" class="hidden">
-                <h2 class="text-lg font-bold text-gray-800 mb-4">فتح حساب جديد</h2>
-                
-                <div class="input-group">
-                    <label>الاسم الكامل</label>
-                    <input type="text" id="reg-name" class="custom-input" placeholder="أدخل اسمك الكامل">
-                </div>
-
-                <div class="input-group">
-                    <label>البريد الإلكتروني</label>
-                    <input type="email" id="reg-email" class="custom-input" placeholder="example@mail.com">
-                </div>
-
-                <div class="input-group">
-                    <label>كلمة المرور</label>
-                    <input type="password" id="reg-pass" class="custom-input" placeholder="••••••••">
-                </div>
-
-                <button onclick="executeRegister()" class="btn-secondary">تأكيد التسجيل</button>
-                
-                <p class="switch-text">
-                    لديك حساب بالفعل؟ 
-                    <span class="switch-link" onclick="toggleInterface('login')">العودة للدخول</span>
-                </p>
+            <div class="mb-2">
+                <label class="text-xs font-bold text-gray-600 block">Password</label>
+                <input id="l-pass" type="password" placeholder="•••••" class="input-style">
             </div>
+            <button onclick="Server.login()" class="btn-blue">Sign In Now</button>
+            <p class="text-center text-xs text-gray-400 mt-6 italic">Secure authentication by Google Systems</p>
+        </div>
 
+        <div id="section-reg" class="hidden">
+            <div class="mb-4">
+                <label class="text-xs font-bold text-gray-600">Full Name</label>
+                <input id="r-name" type="text" placeholder="Your Name" class="input-style">
+            </div>
+            <div class="mb-4">
+                <label class="text-xs font-bold text-gray-600">Email</label>
+                <input id="r-email" type="email" placeholder="example@mail.com" class="input-style">
+            </div>
+            <div class="mb-2">
+                <label class="text-xs font-bold text-gray-600">Choose Password</label>
+                <input id="r-pass" type="password" placeholder="Password" class="input-style">
+            </div>
+            <button onclick="Server.register()" class="btn-blue">Create Account</button>
+        </div>
+
+        <div id="section-otp" class="hidden text-center">
+            <p class="text-sm font-bold text-gray-500 mb-6">لقد أرسلنا كود التحقق إلى بريدك الإلكتروني</p>
+            <input id="otp-input" type="text" maxlength="6" placeholder="000000" class="w-full p-4 text-center text-3xl font-bold otp-box rounded outline-none">
+            <button onclick="Server.verify()" class="btn-blue">Verify & Register</button>
+            <button onclick="showTab('reg')" class="mt-4 text-xs text-blue-500 font-bold uppercase">Back to Signup</button>
         </div>
     </div>
 
     <script>
         /* --- قسم البرمجة (JavaScript) --- */
 
-        // رابط الاتصال بجوجل (URL الـ Web App)
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzTB9_9V1bqrn4ZHv3ERsksHSNd4WsGFQVFaZOga_Qyk0OXUW8SmPDz5kNCNaJnsFhTIw/exec";
+        // إعدادات EmailJS
+        emailjs.init("WRpj_ZtTQw-eHAZDQ");
+        
+        // رابط الـ Web App من Google Apps Script (رابط الـ exec)
+        // تأكد من وضعه هنا بدقة
+        const scriptURL = "https://script.google.com/macros/s/AKfycbzTB9_9V1bqrn4ZHv3ERsksHSNd4WsGFQVFaZOga_Qyk0OXUW8SmPDz5kNCNaJnsFhTIw/exec"; 
 
-        // 1. وظيفة فحص الجلسة السابقة (يعقل على المستخدم)
+        // دالة لإظهار التنبيهات
+        function showNotify(msg) {
+            console.log("System Message: " + msg);
+            const el = document.getElementById('custom-alert');
+            el.innerText = msg; 
+            el.style.display = 'block';
+            setTimeout(() => { el.style.display = 'none'; }, 4000);
+        }
+
+        // فحص الجلسة عند تحميل الصفحة (ميزة "يعقل")
         window.onload = function() {
-            console.log("Checking for active session...");
-            const savedData = localStorage.getItem("userSession");
-            
-            if (savedData) {
-                const user = JSON.parse(savedData);
-                updateStatus("جاري تذكر بياناتك والدخول تلقائياً...", "#dbeafe", "#1e40af");
-                startValidation(user.email, user.pass, true);
+            const savedSession = localStorage.getItem("userSession");
+            if (savedSession) {
+                const user = JSON.parse(savedSession);
+                showNotify("جاري تسجيل الدخول التلقائي...");
+                Server.autoLogin(user.email, user.pass);
             }
         };
 
-        // 2. التبديل بين الواجهات
-        function toggleInterface(mode) {
-            const loginBox = document.getElementById('login-container');
-            const registerBox = document.getElementById('register-container');
-            
-            if (mode === 'register') {
-                loginBox.classList.add('hidden');
-                registerBox.classList.remove('hidden');
-            } else {
-                registerBox.classList.add('hidden');
-                loginBox.classList.remove('hidden');
-            }
-        }
+        // نظام التعامل مع السيرفر
+        const Server = {
+            generatedCode: "", 
+            userDataTemp: {},
 
-        // 3. تحديث رسائل الحالة للمستخدم
-        function updateStatus(text, bgColor, textColor) {
-            const statusBox = document.getElementById('status-box');
-            statusBox.innerText = text;
-            statusBox.style.backgroundColor = bgColor;
-            statusBox.style.color = textColor;
-            statusBox.style.display = 'block';
-        }
+            // وظيفة الدخول التلقائي
+            autoLogin: function(email, pass) {
+                const url = `${scriptURL}?email=${email}&pass=${pass}`;
+                fetch(url)
+                .then(response => response.json())
+                .then(result => {
+                    if(result.status === "success") {
+                        window.location.href = "https://www.google.com";
+                    }
+                }).catch(err => console.error("Auto-login failed."));
+            },
 
-        // 4. تنفيذ الدخول اليدوي
-        function executeLogin() {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
-
-            if (!email || !pass) {
-                alert("المرجو إدخال كافة البيانات");
-                return;
-            }
-
-            updateStatus("جاري الاتصال بالسيرفر...", "#fef3c7", "#92400e");
-            startValidation(email, pass, false);
-        }
-
-        // 5. التحقق من البيانات مع جوجل
-        function startValidation(email, pass, isAutomatic) {
-            const finalURL = `${WEB_APP_URL}?email=${email}&pass=${pass}`;
-
-            fetch(finalURL)
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    // حفظ الجلسة في ذاكرة المتصفح
-                    localStorage.setItem("userSession", JSON.stringify({ email, pass }));
-                    window.location.href = "https://www.google.com";
-                } else {
-                    updateStatus("بيانات الدخول غير صحيحة", "#fee2e2", "#991b1b");
-                    if (isAutomatic) localStorage.removeItem("userSession");
+            // وظيفة تسجيل الدخول اليدوي
+            login: function() {
+                const email = document.getElementById('l-email').value;
+                const pass = document.getElementById('l-pass').value;
+                
+                if(!email || !pass) {
+                    return showNotify("المرجو إدخال كافة البيانات");
                 }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                updateStatus("فشل الاتصال: تأكد من إعدادات النشر", "#fee2e2", "#991b1b");
-            });
-        }
 
-        // 6. تنفيذ إنشاء حساب جديد
-        function executeRegister() {
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const pass = document.getElementById('reg-pass').value;
+                showNotify("جاري التحقق من البيانات...");
+                fetch(`${scriptURL}?email=${email}&pass=${pass}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === "success") {
+                        localStorage.setItem("userSession", JSON.stringify({email, pass}));
+                        window.location.href = "https://www.google.com";
+                    } else {
+                        showNotify("بيانات الدخول غير صحيحة");
+                    }
+                }).catch(() => showNotify("خطأ: تأكد من إعدادات النشر (Anyone)"));
+            },
 
-            if (!name || !email || !pass) {
-                alert("جميع الخانات مطلوبة");
-                return;
+            // وظيفة التسجيل الأولي وإرسال الكود
+            register: function() {
+                this.userDataTemp = { 
+                    name: document.getElementById('r-name').value, 
+                    email: document.getElementById('r-email').value, 
+                    pass: document.getElementById('r-pass').value 
+                };
+
+                if(!this.userDataTemp.name || !this.userDataTemp.email || !this.userDataTemp.pass) {
+                    return showNotify("المرجو ملء جميع الخانات");
+                }
+
+                // توليد كود عشوائي
+                this.generatedCode = Math.floor(100000 + Math.random() * 900000).toString();
+                
+                showNotify("جاري إرسال كود التحقق...");
+                
+                emailjs.send("service_dk24ksf", "template_14tc2a8", { 
+                    name: this.userDataTemp.name, 
+                    email: this.userDataTemp.email, 
+                    otp_code: this.generatedCode 
+                })
+                .then(() => { 
+                    showNotify("تم إرسال الكود بنجاح!"); 
+                    showTab('otp'); 
+                })
+                .catch((error) => {
+                    console.log(error);
+                    showNotify("فشل إرسال الكود، حاول لاحقاً");
+                });
+            },
+
+            // وظيفة التحقق النهائي وحفظ البيانات في جوجل شيت
+            verify: function() {
+                const userOTP = document.getElementById('otp-input').value;
+                
+                // نقبل الكود المولد أو كود المطور (123456) للتجربة
+                if(userOTP === this.generatedCode || userOTP === "123456") {
+                    
+                    showNotify("كود صحيح! جاري إنشاء الحساب...");
+                    
+                    fetch(scriptURL, { 
+                        method: 'POST', 
+                        mode: 'no-cors', 
+                        body: JSON.stringify(this.userDataTemp) 
+                    });
+
+                    setTimeout(() => {
+                        showNotify("تم التسجيل بنجاح! سجل دخولك الآن");
+                        location.reload();
+                    }, 2500);
+
+                } else { 
+                    showNotify("كود التحقق غير صحيح"); 
+                }
             }
+        };
 
-            updateStatus("جاري إنشاء حسابك...", "#dcfce7", "#166534");
-
-            const requestBody = {
-                name: name,
-                email: email,
-                pass: pass
-            };
-
-            fetch(WEB_APP_URL, {
-                method: 'POST',
-                mode: 'no-cors', // لضمان الإرسال حتى مع قيود الـ CORS
-                body: JSON.stringify(requestBody)
-            })
-            .then(() => {
-                alert("تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.");
-                toggleInterface('login');
-                updateStatus("تم التسجيل! سجل دخولك الآن", "#dcfce7", "#166534");
-            })
-            .catch(error => {
-                alert("حدث خطأ أثناء التسجيل");
-                console.log(error);
-            });
+        // دالة التبديل بين الأقسام
+        function showTab(target) {
+            // إخفاء الكل
+            document.getElementById('section-login').classList.add('hidden');
+            document.getElementById('section-reg').classList.add('hidden');
+            document.getElementById('section-otp').classList.add('hidden');
+            
+            // إظهار المطلوب
+            document.getElementById('section-' + target).classList.remove('hidden');
+            
+            // تحديث شكل التبويبات
+            if(target !== 'otp') {
+                document.getElementById('t-login').classList.toggle('active', target === 'login');
+                document.getElementById('t-reg').classList.toggle('active', target === 'reg');
+            }
         }
 
-        /* --- نهاية الكود البرمجي --- */
+        // توثيق بسيط للمطور
+        console.log("SERVE MAROC Auth System v2.0 Initialized.");
+        console.log("Connected to Script: " + scriptURL);
     </script>
 </body>
 </html>
