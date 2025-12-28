@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SERVE MAROC | نظام الدخول الذكي</title>
+    <title>SERVE MAROC | نظام الدخول</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -12,27 +12,32 @@
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         .main-card { background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); width: 100%; max-width: 410px; padding: 45px 35px; border: 1px solid #f1f5f9; position: relative; }
-        .logo-area { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 35px; color: #1e293b; letter-spacing: -1px; }
+        .logo-area { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 35px; color: #1e293b; }
         .logo-blue { color: #2563eb; }
 
-        /* --- تصميم التبويبات مع الخط المتحرك --- */
+        /* تنسيق التبويبات مع الخط المتحرك */
         .tabs-container { position: relative; display: flex; border-bottom: 2px solid #f1f5f9; margin-bottom: 35px; }
         .tab-item { flex: 1; text-align: center; padding: 12px; cursor: pointer; font-weight: 700; color: #94a3b8; transition: 0.3s; z-index: 2; }
         .tab-item.active { color: #2563eb; }
         
-        /* الخط الأزرق المتحرك */
-        .tab-slider { 
+        .tab-indicator { 
             position: absolute; bottom: -2px; left: 50%; width: 50%; height: 2px; 
             background: #2563eb; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
             z-index: 3; 
         }
-        .slider-login { left: 50% !important; } /* جهة اليمين في RTL هي Sign In */
-        .slider-reg { left: 0% !important; }   /* جهة اليسار في RTL هي Sign Up */
+        /* تحريك الخط حسب الخانة المختارة */
+        .pos-login { left: 50% !important; } 
+        .pos-reg { left: 0% !important; }
 
-        .input-box { width: 100%; padding: 15px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; outline: none; text-align: right; margin-top: 5px; transition: 0.2s; }
+        .input-group { margin-bottom: 20px; text-align: right; }
+        .field-label { font-size: 12px; font-weight: 700; color: #64748b; margin-bottom: 6px; display: block; margin-right: 4px; }
+        .input-box { width: 100%; padding: 15px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; outline: none; text-align: right; transition: 0.2s; }
         .input-box:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.05); }
-        .action-btn { width: 100%; padding: 16px; background: #2563eb; color: white; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; margin-top: 20px; font-size: 16px; }
         
+        .action-btn { width: 100%; padding: 16px; background: #2563eb; color: white; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; margin-top: 10px; font-size: 16px; transition: 0.2s; }
+        .action-btn:hover { background: #1d4ed8; }
+        
+        /* شريط التنبيهات */
         #alert-box { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 15px 30px; border-radius: 12px; display: none; z-index: 10000; font-size: 14px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .hidden { display: none; }
     </style>
@@ -44,22 +49,22 @@
     <div class="main-card">
         <div class="logo-area"><span class="logo-blue">SERVE</span>MAROC</div>
         
-        <div id="tabs-wrapper" class="tabs-container">
-            <div id="tab-login" onclick="nav('login')" class="tab-item active">Sign In</div>
-            <div id="tab-reg" onclick="nav('reg')" class="tab-item">Sign Up</div>
-            <div id="indicator" class="tab-slider slider-login"></div>
+        <div id="nav-tabs" class="tabs-container">
+            <div id="t-login" onclick="nav('login')" class="tab-item active">Sign In</div>
+            <div id="t-reg" onclick="nav('reg')" class="tab-item">Sign Up</div>
+            <div id="line" class="tab-indicator pos-login"></div>
         </div>
 
         <div id="sec-login">
-            <div class="mb-4 text-right">
-                <label class="text-xs font-bold text-slate-500 mr-1">Email Address</label>
+            <div class="input-group">
+                <label class="field-label">Email Address</label>
                 <input id="l-email" type="email" placeholder="example@mail.com" class="input-box">
             </div>
-            <div class="mb-2 text-right">
-                <label class="text-xs font-bold text-slate-500 mr-1">Password</label>
+            <div class="input-group">
+                <label class="field-label">Password</label>
                 <input id="l-pass" type="password" placeholder="••••••••" class="input-box">
             </div>
-            <div class="text-left mt-2">
+            <div class="text-left mt-2 mb-4">
                 <span onclick="nav('reset')" class="text-xs text-blue-600 cursor-pointer hover:underline font-bold">Forgot password?</span>
             </div>
             <button onclick="App.login()" class="action-btn">Log In</button>
@@ -68,109 +73,114 @@
         <div id="sec-reg" class="hidden">
             <input id="r-name" type="text" placeholder="Full Name" class="input-box mb-4">
             <input id="r-email" type="email" placeholder="Email Address" class="input-box mb-4">
-            <input id="r-pass" type="password" placeholder="Password" class="input-box">
-            <button onclick="App.signup()" class="action-btn">Register</button>
+            <input id="r-pass" type="password" placeholder="Password" class="input-box mb-2">
+            <button onclick="App.signup()" class="action-btn">Register Account</button>
         </div>
 
         <div id="sec-reset" class="hidden text-center">
-            <p class="text-sm font-bold text-slate-500 mb-6">أدخل بريدك لاستلام كود الاستعادة</p>
-            <input id="reset-email" type="email" placeholder="Email Address" class="input-box mb-4">
-            <button onclick="App.requestReset()" class="action-btn">إرسال كود الاستعادة</button>
-            <p onclick="nav('login')" class="mt-6 text-xs text-slate-400 cursor-pointer uppercase font-bold">رجوع للخلف</p>
+            <p class="text-sm font-bold text-slate-500 mb-6">سيتم إرسال كود الاستعادة لبريدك</p>
+            <input id="reset-email" type="email" placeholder="Gmail Address" class="input-box mb-4">
+            <button onclick="App.requestReset()" class="action-btn">إرسال كود التحقق</button>
+            <p onclick="nav('login')" class="mt-6 text-xs text-slate-400 cursor-pointer font-bold">إلغاء والرجوع</p>
         </div>
 
         <div id="sec-otp" class="hidden text-center">
-            <p class="text-sm font-bold text-slate-600 mb-8 italic">أدخل الكود المكون من 6 أرقام</p>
+            <p id="otp-hint" class="text-sm font-bold text-slate-600 mb-8 italic">أدخل الكود المكون من 6 أرقام</p>
             <input id="otp-val" type="text" maxlength="6" class="w-full p-5 text-center text-4xl font-black bg-slate-50 border-2 border-blue-100 rounded-2xl outline-none text-blue-600 mb-6 tracking-widest">
-            <div id="new-password-area" class="hidden">
-                <input id="new-pass-input" type="password" placeholder="كلمة السر الجديدة" class="input-box mb-4">
+            <div id="reset-fields" class="hidden">
+                <input id="new-password" type="password" placeholder="كلمة السر الجديدة" class="input-box mb-4">
             </div>
             <button onclick="App.verify()" class="action-btn">تأكيد العملية</button>
         </div>
     </div>
 
     <script>
+        // إعدادات EmailJS ورابط السيرفر
         emailjs.init("WRpj_ZtTQw-eHAZDQ");
         const apiURL = "https://script.google.com/macros/s/AKfycbxJ50ongvh4_a2fm6mh0J_eQA03r_7CbaL-FW2X0w-_drGBFxqlXctPQz0emJWr5sX8Pg/exec";
 
         function showMsg(text) {
             const box = document.getElementById('alert-box');
             box.innerText = text; box.style.display = 'block';
-            setTimeout(() => { box.style.display = 'none'; }, 4000);
+            setTimeout(() => { box.style.display = 'none'; }, 5000);
         }
 
-        // تحريك التبويبات
+        // وظيفة التنقل وتحريك الخط السفلي
         function nav(target) {
-            const indicator = document.getElementById('indicator');
+            const line = document.getElementById('line');
             const sections = ['sec-login', 'sec-reg', 'sec-reset', 'sec-otp'];
             sections.forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById('sec-' + target).classList.remove('hidden');
 
-            if(target === 'login') {
-                indicator.className = 'tab-slider slider-login';
-                document.getElementById('tab-login').classList.add('active');
-                document.getElementById('tab-reg').classList.remove('active');
-                document.getElementById('tabs-wrapper').classList.remove('hidden');
-            } else if(target === 'reg') {
-                indicator.className = 'tab-slider slider-reg';
-                document.getElementById('tab-reg').classList.add('active');
-                document.getElementById('tab-login').classList.remove('active');
-                document.getElementById('tabs-wrapper').classList.remove('hidden');
+            if(target === 'login' || target === 'reg') {
+                document.getElementById('nav-tabs').classList.remove('hidden');
+                line.className = (target === 'login') ? 'tab-indicator pos-login' : 'tab-indicator pos-reg';
+                document.getElementById('t-login').classList.toggle('active', target === 'login');
+                document.getElementById('t-reg').classList.toggle('active', target === 'reg');
             } else {
-                document.getElementById('tabs-wrapper').classList.add('hidden');
+                document.getElementById('nav-tabs').classList.add('hidden');
             }
         }
 
         const App = {
             otpCode: "", draft: {}, mode: "", 
+
             login: function() {
                 const e = document.getElementById('l-email').value, p = document.getElementById('l-pass').value;
-                if(!e || !p) return showMsg("يرجى إدخال البيانات");
+                if(!e || !p) return showMsg("خطأ: يرجى إدخال البريد وكلمة السر");
                 showMsg("جاري التحقق...");
                 fetch(`${apiURL}?email=${e}&pass=${p}`).then(res => res.json()).then(data => {
-                    if(data.status === "success") { localStorage.setItem("userSession", JSON.stringify({email:e, pass:p})); window.location.href = "https://www.google.com"; }
-                    else { showMsg("بيانات الدخول غير صحيحة"); }
-                });
+                    if(data.status === "success") { 
+                        localStorage.setItem("userSession", JSON.stringify({email:e, pass:p})); 
+                        window.location.href = "https://www.google.com"; 
+                    } else { showMsg("خطأ: بيانات الدخول غير صحيحة"); }
+                }).catch(() => showMsg("خطأ: فشل الاتصال بالسيرفر"));
             },
+
             signup: function() {
                 this.mode = "reg";
                 this.draft = { name: document.getElementById('r-name').value, email: document.getElementById('r-email').value, pass: document.getElementById('r-pass').value };
-                if(!this.draft.name || !this.draft.email || !this.draft.pass) return showMsg("يرجى ملء جميع الخانات");
+                if(!this.draft.name || !this.draft.email || !this.draft.pass) return showMsg("خطأ: المرجو ملء جميع الخانات");
                 this.sendOTP(this.draft.email, this.draft.name);
             },
+
             requestReset: function() {
                 this.mode = "reset";
                 const email = document.getElementById('reset-email').value;
-                if(!email) return showMsg("أدخل بريدك الإلكتروني");
+                if(!email) return showMsg("خطأ: المرجو كتابة بريدك الإلكتروني");
                 this.draft = { email: email };
                 this.sendOTP(email, "User");
             },
+
             sendOTP: function(email, name) {
                 this.otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-                showMsg("جاري إرسال كود التحقق...");
+                showMsg("جاري إرسال الكود...");
                 emailjs.send("service_dk24ksf", "template_14tc2a8", { name: name, email: email, otp_code: this.otpCode })
                 .then(() => { 
-                    showMsg("تحقق من بريدك الآن!"); 
-                    if(this.mode === 'reset') document.getElementById('new-password-area').classList.remove('hidden');
+                    showMsg("✅ تم إرسال الكود، تحقق من Gmail"); 
+                    if(this.mode === 'reset') document.getElementById('reset-fields').classList.remove('hidden');
                     nav('otp'); 
-                });
+                }).catch(() => showMsg("خطأ: فشل إرسال الإيميل (EmailJS)"));
             },
+
             verify: function() {
                 const input = document.getElementById('otp-val').value;
                 if(input === this.otpCode || input === "123456") {
                     if(this.mode === "reg") {
+                        showMsg("جاري إنشاء الحساب...");
                         fetch(apiURL, { method: 'POST', body: JSON.stringify(this.draft) })
                         .then(res => res.text()).then(r => {
-                            if(r === "exists") { showMsg("⚠️ هذا البريد مسجل مسبقاً"); nav('login'); }
-                            else { showMsg("✅ تم التسجيل بنجاح!"); location.reload(); }
+                            if(r === "exists") { showMsg("خطأ: هذا البريد مسجل مسبقاً في النظام!"); nav('login'); }
+                            else { showMsg("✅ مبروك! تم إنشاء حسابك بنجاح"); setTimeout(()=> location.reload(), 2000); }
                         });
                     } else {
-                        const newP = document.getElementById('new-pass-input').value;
-                        if(!newP) return showMsg("أدخل كلمة السر الجديدة");
+                        const newP = document.getElementById('new-password').value;
+                        if(!newP) return showMsg("خطأ: يرجى كتابة كلمة السر الجديدة");
+                        showMsg("جاري تحديث البيانات...");
                         fetch(apiURL, { method: 'POST', body: JSON.stringify({email: this.draft.email, newPass: newP, action: "update"}) })
-                        .then(() => { showMsg("✅ تم تحديث كلمة السر!"); setTimeout(() => location.reload(), 2000); });
+                        .then(() => { showMsg("✅ تم تغيير كلمة السر بنجاح!"); setTimeout(() => location.reload(), 2000); });
                     }
-                } else { showMsg("كود التحقق خاطئ"); }
+                } else { showMsg("خطأ: كود التحقق غير صحيح، حاول مرة أخرى"); }
             }
         };
     </script>
