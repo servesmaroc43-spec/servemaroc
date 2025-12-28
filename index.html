@@ -3,23 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SERVE MAROC | نظام الدخول المطور</title>
+    <title>SERVE MAROC | نظام الدخول الذكي</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f3f4f6; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .main-card { background: #ffffff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 410px; padding: 40px 35px; border: 1px solid #e1e4e8; }
-        .logo-area { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 30px; color: #1a202c; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .main-card { background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); width: 100%; max-width: 410px; padding: 45px 35px; border: 1px solid #f1f5f9; position: relative; }
+        .logo-area { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 35px; color: #1e293b; letter-spacing: -1px; }
         .logo-blue { color: #2563eb; }
-        .tabs-header { display: flex; border-bottom: 2px solid #edf2f7; margin-bottom: 30px; }
-        .tab-trigger { flex: 1; text-align: center; padding: 12px; cursor: pointer; font-weight: 700; color: #718096; transition: 0.3s; }
-        .tab-trigger.active { color: #2563eb; border-bottom: 2px solid #2563eb; margin-bottom: -2px; }
-        .input-box { width: 100%; padding: 14px; background: #f8fafc; border-radius: 8px; border: 1px solid #cbd5e0; outline: none; text-align: right; margin-top: 5px; }
-        .action-btn { width: 100%; padding: 16px; background: #2563eb; color: white; border-radius: 8px; font-weight: 700; border: none; cursor: pointer; margin-top: 15px; }
-        #alert-box { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); background: #2d3748; color: white; padding: 15px 30px; border-radius: 10px; display: none; z-index: 10000; }
+
+        /* --- تصميم التبويبات مع الخط المتحرك --- */
+        .tabs-container { position: relative; display: flex; border-bottom: 2px solid #f1f5f9; margin-bottom: 35px; }
+        .tab-item { flex: 1; text-align: center; padding: 12px; cursor: pointer; font-weight: 700; color: #94a3b8; transition: 0.3s; z-index: 2; }
+        .tab-item.active { color: #2563eb; }
+        
+        /* الخط الأزرق المتحرك */
+        .tab-slider { 
+            position: absolute; bottom: -2px; left: 50%; width: 50%; height: 2px; 
+            background: #2563eb; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+            z-index: 3; 
+        }
+        .slider-login { left: 50% !important; } /* جهة اليمين في RTL هي Sign In */
+        .slider-reg { left: 0% !important; }   /* جهة اليسار في RTL هي Sign Up */
+
+        .input-box { width: 100%; padding: 15px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; outline: none; text-align: right; margin-top: 5px; transition: 0.2s; }
+        .input-box:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.05); }
+        .action-btn { width: 100%; padding: 16px; background: #2563eb; color: white; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; margin-top: 20px; font-size: 16px; }
+        
+        #alert-box { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 15px 30px; border-radius: 12px; display: none; z-index: 10000; font-size: 14px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .hidden { display: none; }
     </style>
 </head>
@@ -30,16 +44,23 @@
     <div class="main-card">
         <div class="logo-area"><span class="logo-blue">SERVE</span>MAROC</div>
         
-        <div id="tabs-nav" class="tabs-header">
-            <div id="btn-login" onclick="nav('login')" class="tab-trigger active">Sign In</div>
-            <div id="btn-reg" onclick="nav('reg')" class="tab-trigger">Sign Up</div>
+        <div id="tabs-wrapper" class="tabs-container">
+            <div id="tab-login" onclick="nav('login')" class="tab-item active">Sign In</div>
+            <div id="tab-reg" onclick="nav('reg')" class="tab-item">Sign Up</div>
+            <div id="indicator" class="tab-slider slider-login"></div>
         </div>
 
         <div id="sec-login">
-            <input id="l-email" type="email" placeholder="Email Address" class="input-box">
-            <input id="l-pass" type="password" placeholder="Password" class="input-box mt-4">
+            <div class="mb-4 text-right">
+                <label class="text-xs font-bold text-slate-500 mr-1">Email Address</label>
+                <input id="l-email" type="email" placeholder="example@mail.com" class="input-box">
+            </div>
+            <div class="mb-2 text-right">
+                <label class="text-xs font-bold text-slate-500 mr-1">Password</label>
+                <input id="l-pass" type="password" placeholder="••••••••" class="input-box">
+            </div>
             <div class="text-left mt-2">
-                <span onclick="nav('reset')" class="text-xs text-blue-600 cursor-pointer hover:underline font-bold">نسيت كلمة السر؟</span>
+                <span onclick="nav('reset')" class="text-xs text-blue-600 cursor-pointer hover:underline font-bold">Forgot password?</span>
             </div>
             <button onclick="App.login()" class="action-btn">Log In</button>
         </div>
@@ -52,27 +73,24 @@
         </div>
 
         <div id="sec-reset" class="hidden text-center">
-            <p class="text-sm font-bold text-gray-500 mb-4">أدخل بريدك لاستلام كود الاستعادة</p>
+            <p class="text-sm font-bold text-slate-500 mb-6">أدخل بريدك لاستلام كود الاستعادة</p>
             <input id="reset-email" type="email" placeholder="Email Address" class="input-box mb-4">
             <button onclick="App.requestReset()" class="action-btn">إرسال كود الاستعادة</button>
-            <p onclick="nav('login')" class="mt-4 text-xs text-gray-400 cursor-pointer uppercase">رجوع</p>
+            <p onclick="nav('login')" class="mt-6 text-xs text-slate-400 cursor-pointer uppercase font-bold">رجوع للخلف</p>
         </div>
 
         <div id="sec-otp" class="hidden text-center">
-            <p id="otp-label" class="text-sm font-bold text-gray-600 mb-6 italic">أدخل الكود المرسل لبريدك</p>
-            <input id="otp-val" type="text" maxlength="6" class="w-full p-5 text-center text-4xl font-extrabold bg-blue-50 border-2 border-blue-200 rounded-xl outline-none text-blue-700 mb-6">
-            
+            <p class="text-sm font-bold text-slate-600 mb-8 italic">أدخل الكود المكون من 6 أرقام</p>
+            <input id="otp-val" type="text" maxlength="6" class="w-full p-5 text-center text-4xl font-black bg-slate-50 border-2 border-blue-100 rounded-2xl outline-none text-blue-600 mb-6 tracking-widest">
             <div id="new-password-area" class="hidden">
                 <input id="new-pass-input" type="password" placeholder="كلمة السر الجديدة" class="input-box mb-4">
             </div>
-
             <button onclick="App.verify()" class="action-btn">تأكيد العملية</button>
         </div>
     </div>
 
     <script>
         emailjs.init("WRpj_ZtTQw-eHAZDQ");
-        // رابط الـ Web App الخاص بك من صورة
         const apiURL = "https://script.google.com/macros/s/AKfycbxJ50ongvh4_a2fm6mh0J_eQA03r_7CbaL-FW2X0w-_drGBFxqlXctPQz0emJWr5sX8Pg/exec";
 
         function showMsg(text) {
@@ -81,73 +99,80 @@
             setTimeout(() => { box.style.display = 'none'; }, 4000);
         }
 
+        // تحريك التبويبات
+        function nav(target) {
+            const indicator = document.getElementById('indicator');
+            const sections = ['sec-login', 'sec-reg', 'sec-reset', 'sec-otp'];
+            sections.forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById('sec-' + target).classList.remove('hidden');
+
+            if(target === 'login') {
+                indicator.className = 'tab-slider slider-login';
+                document.getElementById('tab-login').classList.add('active');
+                document.getElementById('tab-reg').classList.remove('active');
+                document.getElementById('tabs-wrapper').classList.remove('hidden');
+            } else if(target === 'reg') {
+                indicator.className = 'tab-slider slider-reg';
+                document.getElementById('tab-reg').classList.add('active');
+                document.getElementById('tab-login').classList.remove('active');
+                document.getElementById('tabs-wrapper').classList.remove('hidden');
+            } else {
+                document.getElementById('tabs-wrapper').classList.add('hidden');
+            }
+        }
+
         const App = {
             otpCode: "", draft: {}, mode: "", 
-
             login: function() {
-                const e = document.getElementById('l-email').value;
-                const p = document.getElementById('l-pass').value;
-                if(!e || !p) return showMsg("أدخل البيانات");
+                const e = document.getElementById('l-email').value, p = document.getElementById('l-pass').value;
+                if(!e || !p) return showMsg("يرجى إدخال البيانات");
                 showMsg("جاري التحقق...");
                 fetch(`${apiURL}?email=${e}&pass=${p}`).then(res => res.json()).then(data => {
-                    if(data.status === "success") { 
-                        localStorage.setItem("userSession", JSON.stringify({email:e, pass:p})); 
-                        window.location.href = "https://www.google.com"; 
-                    } else { showMsg("بيانات خاطئة"); }
+                    if(data.status === "success") { localStorage.setItem("userSession", JSON.stringify({email:e, pass:p})); window.location.href = "https://www.google.com"; }
+                    else { showMsg("بيانات الدخول غير صحيحة"); }
                 });
             },
-
             signup: function() {
                 this.mode = "reg";
                 this.draft = { name: document.getElementById('r-name').value, email: document.getElementById('r-email').value, pass: document.getElementById('r-pass').value };
-                if(!this.draft.name || !this.draft.email || !this.draft.pass) return showMsg("ملء الخانات");
+                if(!this.draft.name || !this.draft.email || !this.draft.pass) return showMsg("يرجى ملء جميع الخانات");
                 this.sendOTP(this.draft.email, this.draft.name);
             },
-
             requestReset: function() {
                 this.mode = "reset";
                 const email = document.getElementById('reset-email').value;
-                if(!email) return showMsg("أدخل بريدك أولاً");
+                if(!email) return showMsg("أدخل بريدك الإلكتروني");
                 this.draft = { email: email };
                 this.sendOTP(email, "User");
             },
-
             sendOTP: function(email, name) {
                 this.otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-                showMsg("جاري إرسال الكود...");
+                showMsg("جاري إرسال كود التحقق...");
                 emailjs.send("service_dk24ksf", "template_14tc2a8", { name: name, email: email, otp_code: this.otpCode })
                 .then(() => { 
-                    showMsg("تحقق من بريدك!"); 
+                    showMsg("تحقق من بريدك الآن!"); 
                     if(this.mode === 'reset') document.getElementById('new-password-area').classList.remove('hidden');
                     nav('otp'); 
                 });
             },
-
             verify: function() {
                 const input = document.getElementById('otp-val').value;
                 if(input === this.otpCode || input === "123456") {
                     if(this.mode === "reg") {
                         fetch(apiURL, { method: 'POST', body: JSON.stringify(this.draft) })
                         .then(res => res.text()).then(r => {
-                            if(r === "exists") { showMsg("⚠️ الإيميل مسجل مسبقاً"); nav('login'); }
+                            if(r === "exists") { showMsg("⚠️ هذا البريد مسجل مسبقاً"); nav('login'); }
                             else { showMsg("✅ تم التسجيل بنجاح!"); location.reload(); }
                         });
                     } else {
                         const newP = document.getElementById('new-pass-input').value;
                         if(!newP) return showMsg("أدخل كلمة السر الجديدة");
                         fetch(apiURL, { method: 'POST', body: JSON.stringify({email: this.draft.email, newPass: newP, action: "update"}) })
-                        .then(() => { showMsg("✅ تم تغيير كلمة السر!"); setTimeout(() => location.reload(), 2000); });
+                        .then(() => { showMsg("✅ تم تحديث كلمة السر!"); setTimeout(() => location.reload(), 2000); });
                     }
-                } else { showMsg("كود خاطئ"); }
+                } else { showMsg("كود التحقق خاطئ"); }
             }
         };
-
-        function nav(target) {
-            const views = ['sec-login', 'sec-reg', 'sec-reset', 'sec-otp'];
-            views.forEach(v => document.getElementById(v).classList.add('hidden'));
-            document.getElementById('sec-' + target).classList.remove('hidden');
-            document.getElementById('tabs-nav').classList.toggle('hidden', target === 'otp' || target === 'reset');
-        }
     </script>
 </body>
 </html>
