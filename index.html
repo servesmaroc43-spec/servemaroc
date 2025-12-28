@@ -75,6 +75,7 @@
 
     <script>
         emailjs.init("WRpj_ZtTQw-eHAZDQ");
+        // رابط API الخاص بك
         const apiURL = "https://script.google.com/macros/s/AKfycbxJ50ongvh4_a2fm6mh0J_eQA03r_7CbaL-FW2X0w-_drGBFxqlXctPQz0emJWr5sX8Pg/exec";
 
         function showMsg(text) {
@@ -101,9 +102,12 @@
                 showMsg("جاري التحقق...");
                 fetch(`${apiURL}?email=${e}&pass=${p}`).then(res => res.json()).then(data => {
                     if(data.status === "success") { 
+                        // حفظ جلسة المستخدم
                         localStorage.setItem("userSession", JSON.stringify({email:e})); 
                         showMsg("✅ تم الدخول! جاري التحويل...");
-                        setTimeout(() => { window.location.href = "w/index.html"; }, 1500); // التوجه للمجلد w
+                        
+                        // التوجيه إلى الصفحة الثانية في المجلد w
+                        setTimeout(() => { window.location.href = "w/index.html"; }, 1500); 
                     } else { showMsg("خطأ: بيانات غير صحيحة"); }
                 }).catch(() => showMsg("خطأ: فشل الاتصال بالسيرفر"));
             },
@@ -120,7 +124,10 @@
                     fetch(apiURL, { method: 'POST', body: JSON.stringify(this.draft) }).then(res => res.text()).then(r => {
                         if(r === "exists") return showMsg("خطأ: الإيميل مسجل مسبقاً");
                         localStorage.setItem("userSession", JSON.stringify({email: this.draft.email}));
-                        window.location.href = "w/index.html"; // التوجه للمجلد w
+                        showMsg("✅ تم التسجيل! جاري التحويل...");
+                        
+                        // التوجيه إلى الصفحة الثانية في المجلد w
+                        setTimeout(() => { window.location.href = "w/index.html"; }, 1500);
                     });
                 } else { showMsg("خطأ: الكود خطأ"); }
             }
