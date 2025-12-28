@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SERVE MAROC | نظام الدخول</title>
+    <title>SERVE MAROC | نظام الدخول المطور</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
@@ -30,7 +30,7 @@
     <div class="main-card">
         <div class="logo-area"><span class="logo-blue">SERVE</span>MAROC</div>
         
-        <div id="tabs" class="tabs-header">
+        <div id="tabs-nav" class="tabs-header">
             <div id="btn-login" onclick="nav('login')" class="tab-trigger active">Sign In</div>
             <div id="btn-reg" onclick="nav('reg')" class="tab-trigger">Sign Up</div>
         </div>
@@ -39,7 +39,7 @@
             <input id="l-email" type="email" placeholder="Email Address" class="input-box">
             <input id="l-pass" type="password" placeholder="Password" class="input-box mt-4">
             <div class="text-left mt-2">
-                <span onclick="nav('reset')" class="text-xs text-blue-600 cursor-pointer hover:underline">Forgot password?</span>
+                <span onclick="nav('reset')" class="text-xs text-blue-600 cursor-pointer hover:underline font-bold">نسيت كلمة السر؟</span>
             </div>
             <button onclick="App.login()" class="action-btn">Log In</button>
         </div>
@@ -54,24 +54,25 @@
         <div id="sec-reset" class="hidden text-center">
             <p class="text-sm font-bold text-gray-500 mb-4">أدخل بريدك لاستلام كود الاستعادة</p>
             <input id="reset-email" type="email" placeholder="Email Address" class="input-box mb-4">
-            <button onclick="App.requestReset()" class="action-btn">Send Recovery Code</button>
-            <button onclick="nav('login')" class="mt-4 text-xs text-gray-400 font-bold uppercase">Cancel</button>
+            <button onclick="App.requestReset()" class="action-btn">إرسال كود الاستعادة</button>
+            <p onclick="nav('login')" class="mt-4 text-xs text-gray-400 cursor-pointer uppercase">رجوع</p>
         </div>
 
         <div id="sec-otp" class="hidden text-center">
-            <p id="otp-text" class="text-sm font-bold text-gray-600 mb-6 italic">تم إرسال كود التحقق لبريدك</p>
+            <p id="otp-label" class="text-sm font-bold text-gray-600 mb-6 italic">أدخل الكود المرسل لبريدك</p>
             <input id="otp-val" type="text" maxlength="6" class="w-full p-5 text-center text-4xl font-extrabold bg-blue-50 border-2 border-blue-200 rounded-xl outline-none text-blue-700 mb-6">
             
-            <div id="new-pass-fields" class="hidden">
-                <input id="new-p" type="password" placeholder="New Password" class="input-box mb-4">
+            <div id="new-password-area" class="hidden">
+                <input id="new-pass-input" type="password" placeholder="كلمة السر الجديدة" class="input-box mb-4">
             </div>
 
-            <button onclick="App.verify()" class="action-btn">Confirm</button>
+            <button onclick="App.verify()" class="action-btn">تأكيد العملية</button>
         </div>
     </div>
 
     <script>
         emailjs.init("WRpj_ZtTQw-eHAZDQ");
+        // رابط الـ Web App الخاص بك من صورة
         const apiURL = "https://script.google.com/macros/s/AKfycbxJ50ongvh4_a2fm6mh0J_eQA03r_7CbaL-FW2X0w-_drGBFxqlXctPQz0emJWr5sX8Pg/exec";
 
         function showMsg(text) {
@@ -81,7 +82,7 @@
         }
 
         const App = {
-            otpCode: "", draft: {}, mode: "", // mode: 'reg' or 'reset'
+            otpCode: "", draft: {}, mode: "", 
 
             login: function() {
                 const e = document.getElementById('l-email').value;
@@ -89,8 +90,10 @@
                 if(!e || !p) return showMsg("أدخل البيانات");
                 showMsg("جاري التحقق...");
                 fetch(`${apiURL}?email=${e}&pass=${p}`).then(res => res.json()).then(data => {
-                    if(data.status === "success") { localStorage.setItem("userSession", JSON.stringify({email:e, pass:p})); window.location.href = "https://www.google.com"; }
-                    else { showMsg("بيانات خاطئة"); }
+                    if(data.status === "success") { 
+                        localStorage.setItem("userSession", JSON.stringify({email:e, pass:p})); 
+                        window.location.href = "https://www.google.com"; 
+                    } else { showMsg("بيانات خاطئة"); }
                 });
             },
 
@@ -115,7 +118,7 @@
                 emailjs.send("service_dk24ksf", "template_14tc2a8", { name: name, email: email, otp_code: this.otpCode })
                 .then(() => { 
                     showMsg("تحقق من بريدك!"); 
-                    if(this.mode === 'reset') document.getElementById('new-pass-fields').classList.remove('hidden');
+                    if(this.mode === 'reset') document.getElementById('new-password-area').classList.remove('hidden');
                     nav('otp'); 
                 });
             },
@@ -126,13 +129,12 @@
                     if(this.mode === "reg") {
                         fetch(apiURL, { method: 'POST', body: JSON.stringify(this.draft) })
                         .then(res => res.text()).then(r => {
-                            if(r === "exists") { showMsg("⚠️ مسجل مسبقاً"); nav('login'); }
-                            else { showMsg("✅ نجاح!"); location.reload(); }
+                            if(r === "exists") { showMsg("⚠️ الإيميل مسجل مسبقاً"); nav('login'); }
+                            else { showMsg("✅ تم التسجيل بنجاح!"); location.reload(); }
                         });
                     } else {
-                        const newP = document.getElementById('new-p').value;
+                        const newP = document.getElementById('new-pass-input').value;
                         if(!newP) return showMsg("أدخل كلمة السر الجديدة");
-                        // إرسال طلب تحديث كلمة السر للسيرفر
                         fetch(apiURL, { method: 'POST', body: JSON.stringify({email: this.draft.email, newPass: newP, action: "update"}) })
                         .then(() => { showMsg("✅ تم تغيير كلمة السر!"); setTimeout(() => location.reload(), 2000); });
                     }
@@ -141,14 +143,10 @@
         };
 
         function nav(target) {
-            const sections = ['sec-login', 'sec-reg', 'sec-reset', 'sec-otp'];
-            sections.forEach(s => document.getElementById(s).classList.add('hidden'));
+            const views = ['sec-login', 'sec-reg', 'sec-reset', 'sec-otp'];
+            views.forEach(v => document.getElementById(v).classList.add('hidden'));
             document.getElementById('sec-' + target).classList.remove('hidden');
-            document.getElementById('tabs').classList.toggle('hidden', target === 'otp' || target === 'reset');
-            if(target === 'login' || target === 'reg') {
-                document.getElementById('btn-login').classList.toggle('active', target === 'login');
-                document.getElementById('btn-reg').classList.toggle('active', target === 'reg');
-            }
+            document.getElementById('tabs-nav').classList.toggle('hidden', target === 'otp' || target === 'reset');
         }
     </script>
 </body>
