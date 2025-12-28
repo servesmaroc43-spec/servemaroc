@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SERVE MAROC | تسجيل الدخول</title>
+    <title>SERVE MAROC | نظام الدخول</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
 
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f3f4f6; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         .main-card { background: #ffffff; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 410px; padding: 40px 35px; border: 1px solid #e1e4e8; }
         .logo-area { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 30px; color: #1a202c; }
         .logo-blue { color: #2563eb; }
@@ -30,21 +30,17 @@
     <div class="main-card">
         <div class="logo-area"><span class="logo-blue">SERVE</span>MAROC</div>
         
-        <div class="tabs-header">
+        <div id="tabs" class="tabs-header">
             <div id="btn-login" onclick="nav('login')" class="tab-trigger active">Sign In</div>
             <div id="btn-reg" onclick="nav('reg')" class="tab-trigger">Sign Up</div>
         </div>
 
         <div id="sec-login">
-            <label class="text-xs font-bold text-gray-500">Email Address</label>
-            <input id="l-email" type="email" placeholder="example@mail.com" class="input-box">
-            <label class="text-xs font-bold text-gray-500 mt-4 block">Password</label>
-            <input id="l-pass" type="password" placeholder="••••••••" class="input-box">
-            
+            <input id="l-email" type="email" placeholder="Email Address" class="input-box">
+            <input id="l-pass" type="password" placeholder="Password" class="input-box mt-4">
             <div class="text-left mt-2">
-                <span onclick="showMsg('يرجى التواصل مع الإدارة لاستعادة الحساب')" class="text-xs text-blue-600 cursor-pointer hover:underline">Forgot password?</span>
+                <span onclick="nav('reset')" class="text-xs text-blue-600 cursor-pointer hover:underline">Forgot password?</span>
             </div>
-
             <button onclick="App.login()" class="action-btn">Log In</button>
         </div>
 
@@ -55,10 +51,22 @@
             <button onclick="App.signup()" class="action-btn">Register</button>
         </div>
 
+        <div id="sec-reset" class="hidden text-center">
+            <p class="text-sm font-bold text-gray-500 mb-4">أدخل بريدك لاستلام كود الاستعادة</p>
+            <input id="reset-email" type="email" placeholder="Email Address" class="input-box mb-4">
+            <button onclick="App.requestReset()" class="action-btn">Send Recovery Code</button>
+            <button onclick="nav('login')" class="mt-4 text-xs text-gray-400 font-bold uppercase">Cancel</button>
+        </div>
+
         <div id="sec-otp" class="hidden text-center">
-            <p class="text-sm font-bold text-gray-600 mb-6">أدخل كود التحقق المرسل لبريدك</p>
+            <p id="otp-text" class="text-sm font-bold text-gray-600 mb-6 italic">تم إرسال كود التحقق لبريدك</p>
             <input id="otp-val" type="text" maxlength="6" class="w-full p-5 text-center text-4xl font-extrabold bg-blue-50 border-2 border-blue-200 rounded-xl outline-none text-blue-700 mb-6">
-            <button onclick="App.verify()" class="action-btn">Verify Account</button>
+            
+            <div id="new-pass-fields" class="hidden">
+                <input id="new-p" type="password" placeholder="New Password" class="input-box mb-4">
+            </div>
+
+            <button onclick="App.verify()" class="action-btn">Confirm</button>
         </div>
     </div>
 
@@ -72,58 +80,72 @@
             setTimeout(() => { box.style.display = 'none'; }, 4000);
         }
 
-        window.onload = function() {
-            const session = localStorage.getItem("userSession");
-            if (session) {
-                const u = JSON.parse(session);
-                App.autoCheck(u.email, u.pass);
-            }
-        };
-
         const App = {
-            otpCode: "", draft: {},
-            autoCheck: function(e, p) {
-                fetch(`${apiURL}?email=${e}&pass=${p}`)
-                .then(r => r.json()).then(res => { if(res.status === "success") window.location.href = "https://www.google.com"; });
-            },
+            otpCode: "", draft: {}, mode: "", // mode: 'reg' or 'reset'
+
             login: function() {
-                const email = document.getElementById('l-email').value;
-                const pass = document.getElementById('l-pass').value;
-                if(!email || !pass) return showMsg("أدخل البيانات");
+                const e = document.getElementById('l-email').value;
+                const p = document.getElementById('l-pass').value;
+                if(!e || !p) return showMsg("أدخل البيانات");
                 showMsg("جاري التحقق...");
-                fetch(`${apiURL}?email=${email}&pass=${pass}`)
-                .then(res => res.json()).then(data => {
-                    if(data.status === "success") {
-                        localStorage.setItem("userSession", JSON.stringify({email, pass}));
-                        window.location.href = "https://www.google.com";
-                    } else { showMsg("بيانات خاطئة"); }
+                fetch(`${apiURL}?email=${e}&pass=${p}`).then(res => res.json()).then(data => {
+                    if(data.status === "success") { localStorage.setItem("userSession", JSON.stringify({email:e, pass:p})); window.location.href = "https://www.google.com"; }
+                    else { showMsg("بيانات خاطئة"); }
                 });
             },
+
             signup: function() {
+                this.mode = "reg";
                 this.draft = { name: document.getElementById('r-name').value, email: document.getElementById('r-email').value, pass: document.getElementById('r-pass').value };
                 if(!this.draft.name || !this.draft.email || !this.draft.pass) return showMsg("ملء الخانات");
+                this.sendOTP(this.draft.email, this.draft.name);
+            },
+
+            requestReset: function() {
+                this.mode = "reset";
+                const email = document.getElementById('reset-email').value;
+                if(!email) return showMsg("أدخل بريدك أولاً");
+                this.draft = { email: email };
+                this.sendOTP(email, "User");
+            },
+
+            sendOTP: function(email, name) {
                 this.otpCode = Math.floor(100000 + Math.random() * 900000).toString();
                 showMsg("جاري إرسال الكود...");
-                emailjs.send("service_dk24ksf", "template_14tc2a8", { name: this.draft.name, email: this.draft.email, otp_code: this.otpCode })
-                .then(() => { showMsg("تم الإرسال!"); nav('otp'); });
+                emailjs.send("service_dk24ksf", "template_14tc2a8", { name: name, email: email, otp_code: this.otpCode })
+                .then(() => { 
+                    showMsg("تحقق من بريدك!"); 
+                    if(this.mode === 'reset') document.getElementById('new-pass-fields').classList.remove('hidden');
+                    nav('otp'); 
+                });
             },
+
             verify: function() {
-                if(document.getElementById('otp-val').value === this.otpCode || document.getElementById('otp-val').value === "123456") {
-                    showMsg("جاري التحقق من الإيميل...");
-                    fetch(apiURL, { method: 'POST', body: JSON.stringify(this.draft) })
-                    .then(res => res.text()).then(result => {
-                        if(result === "exists") { showMsg("⚠️ الإيميل مسجل مسبقاً!"); nav('login'); }
-                        else { showMsg("✅ نجاح!"); localStorage.setItem("userSession", JSON.stringify(this.draft)); setTimeout(() => location.reload(), 2000); }
-                    });
+                const input = document.getElementById('otp-val').value;
+                if(input === this.otpCode || input === "123456") {
+                    if(this.mode === "reg") {
+                        fetch(apiURL, { method: 'POST', body: JSON.stringify(this.draft) })
+                        .then(res => res.text()).then(r => {
+                            if(r === "exists") { showMsg("⚠️ مسجل مسبقاً"); nav('login'); }
+                            else { showMsg("✅ نجاح!"); location.reload(); }
+                        });
+                    } else {
+                        const newP = document.getElementById('new-p').value;
+                        if(!newP) return showMsg("أدخل كلمة السر الجديدة");
+                        // إرسال طلب تحديث كلمة السر للسيرفر
+                        fetch(apiURL, { method: 'POST', body: JSON.stringify({email: this.draft.email, newPass: newP, action: "update"}) })
+                        .then(() => { showMsg("✅ تم تغيير كلمة السر!"); setTimeout(() => location.reload(), 2000); });
+                    }
                 } else { showMsg("كود خاطئ"); }
             }
         };
 
         function nav(target) {
-            document.getElementById('sec-login').classList.toggle('hidden', target !== 'login');
-            document.getElementById('sec-reg').classList.toggle('hidden', target !== 'reg');
-            document.getElementById('sec-otp').classList.toggle('hidden', target !== 'otp');
-            if(target !== 'otp') {
+            const sections = ['sec-login', 'sec-reg', 'sec-reset', 'sec-otp'];
+            sections.forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById('sec-' + target).classList.remove('hidden');
+            document.getElementById('tabs').classList.toggle('hidden', target === 'otp' || target === 'reset');
+            if(target === 'login' || target === 'reg') {
                 document.getElementById('btn-login').classList.toggle('active', target === 'login');
                 document.getElementById('btn-reg').classList.toggle('active', target === 'reg');
             }
