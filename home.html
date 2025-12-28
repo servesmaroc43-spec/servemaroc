@@ -1,1 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SERVE MAROC | لوحة التحكم</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
+        .nav-bar { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
+        .logo-blue { color: #2563eb; font-weight: 800; font-size: 24px; }
+        .welcome-card { background: white; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 50px; text-align: center; border: 1px solid #f1f5f9; }
+        .user-email { color: #2563eb; font-weight: 700; background: #eff6ff; padding: 5px 15px; border-radius: 20px; display: inline-block; margin-top: 10px; }
+        .logout-btn { background: #ef4444; color: white; padding: 10px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .logout-btn:hover { background: #dc2626; transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+    <nav class="nav-bar">
+        <div class="logo-area"><span class="logo-blue">SERVE</span>MAROC</div>
+        <button onclick="logout()" class="logout-btn">تسجيل الخروج</button>
+    </nav>
+
+    <div class="container mx-auto px-4 max-w-2xl">
+        <div class="welcome-card">
+            <div class="text-5xl mb-6">👋</div>
+            <h1 class="text-3xl font-800 text-slate-800 mb-2">مرحباً بك مجدداً!</h1>
+            <p class="text-slate-500 mb-4">تم تسجيل دخولك بنجاح إلى منصة SERVE MAROC</p>
+            
+            <div id="user-info" class="user-email">
+                جاري التحميل...
+            </div>
+
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 text-right">
+                <div class="p-4 border border-slate-100 rounded-xl bg-slate-50">
+                    <h3 class="font-bold text-slate-700">الملف الشخصي</h3>
+                    <p class="text-xs text-slate-400">تعديل بياناتك الشخصية</p>
+                </div>
+                <div class="p-4 border border-slate-100 rounded-xl bg-slate-50">
+                    <h3 class="font-bold text-slate-700">الإعدادات</h3>
+                    <p class="text-xs text-slate-400">إدارة خصوصية حسابك</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. حماية الصفحة: التأكد من أن المستخدم سجل دخوله
+        window.onload = function() {
+            const session = localStorage.getItem("userSession");
+            if (!session) {
+                // إذا لم توجد بيانات، نرجعه لصفحة تسجيل الدخول
+                window.location.href = "index.html"; 
+            } else {
+                const userData = JSON.parse(session);
+                document.getElementById("user-info").innerText = userData.email;
+            }
+        };
+
+        // 2. وظيفة تسجيل الخروج
+        function logout() {
+            localStorage.removeItem("userSession");
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
 
