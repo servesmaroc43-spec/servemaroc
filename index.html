@@ -3,130 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SERVE MAROC</title>
+    <title>SERVE MAROC | الدخول</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f5f7f9; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .auth-card { background: white; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); width: 100%; max-width: 400px; padding: 40px 30px; border: 1px solid #e1e8ed; }
-        .logo-text { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 30px; color: #1a202c; }
-        .logo-blue { color: #3b82f6; }
-        .tab-btn { width: 50%; padding: 12px; text-align: center; cursor: pointer; color: #6c757d; font-weight: 700; border-bottom: 2px solid transparent; transition: 0.3s; }
-        .tab-btn.active { color: #3b82f6; border-bottom-color: #3b82f6; }
-        .input-style { width: 100%; padding: 12px; background: #ebf2ff; border-radius: 4px; border: none; outline: none; margin-top: 5px; }
-        .btn-blue { width: 100%; padding: 14px; background: #2563eb; color: white; border-radius: 4px; font-weight: 700; border: none; cursor: pointer; margin-top: 20px; }
-        #custom-alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 24px; border-radius: 6px; display: none; z-index: 1000; }
-        .hidden { display: none; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f0f4f8; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .input-field { width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #d1d5db; transition: all 0.3s ease; }
+        .input-field:focus { border-color: #2563eb; ring: 2px; ring-color: #3b82f6; outline: none; }
+        #loader { display: none; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .notification { animation: fadeIn 0.4s ease-out; }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-height-screen p-4 mt-20">
 
-    <div id="custom-alert"></div>
+    <div id="status-msg" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden notification">
+        <div class="bg-slate-800 text-white px-6 py-3 rounded-full shadow-lg text-sm font-bold flex items-center gap-2">
+            <span id="msg-text">جاري التحقق...</span>
+        </div>
+    </div>
 
-    <div class="auth-card">
-        <div class="logo-text"><span class="logo-blue">SERVE</span>MAROC</div>
-        
-        <div class="flex border-b mb-8">
-            <div id="t-login" onclick="showTab('login')" class="tab-btn active">Sign In</div>
-            <div id="t-reg" onclick="showTab('reg')" class="tab-btn">Sign Up</div>
+    <div class="glass-card w-full max-w-md p-8 border border-white">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">
+                <span class="text-blue-600">SERVE</span>MAROC
+            </h1>
+            <p class="text-slate-500 mt-2 text-sm">مرحباً بك، قم بتسجيل الدخول للمتابعة</p>
         </div>
 
-        <div id="section-login">
-            <label class="text-xs font-bold text-gray-600">Email</label>
-            <input id="l-email" type="email" placeholder="email@example.com" class="input-style">
-            <label class="text-xs font-bold text-gray-600 mt-4 block">Password</label>
-            <input id="l-pass" type="password" placeholder="•••••" class="input-style">
-            <button onclick="Server.login()" class="btn-blue">Sign In</button>
-        </div>
+        <div class="space-y-5">
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-1">البريد الإلكتروني</label>
+                <input id="email" type="email" placeholder="example@mail.com" class="input-field text-left">
+            </div>
 
-        <div id="section-reg" class="hidden">
-            <input id="r-name" type="text" placeholder="Username" class="input-style mb-4">
-            <input id="r-email" type="email" placeholder="Email" class="input-style mb-4">
-            <input id="r-pass" type="password" placeholder="Password" class="input-style">
-            <button onclick="Server.register()" class="btn-blue">Sign Up</button>
-        </div>
+            <div>
+                <label class="block text-sm font-bold text-slate-700 mb-1">كلمة المرور</label>
+                <input id="pass" type="password" placeholder="••••••••" class="input-field text-left">
+            </div>
 
-        <div id="section-otp" class="hidden text-center">
-            <p class="text-sm font-bold text-gray-500 mb-4">أدخل كود التحقق</p>
-            <input id="otp-input" type="text" maxlength="6" class="w-full p-4 text-center text-3xl font-bold bg-blue-50 border-2 border-blue-200 rounded">
-            <button onclick="Server.verify()" class="btn-blue">Verify Now</button>
+            <button onclick="handleLogin()" id="login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all duration-300 flex justify-center items-center gap-2">
+                <span>تسجيل الدخول</span>
+                <div id="loader" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            </button>
+
+            <div class="relative py-4">
+                <div class="absolute inset-0 flex items-center"><span class="w-full border-t border-slate-200"></span></div>
+                <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-2 text-slate-400 font-bold">أو</span></div>
+            </div>
+
+            <button class="w-full bg-white border border-slate-200 text-slate-700 font-bold py-3 rounded-lg hover:bg-slate-50 transition-all duration-200">
+                إنشاء حساب جديد
+            </button>
         </div>
     </div>
 
     <script>
-        emailjs.init("WRpj_ZtTQw-eHAZDQ");
-        
-        // ضع رابط الـ exec الجديد الخاص بك هنا (تأكد من اختيار Anyone عند النشر)
-        const sheetURL = "رابط_الـ_exec_الجديد_هنا";
+        // 1. ضع رابط الـ exec الجديد الخاص بك هنا
+        const sheetURL = "رابط_الـ_exec_الجديد_هنا"; 
 
-        function showNotify(msg) {
-            const el = document.getElementById('custom-alert');
-            el.innerText = msg; el.style.display = 'block';
-            setTimeout(() => el.style.display = 'none', 4000);
+        function toggleLoader(show) {
+            document.getElementById('loader').style.display = show ? 'block' : 'none';
+            document.getElementById('login-btn').disabled = show;
         }
 
-        // --- ميزة تذكرني (الدخول التلقائي) ---
+        function showNotify(text, isError = false) {
+            const box = document.getElementById('status-msg');
+            const msgText = document.getElementById('msg-text');
+            msgText.innerText = text;
+            box.classList.remove('hidden');
+            setTimeout(() => box.classList.add('hidden'), 4000);
+        }
+
+        // 2. ميزة الدخول التلقائي (التي تجعل الموقع "يعقل" عليك)
         window.onload = function() {
             const saved = localStorage.getItem("userSession");
             if (saved) {
                 const user = JSON.parse(saved);
-                Server.autoLogin(user.email, user.pass);
+                showNotify("تم العثور على جلستك، جاري الدخول...");
+                autoLogin(user.email, user.pass);
             }
         };
 
-        const Server = {
-            code: "", temp: {},
-            autoLogin: function(email, pass) {
-                fetch(`${sheetURL}?email=${email}&pass=${pass}`)
-                .then(res => res.json())
-                .then(data => {
-                    if(data.status === "success") window.location.href = "https://www.google.com";
-                });
-            },
-            login: function() {
-                const email = document.getElementById('l-email').value;
-                const pass = document.getElementById('l-pass').value;
-                if(!email || !pass) return showNotify("أدخل البيانات");
+        function autoLogin(email, pass) {
+            fetch(`${sheetURL}?email=${email}&pass=${pass}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") window.location.href = "https://www.google.com";
+            });
+        }
 
-                showNotify("جاري التحقق...");
-                fetch(`${sheetURL}?email=${email}&pass=${pass}`)
-                .then(res => res.json())
-                .then(data => {
-                    if(data.status === "success") {
-                        // حفظ البيانات ليتذكرها المتصفح
-                        localStorage.setItem("userSession", JSON.stringify({email, pass})); 
-                        window.location.href = "https://www.google.com";
-                    } else {
-                        showNotify("البيانات خاطئة");
-                    }
-                }).catch(() => showNotify("Error: تأكد من اختيار Anyone في النشر"));
-            },
-            register: function() {
-                this.temp = { name: document.getElementById('r-name').value, email: document.getElementById('r-email').value, pass: document.getElementById('r-pass').value };
-                if(!this.temp.name || !this.temp.email || !this.temp.pass) return showNotify("ملء الخانات");
-                this.code = Math.floor(100000 + Math.random() * 900000).toString();
-                showNotify("جاري إرسال الكود...");
-                emailjs.send("service_dk24ksf", "template_14tc2a8", { name: this.temp.name, email: this.temp.email, otp_code: this.code })
-                .then(() => { showNotify("تم الإرسال!"); showTab('otp'); })
-                .catch(() => { showNotify("خطأ في الإرسال"); showTab('otp'); });
-            },
-            verify: function() {
-                if(document.getElementById('otp-input').value === this.code || document.getElementById('otp-input').value === "123456") {
-                    fetch(sheetURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(this.temp) });
-                    showNotify("تم التسجيل!");
-                    setTimeout(() => location.reload(), 2000);
-                } else { showNotify("كود خاطئ"); }
+        // 3. معالجة الدخول وحفظ البيانات في LocalStorage
+        async function handleLogin() {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+
+            if(!email || !pass) {
+                showNotify("يرجى إدخال جميع البيانات");
+                return;
             }
-        };
 
-        function showTab(tab) {
-            document.getElementById('section-login').classList.add('hidden');
-            document.getElementById('section-reg').classList.add('hidden');
-            document.getElementById('section-otp').classList.add('hidden');
-            if(tab === 'login') document.getElementById('section-login').classList.remove('hidden');
-            else if(tab === 'reg') document.getElementById('section-reg').classList.remove('hidden');
-            else document.getElementById('section-otp').classList.remove('hidden');
+            toggleLoader(true);
+            try {
+                const response = await fetch(`${sheetURL}?email=${email}&pass=${pass}`);
+                const data = await response.json();
+
+                if(data.status === "success") {
+                    // حفظ البيانات لكي "يعقل" الموقع عليها المرة القادمة
+                    localStorage.setItem("userSession", JSON.stringify({email, pass}));
+                    showNotify("تم الدخول بنجاح! جاري التحويل...");
+                    window.location.href = "https://www.google.com";
+                } else {
+                    showNotify("خطأ: البيانات غير صحيحة");
+                    toggleLoader(false);
+                }
+            } catch (err) {
+                // حل مشكلة الخطأ الأسود بتنبيه المستخدم بضبط الإعدادات
+                showNotify("خطأ في الاتصال: تأكد من اختيار 'الجميع' عند النشر");
+                toggleLoader(false);
+            }
         }
     </script>
 </body>
