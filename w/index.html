@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SERVE MAROC | تسجيل الدخول</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .main-card { background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); width: 100%; max-width: 410px; padding: 45px 35px; border: 1px solid #f1f5f9; }
+        .logo-area { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 35px; color: #1e293b; }
+        .input-box { width: 100%; padding: 15px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; outline: none; text-align: right; margin-bottom: 15px; }
+        .action-btn { width: 100%; padding: 16px; background: #2563eb; color: white; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; font-size: 16px; }
+        #alert-box { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 15px 30px; border-radius: 12px; display: none; z-index: 10000; font-size: 14px; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div id="alert-box"></div>
+
+    <div class="main-card">
+        <div class="logo-area"><span class="text-blue-600">SERVE</span>MAROC</div>
+        
+        <input id="l-email" type="email" placeholder="البريد الإلكتروني" class="input-box">
+        <input id="l-pass" type="password" placeholder="كلمة السر" class="input-box">
+        <button onclick="login()" class="action-btn">Log In</button>
+    </div>
+
+    <script>
+        // الرابط المأخوذ من صورة شاشة الكمبيوتر الخاصة بك
+        const apiURL = "https://script.google.com/macros/s/AKfycbxumvVcaFNqDFxCpbaZB-n9MbFZz5qryEt23T8z2e-7mtlTo5Upp7d3QK4sERaJNJ3e5A/exec";
+
+        function showMsg(text) {
+            const box = document.getElementById('alert-box');
+            box.innerText = text; box.style.display = 'block';
+            setTimeout(() => { box.style.display = 'none'; }, 4000);
+        }
+
+        function login() {
+            const e = document.getElementById('l-email').value;
+            const p = document.getElementById('l-pass').value;
+
+            if(!e || !p) return showMsg("يرجى إدخال البيانات");
+            showMsg("جاري الاتصال بالسيرفر...");
+
+            // استخدام fetch للتأكد من وصول البيانات لجدول 'b'
+            fetch(`${apiURL}?email=${encodeURIComponent(e)}&pass=${encodeURIComponent(p)}`)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    localStorage.setItem("userSession", JSON.stringify({email: e}));
+                    showMsg("✅ تم الدخول! جاري التحويل...");
+                    // ملاحظة: يجب أن تعيد إنشاء مجلد w في GitHub ليعمل هذا الرابط
+                    setTimeout(() => { window.location.href = "w/index.html"; }, 1500);
+                } else {
+                    showMsg("خطأ: البيانات غير صحيحة");
+                }
+            })
+            .catch(err => {
+                showMsg("خطأ: فشل الاتصال بالسيرفر. تأكد من إعدادات النشر");
+                console.error(err);
+            });
+        }
+    </script>
+</body>
+</html>
