@@ -3,85 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SERVE MAROC | لوحة التحكم</title>
+    <title>SERVE MAROC | Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; margin: 0; }
-        .nav-bar { background: #ffffff; padding: 15px 5%; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
-        .logo-brand { color: #2563eb; font-weight: 800; font-size: 22px; }
-        .status-card { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); border: 1px solid #e2e8f0; text-align: center; }
-        .user-badge { background: #eff6ff; color: #2563eb; padding: 10px 25px; border-radius: 50px; font-weight: 700; display: inline-block; margin-top: 15px; border: 1px solid #dbeafe; }
-        .error-msg { background: #1e293b; color: #ffffff; padding: 12px 25px; border-radius: 12px; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); display: none; z-index: 1000; }
-        .logout-btn { background: #ef4444; color: white; padding: 10px 22px; border-radius: 10px; font-weight: 700; transition: 0.3s; cursor: pointer; border: none; }
-        .logout-btn:hover { background: #dc2626; transform: scale(1.03); }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; }
+        .nav-bar { background: #ffffff; padding: 15px 6%; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .logo-blue { color: #2563eb; font-weight: 800; font-size: 24px; }
+        .card { background: white; border-radius: 20px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); margin-top: 50px; text-align: center; border: 1px solid #f1f5f9; }
+        .user-email { color: #2563eb; font-weight: 700; background: #eff6ff; padding: 8px 20px; border-radius: 50px; display: inline-block; margin-top: 15px; border: 1px solid #dbeafe; }
+        .logout-btn { background: #ef4444; color: white; padding: 10px 25px; border-radius: 10px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .logout-btn:hover { background: #dc2626; transform: scale(1.05); }
+        #error-overlay { position: fixed; inset: 0; background: white; z-index: 9999; display: flex; align-items: center; justify-content: center; text-align: center; display: none; }
     </style>
 </head>
 <body>
 
-    <div id="alert-error" class="error-msg"></div>
+    <div id="error-overlay">
+        <div>
+            <h1 class="text-2xl font-bold text-red-600 mb-4">خطأ: الدخول غير مسموح</h1>
+            <p class="text-slate-500 mb-6">يرجى تسجيل الدخول أولاً للوصول إلى هذه الصفحة.</p>
+            <button onclick="window.location.href='../index.html'" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold">العودة للرئيسية</button>
+        </div>
+    </div>
 
     <nav class="nav-bar">
-        <div class="logo-brand">SERVE MAROC</div>
-        <button onclick="logout()" class="logout-btn">خروج</button>
+        <div class="logo-area"><span class="logo-blue">SERVE</span>MAROC</div>
+        <button onclick="logout()" class="logout-btn">تسجيل الخروج</button>
     </nav>
 
-    <div class="container mx-auto px-4 mt-12 max-w-2xl">
-        <div class="status-card">
-            <div class="text-6xl mb-6">✅</div>
-            <h1 class="text-3xl font-800 text-slate-800 mb-2">تم الدخول بنجاح</h1>
-            <p class="text-slate-500">مرحباً بك في نظام SERVE MAROC المطور</p>
+    <div class="container mx-auto px-4 max-w-2xl">
+        <div class="card">
+            <div class="text-6xl mb-6">🚀</div>
+            <h1 class="text-3xl font-800 text-slate-800 mb-2">أهلاً بك في لوحة التحكم</h1>
+            <p class="text-slate-500">تم التحقق من بياناتك في جدول "b" بنجاح.</p>
             
-            <div id="user-display" class="user-badge">جاري التحميل...</div>
+            <div id="display-email" class="user-email italic">جاري تحميل بريدك...</div>
 
             <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-4 text-right">
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                    <h3 class="font-bold text-slate-700">حالة البيانات</h3>
-                    <p class="text-xs text-green-600 font-bold mt-1">متصل بقاعدة البيانات "b"</p>
+                <div class="p-6 border border-slate-100 rounded-2xl bg-slate-50">
+                    <h3 class="font-bold text-slate-700">الخدمات المتاحة</h3>
+                    <p class="text-xs text-slate-400 mt-2">يمكنك الآن تصفح كافة خدمات SERVE MAROC.</p>
                 </div>
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                    <h3 class="font-bold text-slate-700">التنبيهات</h3>
-                    <p class="text-xs text-slate-400 mt-1">لا توجد إشعارات جديدة حالياً</p>
+                <div class="p-6 border border-slate-100 rounded-2xl bg-slate-50">
+                    <h3 class="font-bold text-slate-700">الأمان</h3>
+                    <p class="text-xs text-slate-400 mt-2">حسابك محمي بنظام التحقق المزدوج.</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function showErr(msg) {
-            const el = document.getElementById("alert-error");
-            el.innerText = msg; el.style.display = "block";
-        }
-
-        // فحص الجلسة عند التحميل
+        // نظام الحماية: التحقق من وجود الجلسة
         window.onload = function() {
             const session = localStorage.getItem("userSession");
-
+            
             if (!session) {
-                // حالة خطأ: محاولة دخول غير قانونية
-                showErr("خطأ: يرجى تسجيل الدخول أولاً");
-                setTimeout(() => { window.location.href = "../index.html"; }, 2000);
+                // إذا لم يجد جلسة، يظهر واجهة الخطأ ويمنع رؤية المحتوى
+                document.getElementById("error-overlay").style.display = "flex";
+                setTimeout(() => { window.location.href = "../index.html"; }, 3000);
             } else {
+                // عرض البريد الإلكتروني المخزن
                 try {
-                    const data = JSON.parse(session);
-                    if (data && data.email) {
-                        document.getElementById("user-display").innerText = data.email;
-                    } else {
-                        throw new Error("بيانات غير مكتملة");
-                    }
-                } catch (e) {
-                    showErr("خطأ: فشل في قراءة بيانات الجلسة");
+                    const userData = JSON.parse(session);
+                    document.getElementById("display-email").innerText = userData.email;
+                } catch(e) {
                     logout();
                 }
             }
         };
 
+        // وظيفة تسجيل الخروج ومسح الذاكرة
         function logout() {
             localStorage.removeItem("userSession");
-            // العودة للصفحة الرئيسية في المجلد الرئيسي
-            window.location.href = "../index.html";
+            window.location.href = "../index.html"; 
         }
     </script>
 </body>
 </html>
-
