@@ -10,13 +10,13 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f5f7f9; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         .auth-card { background: white; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); width: 100%; max-width: 400px; padding: 40px 30px; border: 1px solid #e1e8ed; }
-        .logo-text { font-size: 28px; font-weight: 800; letter-spacing: -1.5px; text-transform: uppercase; text-align: center; margin-bottom: 30px; color: #1a202c; }
+        .logo-text { font-size: 28px; font-weight: 800; text-align: center; margin-bottom: 30px; color: #1a202c; }
         .logo-blue { color: #3b82f6; }
         .tab-btn { width: 50%; padding: 12px; text-align: center; cursor: pointer; color: #6c757d; font-weight: 700; border-bottom: 2px solid transparent; transition: 0.3s; }
         .tab-btn.active { color: #3b82f6; border-bottom-color: #3b82f6; }
         .input-style { width: 100%; padding: 12px; background: #ebf2ff; border-radius: 4px; border: none; outline: none; margin-top: 5px; }
         .btn-blue { width: 100%; padding: 14px; background: #2563eb; color: white; border-radius: 4px; font-weight: 700; border: none; cursor: pointer; margin-top: 20px; }
-        #custom-alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 24px; border-radius: 6px; font-weight: 600; display: none; z-index: 1000; }
+        #custom-alert { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 24px; border-radius: 6px; display: none; z-index: 1000; }
         .hidden { display: none; }
     </style>
 </head>
@@ -57,8 +57,8 @@
     <script>
         emailjs.init("WRpj_ZtTQw-eHAZDQ");
         
-        // --- ضع رابط الـ exec الجديد هنا بعد عمل Deployment ---
-        const sheetURL = "https://script.google.com/macros/s/AKfycbzoH-Ginnjq0NH0rVewA6oQ3npaoQ9XkHSSSQb0tTOAXilVyglEhepKiSt61t6zDZwRNg/exec";
+        // ضع رابط الـ exec الجديد الخاص بك هنا (تأكد من اختيار Anyone عند النشر)
+        const sheetURL = "رابط_الـ_exec_الجديد_هنا";
 
         function showNotify(msg) {
             const el = document.getElementById('custom-alert');
@@ -66,7 +66,7 @@
             setTimeout(() => el.style.display = 'none', 4000);
         }
 
-        // خاصية "يتذكر" المستخدم عند فتح الصفحة
+        // --- ميزة تذكرني (الدخول التلقائي) ---
         window.onload = function() {
             const saved = localStorage.getItem("userSession");
             if (saved) {
@@ -87,35 +87,34 @@
             login: function() {
                 const email = document.getElementById('l-email').value;
                 const pass = document.getElementById('l-pass').value;
-                if(!email || !pass) return showNotify("المرجو إدخال البيانات");
+                if(!email || !pass) return showNotify("أدخل البيانات");
 
-                showNotify("جاري التحقق من Sheets...");
-
+                showNotify("جاري التحقق...");
                 fetch(`${sheetURL}?email=${email}&pass=${pass}`)
                 .then(res => res.json())
                 .then(data => {
                     if(data.status === "success") {
-                        localStorage.setItem("userSession", JSON.stringify({email, pass})); // حفظ الجلسة
-                        showNotify("مرحباً " + data.name);
-                        setTimeout(() => window.location.href = "https://www.google.com", 1500);
+                        // حفظ البيانات ليتذكرها المتصفح
+                        localStorage.setItem("userSession", JSON.stringify({email, pass})); 
+                        window.location.href = "https://www.google.com";
                     } else {
-                        showNotify("البيانات غير صحيحة أو الحساب غير موجود");
+                        showNotify("البيانات خاطئة");
                     }
-                }).catch(() => showNotify("Error: تأكد من تفعيل الرابط (Anyone)"));
+                }).catch(() => showNotify("Error: تأكد من اختيار Anyone في النشر"));
             },
             register: function() {
                 this.temp = { name: document.getElementById('r-name').value, email: document.getElementById('r-email').value, pass: document.getElementById('r-pass').value };
-                if(!this.temp.name || !this.temp.email || !this.temp.pass) return showNotify("ملء جميع الخانات");
+                if(!this.temp.name || !this.temp.email || !this.temp.pass) return showNotify("ملء الخانات");
                 this.code = Math.floor(100000 + Math.random() * 900000).toString();
                 showNotify("جاري إرسال الكود...");
                 emailjs.send("service_dk24ksf", "template_14tc2a8", { name: this.temp.name, email: this.temp.email, otp_code: this.code })
                 .then(() => { showNotify("تم الإرسال!"); showTab('otp'); })
-                .catch(() => { showNotify("خطأ في EmailJS - تحقق من الربط"); showTab('otp'); });
+                .catch(() => { showNotify("خطأ في الإرسال"); showTab('otp'); });
             },
             verify: function() {
                 if(document.getElementById('otp-input').value === this.code || document.getElementById('otp-input').value === "123456") {
                     fetch(sheetURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(this.temp) });
-                    showNotify("تم إنشاء الحساب بنجاح!");
+                    showNotify("تم التسجيل!");
                     setTimeout(() => location.reload(), 2000);
                 } else { showNotify("كود خاطئ"); }
             }
@@ -125,10 +124,9 @@
             document.getElementById('section-login').classList.add('hidden');
             document.getElementById('section-reg').classList.add('hidden');
             document.getElementById('section-otp').classList.add('hidden');
-            document.getElementById('t-login').classList.remove('active');
-            if(tab === 'login') { document.getElementById('section-login').classList.remove('hidden'); document.getElementById('t-login').classList.add('active'); }
-            else if(tab === 'reg') { document.getElementById('section-reg').classList.remove('hidden'); }
-            else { document.getElementById('section-otp').classList.remove('hidden'); }
+            if(tab === 'login') document.getElementById('section-login').classList.remove('hidden');
+            else if(tab === 'reg') document.getElementById('section-reg').classList.remove('hidden');
+            else document.getElementById('section-otp').classList.remove('hidden');
         }
     </script>
 </body>
