@@ -7,17 +7,21 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .main-card { background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); width: 100%; max-width: 410px; padding: 45px 35px; border: 1px solid #f1f5f9; }
+        .main-card { background: #ffffff; border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.05); width: 100%; max-width: 410px; padding: 45px 35px; border: 1px solid #f1f5f9; position: relative; }
         .logo-area { font-size: 32px; font-weight: 800; text-align: center; margin-bottom: 35px; color: #1e293b; }
         .logo-blue { color: #2563eb; }
-        .tabs-container { position: relative; display: flex; border-bottom: 2px solid #f1f5f9; margin-bottom: 30px; }
-        .tab-item { flex: 1; text-align: center; padding: 12px; cursor: pointer; font-weight: 700; color: #94a3b8; transition: 0.3s; }
-        .tab-item.active { color: #2563eb; border-bottom: 2px solid #2563eb; margin-bottom: -2px; }
-        .input-box { width: 100%; padding: 15px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; outline: none; text-align: right; margin-bottom: 15px; }
-        .action-btn { width: 100%; padding: 16px; background: #2563eb; color: white; border-radius: 10px; font-weight: 700; cursor: pointer; border: none; font-size: 16px; }
-        #alert-box { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 25px; border-radius: 10px; display: none; z-index: 1000; font-size: 14px; text-align: center; }
+        .tabs-container { position: relative; display: flex; border-bottom: 2px solid #f1f5f9; margin-bottom: 35px; }
+        .tab-item { flex: 1; text-align: center; padding: 12px; cursor: pointer; font-weight: 700; color: #94a3b8; transition: 0.3s; z-index: 2; }
+        .tab-item.active { color: #2563eb; }
+        .tab-indicator { position: absolute; bottom: -2px; left: 50%; width: 50%; height: 2px; background: #2563eb; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); z-index: 3; }
+        .pos-login { left: 50% !important; } 
+        .pos-reg { left: 0% !important; }
+        .input-box { width: 100%; padding: 15px; background: #f8fafc; border-radius: 10px; border: 1px solid #e2e8f0; outline: none; text-align: right; margin-top: 5px; transition: 0.2s; }
+        .action-btn { width: 100%; padding: 16px; background: #2563eb; color: white; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; margin-top: 20px; font-size: 16px; }
+        #alert-box { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 15px 30px; border-radius: 12px; display: none; z-index: 10000; font-size: 14px; }
         .hidden { display: none; }
     </style>
 </head>
@@ -28,118 +32,90 @@
     <div class="main-card">
         <div class="logo-area"><span class="logo-blue">SERVE</span>MAROC</div>
         
-        <div class="tabs-container">
+        <div id="tabs-wrapper" class="tabs-container">
             <div id="t-login" onclick="nav('login')" class="tab-item active">Sign In</div>
             <div id="t-reg" onclick="nav('reg')" class="tab-item">Sign Up</div>
+            <div id="line" class="tab-indicator pos-login"></div>
         </div>
 
         <div id="sec-login">
-            <input id="l-email" type="email" placeholder="البريد الإلكتروني" class="input-box">
-            <input id="l-pass" type="password" placeholder="كلمة السر" class="input-box">
-            <button onclick="App.login()" class="action-btn">تسجيل الدخول</button>
+            <input id="l-email" type="email" placeholder="Email Address" class="input-box mb-4">
+            <input id="l-pass" type="password" placeholder="Password" class="input-box">
+            <button onclick="App.login()" class="action-btn">Log In</button>
         </div>
 
         <div id="sec-reg" class="hidden">
-            <input id="r-name" type="text" placeholder="الاسم الكامل" class="input-box">
-            <input id="r-email" type="email" placeholder="البريد الإلكتروني" class="input-box">
-            <input id="r-pass" type="password" placeholder="كلمة السر" class="input-box">
-            <button onclick="App.signup()" class="action-btn">إنشاء حساب</button>
+            <input id="r-name" type="text" placeholder="Full Name" class="input-box mb-4">
+            <input id="r-email" type="email" placeholder="Email Address" class="input-box mb-4">
+            <input id="r-pass" type="password" placeholder="Password" class="input-box">
+            <button onclick="App.signup()" class="action-btn">Register</button>
         </div>
 
         <div id="sec-otp" class="hidden text-center">
-            <p class="text-sm font-bold text-slate-600 mb-4">أدخل كود التحقق المرسل لبريدك</p>
+            <p class="text-sm font-bold text-slate-600 mb-6 italic">أدخل كود التحقق</p>
             <input id="otp-val" type="text" maxlength="6" class="w-full p-4 text-center text-3xl font-black bg-slate-50 border rounded-xl mb-4">
-            <button onclick="App.verify()" class="action-btn">تأكيد الكود</button>
+            <button onclick="App.verify()" class="action-btn">تأكيد</button>
         </div>
     </div>
 
     <script>
-        // إعدادات EmailJS
         emailjs.init("WRpj_ZtTQw-eHAZDQ");
+        
+        // الرابط المأخوذ من شاشة النشر الخاصة بك
+        const apiURL = "https://script.google.com/macros/s/AKfycbxumvVcaFNqDFxCpbaZB-n9MbFZz5qryEt23T8z2e-7mtlTo5Upp7d3QK4sERaJNJ3e5A/exec";
 
-        // رابط السكريبت (تأكد أنه ينتهي بـ /exec)
-        const apiURL = "https://script.google.com/macros/s/AKfycbxJ50ongvh4_a2fm6mh0J_eQA03r_7CbaL-FW2X0w-_drGBFxqlXctPQz0emJWr5sX8Pg/exec";
-
-        function showMsg(msg) {
+        function showMsg(text) {
             const box = document.getElementById('alert-box');
-            box.innerText = msg; box.style.display = 'block';
+            box.innerText = text; box.style.display = 'block';
             setTimeout(() => { box.style.display = 'none'; }, 4000);
         }
 
         function nav(target) {
-            document.getElementById('sec-login').classList.toggle('hidden', target !== 'login');
-            document.getElementById('sec-reg').classList.toggle('hidden', target !== 'reg');
-            document.getElementById('sec-otp').classList.add('hidden');
-            document.getElementById('t-login').classList.toggle('active', target === 'login');
-            document.getElementById('t-reg').classList.toggle('active', target === 'reg');
+            const line = document.getElementById('line');
+            const sections = ['sec-login', 'sec-reg', 'sec-otp'];
+            sections.forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById('sec-' + target).classList.remove('hidden');
+            if(target === 'login') line.className = 'tab-indicator pos-login';
+            else if(target === 'reg') line.className = 'tab-indicator pos-reg';
         }
 
         const App = {
-            otpCode: "", draft: {},
-            
+            otpCode: "", draft: {}, 
             login: function() {
-                const e = document.getElementById('l-email').value;
-                const p = document.getElementById('l-pass').value;
-                if(!e || !p) return showMsg("يرجى ملء جميع الحقول");
-
-                showMsg("جاري التحقق من البيانات...");
-
-                // استخدام التحميل عبر الإطار البرمجي لضمان تخطي مشاكل CORS
+                const e = document.getElementById('l-email').value, p = document.getElementById('l-pass').value;
+                if(!e || !p) return showMsg("أدخل البيانات كاملة");
+                
+                showMsg("جاري التحقق...");
+                
+                // إضافة متغيرات لمنع حظر الطلب من المتصفح
                 fetch(`${apiURL}?email=${encodeURIComponent(e)}&pass=${encodeURIComponent(p)}`)
                 .then(res => res.json())
                 .then(data => {
-                    if(data.status === "success") {
-                        localStorage.setItem("userSession", JSON.stringify({email: e}));
-                        showMsg("✅ تم الدخول بنجاح! جاري تحويلك...");
-                        setTimeout(() => { window.location.href = "w/index.html"; }, 1500);
-                    } else {
-                        showMsg("خطأ: البريد أو كلمة السر غير صحيحة");
-                    }
+                    if(data.status === "success") { 
+                        localStorage.setItem("userSession", JSON.stringify({email: e})); 
+                        showMsg("✅ تم الدخول! جاري التحويل...");
+                        setTimeout(() => { window.location.href = "w/index.html"; }, 1500); 
+                    } else { showMsg("بيانات غير صحيحة"); }
                 })
-                .catch(err => {
-                    console.error(err);
-                    showMsg("خطأ: فشل الاتصال بالسيرفر. تأكد من نشر السكريبت بشكل صحيح");
-                });
+                .catch(() => showMsg("خطأ: فشل الاتصال بالسيرفر"));
             },
-
             signup: function() {
-                this.draft = {
-                    name: document.getElementById('r-name').value,
-                    email: document.getElementById('r-email').value,
-                    pass: document.getElementById('r-pass').value
-                };
-                if(!this.draft.email || !this.draft.pass) return showMsg("يرجى ملء البيانات");
-
+                this.draft = { name: document.getElementById('r-name').value, email: document.getElementById('r-email').value, pass: document.getElementById('r-pass').value };
+                if(!this.draft.email) return showMsg("أدخل الإيميل");
                 this.otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-                showMsg("جاري إرسال كود التحقق...");
-
-                emailjs.send("service_dk24ksf", "template_14tc2a8", {
-                    name: this.draft.name,
-                    email: this.draft.email,
-                    otp_code: this.otpCode
-                }).then(() => {
-                    showMsg("تم إرسال الكود لبريدك الإلكتروني");
-                    document.getElementById('sec-reg').classList.add('hidden');
-                    document.getElementById('sec-otp').classList.remove('hidden');
-                }).catch(() => showMsg("خطأ في إرسال البريد"));
+                emailjs.send("service_dk24ksf", "template_14tc2a8", { name: this.draft.name, email: this.draft.email, otp_code: this.otpCode })
+                .then(() => { showMsg("كود التحقق أرسل لبريدك"); nav('otp'); });
             },
-
             verify: function() {
                 const val = document.getElementById('otp-val').value;
                 if(val === this.otpCode || val === "123456") {
-                    showMsg("جاري إنشاء الحساب...");
-                    fetch(apiURL, {
-                        method: 'POST',
-                        mode: 'no-cors', // لضمان الإرسال حتى مع قيود المتصفح
-                        body: JSON.stringify(this.draft)
-                    }).then(() => {
+                    fetch(apiURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(this.draft) })
+                    .then(() => {
                         localStorage.setItem("userSession", JSON.stringify({email: this.draft.email}));
                         showMsg("✅ تم التسجيل! جاري التحويل...");
                         setTimeout(() => { window.location.href = "w/index.html"; }, 1500);
                     });
-                } else {
-                    showMsg("كود التحقق غير صحيح");
-                }
+                } else { showMsg("الكود غير صحيح"); }
             }
         };
     </script>
