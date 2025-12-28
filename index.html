@@ -3,126 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SERVE MAROC | الدخول</title>
+    <title>SERVE MAROC | دخول وتسجيل</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f0f4f8; }
-        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        .input-field { width: 100%; padding: 12px 16px; border-radius: 8px; border: 1px solid #d1d5db; transition: all 0.3s ease; }
-        .input-field:focus { border-color: #2563eb; ring: 2px; ring-color: #3b82f6; outline: none; }
-        #loader { display: none; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .notification { animation: fadeIn 0.4s ease-out; }
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+        body { font-family: 'Tajawal', sans-serif; background: #f3f4f6; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
+        .card { background: white; padding: 2.5rem; border-radius: 1.5rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); width: 100%; max-width: 420px; }
+        .input-group input { width: 100%; padding: 0.75rem 1rem; border: 1px solid #d1d5db; border-radius: 0.75rem; outline: none; text-align: right; }
+        #msg { display: none; text-align: center; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-size: 14px; }
     </style>
 </head>
-<body class="flex items-center justify-center min-height-screen p-4 mt-20">
+<body>
 
-    <div id="status-msg" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden notification">
-        <div class="bg-slate-800 text-white px-6 py-3 rounded-full shadow-lg text-sm font-bold flex items-center gap-2">
-            <span id="msg-text">جاري التحقق...</span>
+    <div class="card">
+        <h1 class="text-3xl font-extrabold text-center text-blue-600 mb-6">SERVE MAROC</h1>
+        <div id="msg"></div>
+
+        <div class="space-y-4">
+            <div id="name-box" class="input-group hidden">
+                <input id="u-name" type="text" placeholder="الاسم الكامل">
+            </div>
+            <div class="input-group">
+                <input id="u-email" type="email" placeholder="البريد الإلكتروني">
+            </div>
+            <div class="input-group">
+                <input id="u-pass" type="password" placeholder="كلمة المرور">
+            </div>
+            <button onclick="handleSubmit()" id="main-btn" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition">دخول</button>
         </div>
-    </div>
 
-    <div class="glass-card w-full max-w-md p-8 border border-white">
-        <div class="text-center mb-8">
-            <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">
-                <span class="text-blue-600">SERVE</span>MAROC
-            </h1>
-            <p class="text-slate-500 mt-2 text-sm">مرحباً بك، قم بتسجيل الدخول للمتابعة</p>
-        </div>
-
-        <div class="space-y-5">
-            <div>
-                <label class="block text-sm font-bold text-slate-700 mb-1">البريد الإلكتروني</label>
-                <input id="email" type="email" placeholder="example@mail.com" class="input-field text-left">
-            </div>
-
-            <div>
-                <label class="block text-sm font-bold text-slate-700 mb-1">كلمة المرور</label>
-                <input id="pass" type="password" placeholder="••••••••" class="input-field text-left">
-            </div>
-
-            <button onclick="handleLogin()" id="login-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-all duration-300 flex justify-center items-center gap-2">
-                <span>تسجيل الدخول</span>
-                <div id="loader" class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            </button>
-
-            <div class="relative py-4">
-                <div class="absolute inset-0 flex items-center"><span class="w-full border-t border-slate-200"></span></div>
-                <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-2 text-slate-400 font-bold">أو</span></div>
-            </div>
-
-            <button class="w-full bg-white border border-slate-200 text-slate-700 font-bold py-3 rounded-lg hover:bg-slate-50 transition-all duration-200">
-                إنشاء حساب جديد
-            </button>
+        <div class="mt-6 text-center text-sm">
+            <p id="toggle-text">ليس لديك حساب؟ <span onclick="toggleMode()" class="text-blue-600 font-bold cursor-pointer">أنشئ حساباً</span></p>
         </div>
     </div>
 
     <script>
-        // 1. ضع رابط الـ exec الجديد الخاص بك هنا
-        const sheetURL = "رابط_الـ_exec_الجديد_هنا"; 
+        // الرابط الخاص بك الذي نسخته
+        const scriptURL = "https://script.google.com/macros/s/AKfycbydUIEV-s7RsqJAVgGvODciYAr1rZetC1NOMTEYKHRAFhkZ-vgrFgrXis4ii-BiVwig/exec"; 
 
-        function toggleLoader(show) {
-            document.getElementById('loader').style.display = show ? 'block' : 'none';
-            document.getElementById('login-btn').disabled = show;
-        }
+        let isLoginMode = true;
 
-        function showNotify(text, isError = false) {
-            const box = document.getElementById('status-msg');
-            const msgText = document.getElementById('msg-text');
-            msgText.innerText = text;
-            box.classList.remove('hidden');
-            setTimeout(() => box.classList.add('hidden'), 4000);
-        }
-
-        // 2. ميزة الدخول التلقائي (التي تجعل الموقع "يعقل" عليك)
+        // ميزة "يعقل": الدخول التلقائي
         window.onload = function() {
             const saved = localStorage.getItem("userSession");
             if (saved) {
                 const user = JSON.parse(saved);
-                showNotify("تم العثور على جلستك، جاري الدخول...");
-                autoLogin(user.email, user.pass);
+                performAction("login", user);
             }
         };
 
-        function autoLogin(email, pass) {
-            fetch(`${sheetURL}?email=${email}&pass=${pass}`)
-            .then(res => res.json())
-            .then(data => {
-                if(data.status === "success") window.location.href = "https://www.google.com";
-            });
+        function toggleMode() {
+            isLoginMode = !isLoginMode;
+            document.getElementById('name-box').classList.toggle('hidden');
+            document.getElementById('main-btn').innerText = isLoginMode ? "دخول" : "تسجيل جديد";
         }
 
-        // 3. معالجة الدخول وحفظ البيانات في LocalStorage
-        async function handleLogin() {
-            const email = document.getElementById('email').value;
-            const pass = document.getElementById('pass').value;
+        function handleSubmit() {
+            const data = {
+                name: document.getElementById('u-name').value,
+                email: document.getElementById('u-email').value,
+                pass: document.getElementById('u-pass').value
+            };
+            performAction(isLoginMode ? "login" : "signup", data);
+        }
 
-            if(!email || !pass) {
-                showNotify("يرجى إدخال جميع البيانات");
-                return;
-            }
+        function performAction(action, data) {
+            const url = action === "login" ? `${scriptURL}?email=${data.email}&pass=${data.pass}` : scriptURL;
+            const options = action === "signup" ? { method: "POST", body: JSON.stringify(data) } : {};
 
-            toggleLoader(true);
-            try {
-                const response = await fetch(`${sheetURL}?email=${email}&pass=${pass}`);
-                const data = await response.json();
-
-                if(data.status === "success") {
-                    // حفظ البيانات لكي "يعقل" الموقع عليها المرة القادمة
-                    localStorage.setItem("userSession", JSON.stringify({email, pass}));
-                    showNotify("تم الدخول بنجاح! جاري التحويل...");
+            fetch(url, options)
+            .then(res => action === "login" ? res.json() : res.text())
+            .then(resData => {
+                if(action === "login" && resData.status === "success") {
+                    localStorage.setItem("userSession", JSON.stringify(data));
                     window.location.href = "https://www.google.com";
+                } else if(action === "signup") {
+                    alert("تم إنشاء الحساب! يمكنك الدخول الآن");
+                    toggleMode();
                 } else {
-                    showNotify("خطأ: البيانات غير صحيحة");
-                    toggleLoader(false);
+                    alert("خطأ في البيانات");
                 }
-            } catch (err) {
-                // حل مشكلة الخطأ الأسود بتنبيه المستخدم بضبط الإعدادات
-                showNotify("خطأ في الاتصال: تأكد من اختيار 'الجميع' عند النشر");
-                toggleLoader(false);
-            }
+            })
+            .catch(() => alert("تأكد من اختيار 'الجميع' عند النشر في جوجل"));
         }
     </script>
 </body>
