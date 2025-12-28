@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SERVE MAROC | لوحة التحكم</title>
+    <title>SERVE MAROC | الرئيسية</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
@@ -11,55 +11,60 @@
         .nav-bar { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.05); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; }
         .logo-blue { color: #2563eb; font-weight: 800; font-size: 24px; }
         .welcome-card { background: white; border-radius: 16px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-top: 50px; text-align: center; border: 1px solid #f1f5f9; }
-        .user-email { color: #2563eb; font-weight: 700; background: #eff6ff; padding: 5px 15px; border-radius: 20px; display: inline-block; margin-top: 10px; }
-        .logout-btn { background: #ef4444; color: white; padding: 10px 25px; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.3s; }
-        .logout-btn:hover { background: #dc2626; transform: scale(1.05); }
+        .user-badge { color: #2563eb; font-weight: 700; background: #eff6ff; padding: 8px 20px; border-radius: 25px; display: inline-block; margin-top: 15px; border: 1px solid #dbeafe; }
+        .logout-btn { background: #ef4444; color: white; padding: 10px 25px; border-radius: 8px; font-weight: 700; transition: 0.3s; }
+        .logout-btn:hover { background: #dc2626; transform: translateY(-2px); }
+        .status-msg { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 25px; border-radius: 10px; display: none; }
     </style>
 </head>
 <body>
 
+    <div id="status-box" class="status-msg"></div>
+
     <nav class="nav-bar">
         <div class="logo-area"><span class="logo-blue">SERVE</span>MAROC</div>
-        <button onclick="logout()" class="logout-btn">تسجيل الخروج</button>
+        <button onclick="logout()" class="logout-btn">خروج</button>
     </nav>
 
     <div class="container mx-auto px-4 max-w-2xl">
         <div class="welcome-card">
-            <div class="text-5xl mb-6">👋</div>
-            <h1 class="text-3xl font-800 text-slate-800 mb-2">مرحباً بك مجدداً!</h1>
-            <p class="text-slate-500 mb-4">تم تسجيل دخولك بنجاح إلى منصة SERVE MAROC</p>
+            <div class="text-6xl mb-6 text-blue-600">✔</div>
+            <h1 class="text-3xl font-800 text-slate-800 mb-2">أهلاً بك في SERVE MAROC</h1>
+            <p class="text-slate-500">تم التحقق من حسابك بنجاح</p>
             
-            <div id="user-info" class="user-email">
-                جاري التحميل...
-            </div>
+            <div id="display-email" class="user-badge">جاري جلب البيانات...</div>
 
-            <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-4 text-right">
-                <div class="p-4 border border-slate-100 rounded-xl bg-slate-50">
-                    <h3 class="font-bold text-slate-700">الملف الشخصي</h3>
-                    <p class="text-xs text-slate-400">تعديل بياناتك الشخصية</p>
-                </div>
-                <div class="p-4 border border-slate-100 rounded-xl bg-slate-50">
-                    <h3 class="font-bold text-slate-700">الإعدادات</h3>
-                    <p class="text-xs text-slate-400">إدارة خصوصية حسابك</p>
+            <div class="mt-12 grid grid-cols-1 gap-4">
+                <div class="p-6 border border-slate-100 rounded-xl bg-slate-50 text-right">
+                    <h3 class="font-bold text-slate-700 text-lg mb-1">لوحة التحكم</h3>
+                    <p class="text-sm text-slate-500">يمكنك الآن البدء في إدارة حسابك والوصول إلى كافة الخدمات.</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // 1. حماية الصفحة: التأكد من أن المستخدم سجل دخوله
+        // نظام الحماية وجلب البيانات
         window.onload = function() {
             const session = localStorage.getItem("userSession");
+            
+            // إذا لم يجد جلسة دخول، يطرده للصفحة الأولى
             if (!session) {
-                // إذا لم توجد بيانات، نرجعه لصفحة تسجيل الدخول
+                document.body.innerHTML = ""; 
                 window.location.href = "index.html"; 
             } else {
-                const userData = JSON.parse(session);
-                document.getElementById("user-info").innerText = userData.email;
+                try {
+                    const userData = JSON.parse(session);
+                    document.getElementById("display-email").innerText = userData.email;
+                } catch(e) {
+                    // في حال حدوث خطأ في قراءة البيانات
+                    console.error("خطأ في البيانات");
+                    logout();
+                }
             }
         };
 
-        // 2. وظيفة تسجيل الخروج
+        // وظيفة تسجيل الخروج ومسح الذاكرة
         function logout() {
             localStorage.removeItem("userSession");
             window.location.href = "index.html";
@@ -67,4 +72,3 @@
     </script>
 </body>
 </html>
-
