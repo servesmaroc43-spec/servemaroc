@@ -12,17 +12,18 @@
     </nav>
     <div class="max-w-md mx-auto mt-20 p-8 bg-white rounded-2xl shadow-lg text-center">
         <h1 class="text-2xl font-bold mb-4">مرحباً بك!</h1>
-        <div id="user-mail" class="text-blue-600 font-bold bg-blue-50 p-2 rounded-lg inline-block mb-4 italic"></div>
-        <p class="text-slate-500 text-sm">تم تفعيل حسابك بنجاح من قاعدة البيانات.</p>
+        <p class="text-slate-500 text-xs">لقد تم تفعيل وصولك بنجاح.</p>
     </div>
 
     <script>
         window.onload = function() {
-            const s = localStorage.getItem("userSession");
-            if(!s) { window.location.href = "../index.html"; }
-            else { document.getElementById("user-mail").innerText = JSON.parse(s).email; }
+            const session = localStorage.getItem("userSession");
+            if(!session) { window.location.href = "../index.html"; }
         };
-        function logout() { localStorage.clear(); window.location.href = "../index.html"; }
+        function logout() { 
+            localStorage.removeItem("userSession"); 
+            window.location.href = "../index.html"; 
+        }
     </script>
 </body>
 </html>
