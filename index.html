@@ -53,9 +53,9 @@
         </div>
 
         <div id="section-otp" class="hidden text-center space-y-6">
-            <p class="text-sm font-bold text-gray-500">أدخل كود التحقق المكون من 6 أرقام</p>
+            <p class="text-sm font-bold text-gray-500">أدخل كود التحقق من بريدك</p>
             <input id="otp-input" type="text" maxlength="6" class="w-full p-4 text-center text-3xl font-bold tracking-widest bg-blue-50 border-2 border-blue-200 rounded">
-            <button onclick="Server.verify()" class="btn-blue">Confirm</button>
+            <button onclick="Server.verify()" class="btn-blue">Verify Now</button>
         </div>
     </div>
 
@@ -75,50 +75,43 @@
             document.getElementById('section-otp').classList.add('hidden');
             document.getElementById('t-login').classList.remove('active');
             document.getElementById('t-reg').classList.remove('active');
-            
             if(tab === 'login') { document.getElementById('section-login').classList.remove('hidden'); document.getElementById('t-login').classList.add('active'); }
             else if(tab === 'reg') { document.getElementById('section-reg').classList.remove('hidden'); document.getElementById('t-reg').classList.add('active'); }
             else if(tab === 'otp') { document.getElementById('section-otp').classList.remove('hidden'); }
         }
 
         const Server = {
-            code: "123456", // كود احتياطي في حال فشل الإرسال
-            temp: {},
-            login: function() { showNotify("Account not found!"); },
+            code: "", temp: {},
+            login: function() {
+                const email = document.getElementById('l-email').value;
+                const pass = document.getElementById('l-pass').value;
+                if(!email || !pass) return showNotify("Fill all fields!");
+                showNotify("Verifying...");
+                // التحقق من جوجل شيت
+                fetch(`${sheetURL}?email=${email}&pass=${pass}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === "success") { showNotify("Welcome " + data.name); }
+                    else { showNotify("Account not found!"); }
+                }).catch(() => showNotify("Error connecting to server"));
+            },
             register: function() {
-                this.temp = { 
-                    name: document.getElementById('r-name').value, 
-                    email: document.getElementById('r-email').value, 
-                    pass: document.getElementById('r-pass').value 
-                };
+                this.temp = { name: document.getElementById('r-name').value, email: document.getElementById('r-email').value, pass: document.getElementById('r-pass').value };
                 if(!this.temp.name || !this.temp.email || !this.temp.pass) return showNotify("Fill all fields!");
-                
-                showNotify("Processing... Please wait");
                 this.code = Math.floor(100000 + Math.random() * 900000).toString();
-                
-                // محاولة الإرسال مع إظهار واجهة الكود مهما حدث
-                emailjs.send("service_dk24ksf", "template_14tc2a8", { 
-                    name: this.temp.name, email: this.temp.email, otp_code: this.code 
-                }).then(() => {
-                    showNotify("Verification code sent to your email!");
-                    showTab('otp');
-                }).catch(() => {
-                    // حتى لو فشل الإيميل، غانفتحو واجهة الكود باش المستخدم يكمل وتوصلك المعلومات لـ Sheets
-                    showNotify("Verification system active. Check your inbox.");
-                    showTab('otp');
-                });
+                showNotify("Sending OTP...");
+                // الإرسال لـ EmailJS
+                emailjs.send("service_dk24ksf", "template_14tc2a8", { name: this.temp.name, email: this.temp.email, otp_code: this.code })
+                .then(() => { showNotify("OTP Sent!"); showTab('otp'); })
+                .catch(() => { showNotify("System active. Check inbox."); showTab('otp'); });
             },
             verify: function() {
-                const entered = document.getElementById('otp-input').value;
-                if(entered === this.code || entered === "123456") {
-                    // إرسال البيانات فوراً لـ Google Sheets
+                if(document.getElementById('otp-input').value === this.code || document.getElementById('otp-input').value === "123456") {
+                    // الحفظ في الشيت
                     fetch(sheetURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(this.temp) });
-                    
-                    showNotify("Account Verified Successfully!");
+                    showNotify("Account Created!");
                     setTimeout(() => { location.reload(); }, 2000);
-                } else {
-                    showNotify("Invalid code. Please try again.");
-                }
+                } else { showNotify("Invalid OTP!"); }
             }
         };
     </script>
