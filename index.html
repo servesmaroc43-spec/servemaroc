@@ -10,8 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f5f7f9; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
         .auth-card { background: white; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); width: 100%; max-width: 400px; padding: 40px 30px; border: 1px solid #e1e8ed; }
-        .logo-container { text-align: center; margin-bottom: 30px; }
-        .logo-text { font-size: 28px; font-weight: 800; letter-spacing: -1.5px; text-transform: uppercase; }
+        .logo-text { font-size: 28px; font-weight: 800; letter-spacing: -1.5px; text-transform: uppercase; text-align: center; margin-bottom: 30px; }
         .logo-blue { color: #3b82f6; }
         .logo-black { color: #1a202c; }
         .tab-btn { width: 50%; padding: 12px; text-align: center; cursor: pointer; color: #6c757d; font-weight: 700; border-bottom: 2px solid transparent; transition: 0.3s; }
@@ -29,20 +28,19 @@
     <div id="custom-alert"></div>
 
     <div class="auth-card">
-        <div class="logo-container">
-            <h1 class="logo-text"><span class="logo-blue">SERVE</span><span class="logo-black">MAROC</span></h1>
+        <div class="logo-text">
+            <span class="logo-blue">SERVE</span><span class="logo-black">MAROC</span>
         </div>
         
         <div class="flex border-b mb-8">
-            <div id="t-reg" onclick="showTab('reg')" class="tab-btn">Sign Up</div>
             <div id="t-login" onclick="showTab('login')" class="tab-btn active">Sign In</div>
+            <div id="t-reg" onclick="showTab('reg')" class="tab-btn">Sign Up</div>
         </div>
 
         <div id="section-login">
             <div class="input-group"><label>Email</label><input id="l-email" type="email" placeholder="email@example.com" class="input-style"></div>
             <div class="input-group"><label>Password</label><input id="l-pass" type="password" placeholder="•••••" class="input-style"></div>
             <button onclick="Server.login()" class="btn-blue">Sign In</button>
-            <p onclick="showTab('forgot')" class="text-center text-blue-500 text-xs mt-4 cursor-pointer">Forgot password?</p>
         </div>
 
         <div id="section-reg" class="hidden">
@@ -61,6 +59,7 @@
 
     <script>
         emailjs.init("WRpj_ZtTQw-eHAZDQ");
+        // استبدل هذا الرابط برابط الـ Web App الجديد الخاص بك (بعد إصلاح سطر 34)
         const sheetURL = "https://script.google.com/macros/s/AKfycbzoH-Ginnjq0NH0rVewA6oQ3npaoQ9XkHSSSQb0tTOAXilVyglEhepKiSt61t6zDZwRNg/exec";
 
         function showNotify(msg) {
@@ -68,6 +67,15 @@
             el.innerText = msg; el.style.display = 'block';
             setTimeout(() => { el.style.display = 'none'; }, 4000);
         }
+
+        // التحقق من "تذكرني" عند فتح الصفحة
+        window.onload = function() {
+            const savedUser = localStorage.getItem("userSession");
+            if (savedUser) {
+                const user = JSON.parse(savedUser);
+                Server.autoLogin(user.email, user.pass);
+            }
+        };
 
         function showTab(tab) {
             document.getElementById('section-login').classList.add('hidden');
@@ -82,36 +90,47 @@
 
         const Server = {
             code: "", temp: {},
-            login: function() {
-                const email = document.getElementById('l-email').value;
-                const pass = document.getElementById('l-pass').value;
-                if(!email || !pass) return showNotify("Fill all fields!");
-                showNotify("Verifying...");
-                // التحقق من جوجل شيت
+            autoLogin: function(email, pass) {
                 fetch(`${sheetURL}?email=${email}&pass=${pass}`)
                 .then(res => res.json())
                 .then(data => {
-                    if(data.status === "success") { showNotify("Welcome " + data.name); }
-                    else { showNotify("Account not found!"); }
+                    if(data.status === "success") { window.location.href = "https://www.google.com"; }
+                });
+            },
+            login: function() {
+                const email = document.getElementById('l-email').value;
+                const pass = document.getElementById('l-pass').value;
+                if(!email || !pass) return showNotify("المرجو إدخال البيانات");
+                
+                showNotify("جاري التحقق من الحساب...");
+                
+                fetch(`${sheetURL}?email=${email}&pass=${pass}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data.status === "success") {
+                        localStorage.setItem("userSession", JSON.stringify({email, pass}));
+                        showNotify("مرحباً " + data.name);
+                        setTimeout(() => { window.location.href = "https://www.google.com"; }, 2000);
+                    } else {
+                        showNotify("البيانات غير صحيحة");
+                    }
                 }).catch(() => showNotify("Error connecting to server"));
             },
             register: function() {
                 this.temp = { name: document.getElementById('r-name').value, email: document.getElementById('r-email').value, pass: document.getElementById('r-pass').value };
-                if(!this.temp.name || !this.temp.email || !this.temp.pass) return showNotify("Fill all fields!");
+                if(!this.temp.name || !this.temp.email || !this.temp.pass) return showNotify("ملء جميع الخانات");
                 this.code = Math.floor(100000 + Math.random() * 900000).toString();
-                showNotify("Sending OTP...");
-                // الإرسال لـ EmailJS
+                showNotify("جاري إرسال الكود...");
                 emailjs.send("service_dk24ksf", "template_14tc2a8", { name: this.temp.name, email: this.temp.email, otp_code: this.code })
-                .then(() => { showNotify("OTP Sent!"); showTab('otp'); })
-                .catch(() => { showNotify("System active. Check inbox."); showTab('otp'); });
+                .then(() => { showNotify("تم الإرسال!"); showTab('otp'); })
+                .catch(() => { showNotify("مشكلة في الإيميل، تحقق من inbox"); showTab('otp'); });
             },
             verify: function() {
                 if(document.getElementById('otp-input').value === this.code || document.getElementById('otp-input').value === "123456") {
-                    // الحفظ في الشيت
                     fetch(sheetURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(this.temp) });
-                    showNotify("Account Created!");
+                    showNotify("تم التسجيل!");
                     setTimeout(() => { location.reload(); }, 2000);
-                } else { showNotify("Invalid OTP!"); }
+                } else { showNotify("كود خاطئ"); }
             }
         };
     </script>
