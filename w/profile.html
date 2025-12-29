@@ -10,134 +10,53 @@
         :root { --bg: #ffffff; --text: #000; --card: #fff; --border: #000; }
         .dark-mode { --bg: #000; --text: #fff; --card: #121212; --border: #fff; }
         body { background-color: var(--bg); color: var(--text); font-family: sans-serif; transition: 0.4s; }
-        
-        .profile-card {
-            background: var(--card); border: 4px solid var(--border); border-radius: 40px;
-            padding: 25px; box-shadow: 10px 10px 0px rgba(0,0,0,0.1); text-align: center;
-        }
-
-        .avatar-box {
-            width: 120px; h-120px; border: 4px solid var(--border); border-radius: 30px;
-            margin: 0 auto 20px; overflow: hidden; background: #fff;
-        }
-
-        .gender-btn {
-            background: #f0f0f0; border: 3px solid #000; border-radius: 20px;
-            padding: 10px 20px; cursor: pointer; color: #000; font-weight: 900;
-        }
-
+        .profile-card { background: var(--card); border: 4px solid var(--border); border-radius: 40px; padding: 25px; text-align: center; box-shadow: 10px 10px 0px rgba(0,0,0,0.1); }
+        .gender-btn { background: #f0f0f0; border: 3px solid #000; border-radius: 20px; padding: 10px 20px; cursor: pointer; font-weight: 900; }
         .gender-active { background: #ffea00; box-shadow: 4px 4px 0px #000; }
-
-        .neo-input {
-            width: 100%; border: 3px solid var(--border); border-radius: 15px;
-            padding: 12px; margin-bottom: 12px; background: #f9f9f9;
-            color: #000; font-weight: 800; text-align: center; outline: none;
-        }
-
-        .btn-update {
-            background: #000; color: #fff; border-radius: 20px; padding: 15px;
-            width: 100%; font-weight: 900; cursor: pointer; margin-top: 10px;
-        }
+        .neo-input { width: 100%; border: 3px solid var(--border); border-radius: 15px; padding: 12px; margin-bottom: 12px; text-align: center; font-weight: 800; outline: none; background: #f9f9f9; }
+        .btn-update { background: #000; color: #fff; border-radius: 20px; padding: 15px; width: 100%; font-weight: 900; cursor: pointer; }
     </style>
 </head>
 <body class="p-4">
-
     <div class="flex justify-between items-center mb-6">
         <a href="index.html" class="text-2xl"><i class="fas fa-arrow-right"></i></a>
         <h1 class="font-black text-xl">إعدادات الحساب</h1>
-        <div onclick="toggleTheme()" class="text-xl cursor-pointer"><i id="theme-icon" class="fas fa-moon"></i></div>
     </div>
-
     <div class="profile-card">
-        <div class="avatar-box">
-            <img id="profile-img" src="https://i.ibb.co/JjSq6HVr/male.png" class="w-full h-full object-cover">
+        <div class="w-32 h-32 border-4 border-black rounded-3xl mx-auto mb-4 overflow-hidden">
+            <img id="profile-img" src="" class="w-full h-full object-cover">
         </div>
-
         <div class="flex justify-center gap-4 mb-6">
-            <button id="btn-male" onclick="setGender('ذكر')" class="gender-btn gender-active">
-                ذكر <i class="fas fa-mars text-blue-500"></i>
-            </button>
-            <button id="btn-female" onclick="setGender('أنثى')" class="gender-btn">
-                أنثى <i class="fas fa-venus text-pink-500"></i>
-            </button>
+            <button id="btn-male" onclick="setGender('ذكر')" class="gender-btn">ذكر</button>
+            <button id="btn-female" onclick="setGender('أنثى')" class="gender-btn">أنثى</button>
         </div>
-
         <input type="text" id="new-name" placeholder="تغيير الإسم" class="neo-input">
-        <div class="border-t-2 border-dashed border-gray-400 my-4"></div>
-        
         <input type="password" id="curr-pass" placeholder="كلمة السر الحالية" class="neo-input">
         <input type="password" id="new-pass" placeholder="كلمة السر الجديدة" class="neo-input">
-
-        <button onclick="saveProfile()" class="btn-update">Servemaroc Update</button>
+        <button onclick="saveProfile()" class="btn-update">تحديث البيانات</button>
     </div>
-
     <script>
-        const maleImg = "https://i.ibb.co/JjSq6HVr/male.png"; //
-        const femaleImg = "https://i.ibb.co/Z6hnKQFm/female.png"; //
-
-        // دالة لتغيير الجنس والصورة
-        function setGender(gender) {
-            localStorage.setItem("userGender", gender);
-            const img = (gender === 'ذكر') ? maleImg : femaleImg;
+        function setGender(g) {
+            localStorage.setItem("userGender", g);
+            const img = g === 'ذكر' ? "https://i.ibb.co/JjSq6HVr/male.png" : "https://i.ibb.co/Z6hnKQFm/female.png";
             document.getElementById("profile-img").src = img;
             localStorage.setItem("savedAvatar", img);
-
-            // تحديث شكل الأزرار
-            document.getElementById("btn-male").classList.toggle("gender-active", gender === 'ذكر');
-            document.getElementById("btn-female").classList.toggle("gender-active", gender === 'أنثى');
+            document.getElementById("btn-male").classList.toggle("gender-active", g === 'ذكر');
+            document.getElementById("btn-female").classList.toggle("gender-active", g === 'أنثى');
         }
-
-        // دالة حفظ البيانات وتغيير كلمة السر
         function saveProfile() {
             const name = document.getElementById("new-name").value;
-            const currPass = document.getElementById("curr-pass").value;
-            const newPass = document.getElementById("new-pass").value;
-            const storedPass = localStorage.getItem("userPassword") || "123456"; // كلمة سر افتراضية
-
-            // 1. معالجة تغيير كلمة السر
-            if (currPass !== "") {
-                if (currPass === storedPass) {
-                    if (newPass.length >= 6) {
-                        localStorage.setItem("userPassword", newPass);
-                        alert("تم تغيير كلمة السر بنجاح! ✅");
-                    } else {
-                        alert("الجديدة ضعيفة (6 حروف على الأقل)! ⚠️");
-                        return;
-                    }
-                } else {
-                    alert("كلمة السر الحالية خاطئة! ❌");
-                    return;
-                }
-            }
-
-            // 2. حفظ الاسم
-            if (name !== "") {
-                localStorage.setItem("savedUsername", name);
-            }
-
-            alert("تم تحديث البروفايل بنجاح! ✨");
-            window.location.href = "index.html";
+            const cp = document.getElementById("curr-pass").value;
+            const np = document.getElementById("new-pass").value;
+            const sp = localStorage.getItem("userPassword") || "123456";
+            if(cp !== "" && cp === sp) { localStorage.setItem("userPassword", np); alert("تم تغيير كلمة السر!"); }
+            if(name !== "") localStorage.setItem("savedUsername", name);
+            alert("تم الحفظ!");
+            window.location.href="index.html";
         }
-
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('myTheme', isDark ? 'dark' : 'light');
-            document.getElementById('theme-icon').className = isDark ? 'fas fa-sun text-yellow-400' : 'fas fa-moon';
-        }
-
         window.onload = function() {
-            // استرجاع الإسم
             document.getElementById("new-name").value = localStorage.getItem("savedUsername") || "Hafid Youssef";
-            
-            // استرجاع الجنس والصورة
-            const gender = localStorage.getItem("userGender") || "ذكر";
-            setGender(gender);
-
-            if (localStorage.getItem('myTheme') === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.getElementById('theme-icon').className = 'fas fa-sun text-yellow-400';
-            }
+            setGender(localStorage.getItem("userGender") || "ذكر");
         }
     </script>
 </body>
