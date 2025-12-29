@@ -3,66 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account | SERVEMAROC</title>
+    <title>SMM Dashboard | Servemaroc</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f0f4f8; }
-        .neo-card { background: white; border: 3px solid #000; border-radius: 45px; overflow: hidden; box-shadow: 10px 10px 0px rgba(0,0,0,0.1); }
-        .yellow-header { background: #ffea00; height: 140px; border-bottom: 3px solid #000; display: flex; justify-content: center; align-items: flex-end; }
-        .avatar-frame { width: 115px; height: 115px; background: #fff; border: 4px solid #000; border-radius: 30px; margin-bottom: -55px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-        .neo-input { border: 3px solid #000; border-radius: 22px; padding: 16px; width: 100%; background: #fff; font-weight: 800; outline: none; transition: 0.3s; }
-        .neo-input:focus { background: #fefce8; border-color: #4f70ff; }
-        .neo-tag { background: #ffea00; border: 2px solid #000; border-radius: 10px; padding: 3px 15px; font-size: 11px; font-weight: 900; position: absolute; top: -14px; right: 25px; z-index: 5; }
-        .neo-button { background: #ffea00; border: 3px solid #000; border-radius: 25px; padding: 18px; width: 100%; font-weight: 900; font-size: 18px; box-shadow: 7px 7px 0px #000; cursor: pointer; transition: 0.2s; }
-        .neo-button:active { transform: translate(4px, 4px); box-shadow: 2px 2px 0px #000; }
-        .gender-switcher { background: #000; color: #fff; border-radius: 50px; padding: 8px 30px; display: inline-flex; gap: 20px; font-size: 14px; font-weight: 900; cursor: pointer; border: 2px solid #000; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; overflow-x: hidden; color: #000; }
+        
+        /* Sidebar Design */
+        .sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #fff; z-index: 1000; transition: 0.3s ease; border-left: 3px solid #000; padding: 20px; }
+        .sidebar.active { right: 0; }
+        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; display: none; }
+        .sidebar-overlay.active { display: block; }
+        
+        /* Profile inside Sidebar */
+        .sidebar-profile { background: #f1f5f9; padding: 15px; border-radius: 20px; border: 2px solid #000; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
+
+        .menu-item { display: flex; align-items: center; gap: 15px; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 5px; }
+        .menu-item:hover, .menu-item.active { background: #4f70ff; color: white; }
+
+        /* Main Dashboard Cards */
+        .card-neo { background: white; border: 3px solid #000; border-radius: 30px; padding: 20px; margin-bottom: 20px; box-shadow: 6px 6px 0px #000; }
+        .banner-yellow { background: #ffea00; border: 3px solid #000; border-radius: 30px; padding: 25px; text-align: center; margin-bottom: 20px; box-shadow: 6px 6px 0px rgba(0,0,0,0.1); }
+        
+        /* Profile Screen Design */
+        #profile-screen { position: fixed; inset: 0; background: #f8fafc; z-index: 2000; display: none; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
+        .profile-container { background: white; width: 100%; max-width: 480px; border-radius: 40px; border: 3px solid #000; overflow: hidden; box-shadow: 12px 12px 0px rgba(0,0,0,0.1); position: relative; }
+        .top-yellow { background: #ffea00; height: 120px; border-bottom: 3px solid #000; position: relative; display: flex; justify-content: center; }
+        .avatar-frame { width: 110px; height: 110px; background: #fff; border: 4px solid #000; border-radius: 30px; position: absolute; bottom: -55px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .gender-switch { margin-top: 70px; display: flex; justify-content: center; }
+        .switch-btn { background: #000; color: #fff; border-radius: 50px; padding: 6px 25px; font-weight: 900; font-size: 13px; display: flex; gap: 15px; border: 2px solid #000; cursor: pointer; }
+        
+        .neo-input { width: 100%; border: 2px solid #000; border-radius: 15px; padding: 12px; margin-bottom: 15px; outline: none; font-size: 13px; text-align: right; font-weight: 700; background: #f9f9f9; }
+        .btn-action { background: #ffea00; border: 2px solid #000; border-radius: 18px; padding: 14px; width: 100%; font-weight: 900; font-size: 16px; box-shadow: 5px 5px 0px #000; cursor: pointer; }
     </style>
 </head>
-<body class="p-4 md:p-12">
+<body>
 
-    <header class="max-w-xl mx-auto flex justify-between items-center mb-10 bg-white p-5 rounded-[40px] border-2 border-black shadow-sm">
-        <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-black text-2xl border-2 border-black">S</div>
-        <div class="flex items-center gap-4">
-            <div class="text-right">
-                <p id="nav-user-display" class="text-sm font-black italic text-black tracking-tight">Loading...</p>
-                <p class="text-[10px] text-green-500 font-bold uppercase">Online Now</p>
+    <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
+    
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-profile">
+            <div class="w-12 h-12 rounded-xl border-2 border-black overflow-hidden">
+                <img id="side-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
             </div>
-            <div class="w-12 h-12 bg-slate-100 rounded-2xl overflow-hidden border-2 border-black shadow-md">
-                <img id="nav-avatar-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jude" class="w-full h-full">
-            </div>
-        </div>
-    </header>
-
-    <div class="max-w-xl mx-auto neo-card">
-        <div class="yellow-header">
-            <div class="avatar-frame">
-                <img id="main-profile-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jude" class="w-full h-full bg-slate-50">
+            <div>
+                <p id="side-name" class="text-sm font-black italic">User</p>
+                <p class="text-[9px] text-blue-600 font-bold">الحساب النشط</p>
             </div>
         </div>
 
-        <div class="p-10 mt-16 text-center">
-            <div class="gender-switcher mb-10" onclick="toggleUserGender()">
-                <span id="m-btn">♂ ذكر</span> | <span id="f-btn" class="opacity-30">♀ أنثى</span>
-            </div>
+        <nav>
+            <div class="menu-item active" onclick="toggleMenu()"><i class="fas fa-cart-plus"></i> New order</div>
+            <div class="menu-item" onclick="openProfile()"><i class="fas fa-user-cog"></i> Account Settings</div>
+        </nav>
 
-            <div class="relative mb-8 text-right">
-                <span class="neo-tag">اسم المستخدم</span>
-                <div id="account-name-display" class="neo-input bg-slate-50">--</div>
+        <div class="absolute bottom-10 left-0 right-0 px-6">
+             <div class="flex items-center gap-3 border-t pt-4">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black border-2 border-black">S</div>
+                <span class="font-black">Servemaroc</span>
             </div>
+        </div>
+    </aside>
 
-            <div class="relative mb-12 text-right">
-                <span class="neo-tag" style="background: white;">رتبة الحساب</span>
-                <div class="neo-input italic text-slate-400">Premium Member</div>
+    <div id="main-screen" class="p-4 max-w-[500px] mx-auto">
+        <header class="flex justify-between items-center bg-white p-3 rounded-2xl border-2 border-black mb-6">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="openProfile()">
+                <div class="w-10 h-10 rounded-xl border-2 border-black overflow-hidden bg-indigo-50">
+                    <img id="nav-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
+                </div>
+                <div class="text-right">
+                    <p id="nav-name" class="text-xs font-black italic text-black">Loading...</p>
+                    <p class="text-[8px] text-green-500 font-bold uppercase">Online</p>
+                </div>
             </div>
+            <button onclick="toggleMenu()" class="w-10 h-10 bg-blue-600 text-white rounded-xl border-2 border-black shadow-md"><i class="fas fa-bars"></i></button>
+        </header>
 
-            <div class="border-4 border-black rounded-[45px] p-8 bg-slate-50 shadow-[12px_12px_0px_rgba(0,0,0,1)]">
-                <div class="bg-black text-white py-3 rounded-2xl text-[12px] font-black mb-10 italic tracking-widest uppercase">Change Secure Password</div>
-                <div class="space-y-6">
-                    <div class="text-right"><input type="password" placeholder="كلمة السر الحالية" class="neo-input text-sm"></div>
-                    <div class="text-right"><input type="password" placeholder="كلمة السر الجديدة" class="neo-input text-sm"></div>
-                    <div class="text-right"><input type="password" placeholder="تأكيد كلمة السر" class="neo-input text-sm"></div>
-                    <button class="neo-button mt-6">تحديث البيانات الآن</button>
+        <div class="banner-yellow">
+            <h1 class="text-xl font-black italic">في Smmcpan!</h1> 
+            <p class="text-[10px] font-bold mt-2">أفضل الحلول السريعة لتسويق حساباتك.</p>
+        </div>
+
+        <div class="card-neo text-center">
+            <p class="mb-4 font-bold">مرحباً بك مرة أخرى في لوحة التحكم</p>
+            <button class="w-full bg-yellow-400 border-2 border-black rounded-2xl p-4 font-black shadow-[5px_5px_0px_#000] active:translate-y-1 active:shadow-none transition-all text-black">تأكيد الطلب الآن</button>
+        </div>
+    </div>
+
+    <div id="profile-screen">
+        <div class="w-full max-w-[480px]">
+            <button onclick="closeProfile()" class="mb-6 font-black text-sm flex items-center gap-2 text-black">
+                رجوع <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="profile-container">
+                <div class="top-yellow">
+                    <div class="avatar-frame">
+                        <img id="main-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                <div class="gender-switch" onclick="toggleGender()">
+                    <div class="switch-btn">
+                        <span id="m-lab" style="opacity: 1;">♂ ذكر</span>
+                        <span style="opacity: 0.2;">|</span>
+                        <span id="f-lab" style="opacity: 0.3;">♀ أنثى</span>
+                    </div>
+                </div>
+                <div class="flex gap-3 px-6 mt-8">
+                    <div class="flex-1 border-2 border-black rounded-xl p-3 text-center relative bg-white overflow-hidden">
+                        <span class="absolute -top-2 right-4 bg-yellow-400 border-2 border-black text-[8px] px-2 rounded font-black">User</span>
+                        <span id="user-display" class="font-bold text-[10px] block truncate text-black">--</span>
+                    </div>
+                    <div class="flex-1 border-2 border-black rounded-xl p-3 text-center relative bg-white overflow-hidden text-black">
+                        <span class="absolute -top-2 right-4 bg-white border-2 border-black text-[8px] px-2 rounded font-black italic uppercase">Email</span>
+                        <span id="email-display" class="font-bold text-[9px] block truncate text-slate-500">--</span>
+                    </div>
+                </div>
+                <div class="p-6 mt-4">
+                    <input type="password" id="p1" placeholder="كلمة السر الحالية" class="neo-input text-black">
+                    <input type="password" id="p2" placeholder="كلمة السر الجديدة" class="neo-input text-black">
+                    <button onclick="handleUpdate()" class="btn-action text-black">حفظ التغييرات</button>
                 </div>
             </div>
         </div>
@@ -70,34 +130,77 @@
 
     <script>
         let isMale = true;
+        const maleImg = "https://i.ibb.co/LhCJ7SjR/image.png"; 
+        const femaleImg = "https://i.ibb.co/xqphDc46/image.png"; 
+
+        const SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE";
+
+        function toggleMenu() { 
+            document.getElementById('sidebar').classList.toggle('active'); 
+            document.getElementById('overlay').classList.toggle('active'); 
+        }
+
+        function openProfile() { 
+            document.getElementById('profile-screen').style.display = 'flex';
+            document.getElementById('main-screen').style.display = 'none';
+            toggleMenu(); // إغلاق القائمة بعد الفتح
+        }
+
+        function closeProfile() { 
+            document.getElementById('profile-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'block';
+        }
+
+        function toggleGender() {
+            isMale = !isMale;
+            document.getElementById('m-lab').style.opacity = isMale ? "1" : "0.3";
+            document.getElementById('f-lab').style.opacity = isMale ? "0.3" : "1";
+            const currentImg = isMale ? maleImg : femaleImg;
+            
+            // تحديث الصورة في جميع الأماكن (الهيدر، البروفايل، والقائمة الجانبية)
+            document.getElementById('main-avatar').src = currentImg;
+            document.getElementById('nav-avatar').src = currentImg;
+            document.getElementById('side-avatar').src = currentImg;
+        }
 
         window.onload = function() {
-            const sessionData = JSON.parse(localStorage.getItem("userSession"));
-            if (sessionData) {
-                // ذكاء اصطناعي بسيط: إذا لم يوجد اسم، نأخذ الجزء الأول من الإيميل وننظفه
-                let rawName = sessionData.username || sessionData.email.split('@')[0];
-                let cleanName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
+            const data = JSON.parse(localStorage.getItem("userSession"));
+            if (data) {
+                let name = data.username || data.email.split('@')[0];
+                let cleanName = name.charAt(0).toUpperCase() + name.slice(1);
                 
-                document.getElementById("nav-user-display").innerText = cleanName;
-                document.getElementById("account-name-display").innerText = cleanName;
-            } else {
-                window.location.href = "../index.html";
+                // عرض الاسم في كل الأماكن
+                document.getElementById("nav-name").innerText = cleanName;
+                document.getElementById("side-name").innerText = cleanName;
+                document.getElementById("user-display").innerText = cleanName;
+                document.getElementById("email-display").innerText = data.email || "No Email";
             }
         };
 
-        function toggleUserGender() {
-            isMale = !isMale;
-            document.getElementById("m-btn").style.opacity = isMale ? "1" : "0.3";
-            document.getElementById("f-btn").style.opacity = isMale ? "0.3" : "1";
-            
-            // اختيار شخصيات (Seeds) ملامحها "زوينة" و "طبيعية" جداً
-            // Jude: دري وسيم بملامح هادئة | Bella: بنت جميلة بملامح طبيعية
-            const personSeed = isMale ? "Jude" : "Bella";
-            const avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${personSeed}&mouth=smile&eyebrows=default`;
-            
-            document.getElementById("main-profile-img").src = avatarUrl;
-            document.getElementById("nav-avatar-img").src = avatarUrl;
+        async function handleUpdate() {
+            const oldP = document.getElementById('p1').value;
+            const newP = document.getElementById('p2').value;
+            const user = document.getElementById('user-display').innerText;
+            const email = document.getElementById('email-display').innerText;
+
+            if(!oldP || !newP) { alert("عافاك عمر الخانات!"); return; }
+
+            const formData = new URLSearchParams();
+            formData.append("username", user);
+            formData.append("email", email);
+            formData.append("old_password", oldP);
+            formData.append("new_password", newP);
+
+            try {
+                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData });
+                alert("تم إرسال طلب التحديث بنجاح! ✅");
+                document.getElementById('p1').value = "";
+                document.getElementById('p2').value = "";
+            } catch (e) {
+                alert("خطأ في الاتصال.");
+            }
         }
     </script>
 </body>
 </html>
+هذا الكود ما تقاسوش زيد فيه غير دارك مود ما دير لا لا مساله والو في مستطيل الدارك مود يكون ابيض حتى تبدل له الشاشه غادي تبدل هو
