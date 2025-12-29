@@ -3,42 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servemaroc | الرئيسية</title>
+    <title>SMM Dashboard | Servemaroc</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #000; color: #fff; font-family: sans-serif; }
-        .card-neo { background: #121212; border: 3px solid #fff; border-radius: 40px; padding: 25px; }
-        .banner-yellow { background: #ffea00; border-radius: 50px; padding: 15px; text-align: center; color: #000; font-weight: 900; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .profile-container { background: white; width: 100%; max-width: 480px; border-radius: 40px; border: 3px solid #000; overflow: hidden; box-shadow: 12px 12px 0px rgba(0,0,0,0.1); position: relative; }
+        .top-yellow { background: #ffea00; height: 120px; border-bottom: 3px solid #000; position: relative; display: flex; justify-content: center; }
+        .avatar-frame { width: 110px; height: 110px; background: #fff; border: 4px solid #000; border-radius: 30px; position: absolute; bottom: -55px; overflow: hidden; }
+        .gender-switch { margin-top: 70px; display: flex; justify-content: center; }
+        .switch-btn { background: #000; color: #fff; border-radius: 50px; padding: 6px 25px; font-weight: 900; font-size: 13px; display: flex; gap: 15px; border: 2px solid #000; cursor: pointer; }
+        .pass-area { margin: 10px 25px 30px; border: 3px solid #000; border-radius: 35px; padding: 35px 20px 20px; position: relative; background: #fff; }
+        .pass-header { background: #000; color: #fff; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); padding: 6px 35px; border-radius: 18px; font-size: 11px; font-weight: 900; white-space: nowrap; font-style: italic; }
+        .neo-input { width: 100%; border: 2px solid #000; border-radius: 15px; padding: 12px; margin-bottom: 15px; outline: none; font-size: 13px; text-align: right; font-weight: 700; background: #f9f9f9; }
+        .btn-action { background: #ffea00; border: 2px solid #000; border-radius: 18px; padding: 14px; width: 100%; font-weight: 900; font-size: 16px; box-shadow: 5px 5px 0px #000; cursor: pointer; }
     </style>
 </head>
-<body class="p-4">
-    <header class="flex justify-between items-center mb-8">
-        <button class="w-12 h-12 bg-blue-600 border-2 border-white rounded-xl flex items-center justify-center"><i class="fas fa-bars"></i></button>
-        
-        <a href="profile.html" class="flex items-center gap-3">
-            <div class="text-right">
-                <p id="nav-username" class="text-xs font-black italic">User</p>
-            </div>
-            <div class="w-12 h-12 border-2 border-white rounded-xl overflow-hidden bg-white">
-                <img id="nav-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
-            </div>
-        </a>
-    </header>
+<body>
 
-    <div class="banner-yellow mb-6">تـنـفـيـذ طـلـب</div>
-    <div class="card-neo">
-        <p class="text-center font-bold">مرحباً بك في واجهة الطلبات</p>
+    <button onclick="window.location.href='index.html'" class="mb-6 font-black text-sm self-start mr-[10%]">رجوع ←</button>
+
+    <div class="profile-container text-black">
+        <div class="top-yellow">
+            <div class="avatar-frame">
+                <img id="main-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
+            </div>
+        </div>
+        
+        <div class="gender-switch" onclick="toggleGender()">
+            <div class="switch-btn"><span id="m-lab">♂ ذكر</span> | <span id="f-lab" style="opacity:0.3">♀ أنثى</span></div>
+        </div>
+
+        <div class="flex gap-3 px-6 mt-8">
+            <input type="text" id="username-input" placeholder="تغيير الإسم" class="flex-1 border-2 border-black rounded-xl p-2 text-center text-xs font-bold outline-none">
+            <div class="flex-1 border-2 border-black rounded-xl p-3 text-center bg-white"><span id="email-display" class="font-bold text-[10px] text-slate-500">example@mail.com</span></div>
+        </div>
+
+        <div class="pass-area">
+            <div class="pass-header italic">Servemaroc Update</div>
+            <input type="password" id="p1" placeholder="كلمة السر الحالية" class="neo-input">
+            <input type="password" id="p2" placeholder="كلمة السر الجديدة" class="neo-input">
+            <button onclick="saveAll()" class="btn-action">حفظ البيانات</button>
+        </div>
     </div>
 
     <script>
-        // كود استخراج البيانات من الذاكرة
-        window.onload = function() {
-            const savedName = localStorage.getItem("username");
-            const savedAvatar = localStorage.getItem("avatar");
+        let isMale = true;
+        const maleImg = "https://i.ibb.co/LhCJ7SjR/image.png";
+        const femaleImg = "https://i.ibb.co/xqphDc46/image.png";
+
+        function toggleGender() {
+            isMale = !isMale;
+            document.getElementById('m-lab').style.opacity = isMale ? "1" : "0.3";
+            document.getElementById('f-lab').style.opacity = isMale ? "0.3" : "1";
+            document.getElementById('main-avatar').src = isMale ? maleImg : femaleImg;
+        }
+
+        function saveAll() {
+            const name = document.getElementById('username-input').value;
+            const avatar = document.getElementById('main-avatar').src;
             
-            if (savedName) document.getElementById("nav-username").innerText = savedName;
-            if (savedAvatar) document.getElementById("nav-avatar").src = savedAvatar;
+            // حفظ السمية والتصويرة في الذاكرة
+            if(name) localStorage.setItem("savedUsername", name);
+            localStorage.setItem("savedAvatar", avatar);
+            
+            alert("تم حفظ البيانات بنجاح! ✅");
+        }
+
+        // تحميل البيانات المحفوظة عند فتح الصفحة
+        window.onload = function() {
+            const savedName = localStorage.getItem("savedUsername");
+            const savedAvatar = localStorage.getItem("savedAvatar");
+            if(savedName) document.getElementById('username-input').value = savedName;
+            if(savedAvatar) {
+                document.getElementById('main-avatar').src = savedAvatar;
+                isMale = savedAvatar.includes("LhCJ7SjR");
+                document.getElementById('m-lab').style.opacity = isMale ? "1" : "0.3";
+                document.getElementById('f-lab').style.opacity = isMale ? "0.3" : "1";
+            }
         };
     </script>
 </body>
