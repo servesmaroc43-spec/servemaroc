@@ -2,225 +2,39 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMM Dashboard | Servemaroc</title>
+    <title>الرئيسية | Servemaroc</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* إعدادات الألوان المتغيرة */
-        :root { --bg: #f8fafc; --text: #000; --card: #fff; --border: #000; --input-bg: #f9f9f9; }
-        .dark { --bg: #000000; --text: #fff; --card: #121212; --border: #fff; --input-bg: #1e1e1e; }
-
-        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg); color: var(--text); transition: 0.3s ease; overflow-x: hidden; }
-        
-        /* Sidebar Design */
-        .sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: var(--card); z-index: 1000; transition: 0.3s ease; border-left: 3px solid var(--border); padding: 20px; }
-        .sidebar.active { right: 0; }
-        .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; display: none; }
-        .sidebar-overlay.active { display: block; }
-        
-        .sidebar-profile { background: rgba(0,0,0,0.05); padding: 15px; border-radius: 20px; border: 2px solid var(--border); margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
-        .dark .sidebar-profile { background: rgba(255,255,255,0.05); }
-
-        .menu-item { display: flex; align-items: center; gap: 15px; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 5px; }
-        .menu-item:hover, .menu-item.active { background: #4f70ff; color: white; }
-
-        /* Main Dashboard Cards */
-        .card-neo { background: var(--card); border: 3px solid var(--border); border-radius: 30px; padding: 20px; margin-bottom: 20px; box-shadow: 6px 6px 0px var(--border); }
-        .banner-yellow { background: #ffea00; border: 3px solid #000; border-radius: 30px; padding: 25px; text-align: center; margin-bottom: 20px; color: #000; }
-        
-        /* تصميم مفتاح الدارك مود - مستطيل أبيض دائم */
-        .dark-mode-container { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-        .toggle-track { width: 44px; height: 22px; background: #fff; border-radius: 50px; border: 2px solid #000; position: relative; transition: 0.3s; }
-        .dark .toggle-track { border-color: #fff; }
-        .toggle-ball { width: 14px; height: 14px; background: #000; border-radius: 50%; position: absolute; top: 2px; right: 2px; transition: 0.3s; }
-        .dark .toggle-ball { right: 24px; background: #4f70ff; }
-
-        /* Profile Screen Design */
-        #profile-screen { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
-        .profile-container { background: var(--card); width: 100%; max-width: 480px; border-radius: 40px; border: 3px solid var(--border); overflow: hidden; box-shadow: 12px 12px 0px rgba(0,0,0,0.1); position: relative; }
-        .top-yellow { background: #ffea00; height: 120px; border-bottom: 3px solid #000; position: relative; display: flex; justify-content: center; }
-        .avatar-frame { width: 110px; height: 110px; background: #fff; border: 4px solid #000; border-radius: 30px; position: absolute; bottom: -55px; overflow: hidden; }
-        
-        .gender-switch { margin-top: 70px; display: flex; justify-content: center; }
-        .switch-btn { background: #000; color: #fff; border-radius: 50px; padding: 6px 25px; font-weight: 900; font-size: 13px; display: flex; gap: 15px; border: 2px solid #000; cursor: pointer; }
-        .dark .switch-btn { background: #fff; color: #000; border-color: #fff; }
-
-        .neo-input { width: 100%; border: 2px solid var(--border); border-radius: 15px; padding: 12px; margin-bottom: 15px; outline: none; font-size: 13px; text-align: right; font-weight: 700; background: var(--input-bg); color: var(--text); }
-        .btn-action { background: #ffea00; border: 2px solid #000; border-radius: 18px; padding: 14px; width: 100%; font-weight: 900; font-size: 16px; box-shadow: 5px 5px 0px #000; cursor: pointer; color: #000; }
+        body { background-color: #000; color: #fff; font-family: 'Tajawal', sans-serif; }
+        .card-neo { background: #121212; border: 3px solid #fff; border-radius: 40px; padding: 25px; }
+        .banner-yellow { background: #ffea00; border-radius: 50px; padding: 15px; text-align: center; color: #000; font-weight: 900; }
+        .neo-input { width: 100%; border: 2px solid #fff; border-radius: 20px; padding: 12px; margin-bottom: 8px; background: #1e1e1e; color: #fff; text-align: right; }
+        .limit-label { font-size: 12px; font-weight: 900; color: #55acee; text-align: center; display: block; margin-bottom: 20px; }
     </style>
 </head>
-<body>
+<body class="p-4">
+    <header class="flex justify-between mb-8">
+        <button class="w-12 h-12 bg-blue-600 border-2 border-white rounded-xl"><i class="fas fa-bars"></i></button>
+        <a href="profile.html" class="w-12 h-12 border-2 border-white rounded-xl overflow-hidden bg-white">
+            <img src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
+        </a>
+    </header>
 
-    <div class="sidebar-overlay" id="overlay" onclick="toggleMenu()"></div>
-    
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-profile">
-            <div class="w-12 h-12 rounded-xl border-2 border-black overflow-hidden bg-white">
-                <img id="side-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
-            </div>
-            <div>
-                <p id="side-name" class="text-sm font-black italic">مستخدم</p>
-                <p class="text-[9px] text-blue-600 font-bold">الحساب النشط</p>
-            </div>
+    <div class="banner-yellow mb-6">تـنـفـيـذ طـلـب</div>
+
+    <div class="card-neo">
+        <div class="grid grid-cols-4 gap-3 mb-6">
+            <div class="border-2 border-white h-14 rounded-2xl flex items-center justify-center"><i class="fab fa-youtube"></i></div>
+            <div class="border-2 border-white h-14 rounded-2xl flex items-center justify-center bg-[#ffea00] text-black"><i class="fab fa-facebook-f"></i></div>
+            <div class="border-2 border-white h-14 rounded-2xl flex items-center justify-center"><i class="fab fa-tiktok"></i></div>
+            <div class="border-2 border-white h-14 rounded-2xl flex items-center justify-center"><i class="fab fa-instagram"></i></div>
         </div>
-
-        <nav>
-            <div class="menu-item active" onclick="toggleMenu()"><i class="fas fa-cart-plus"></i> طلب جديد</div>
-            <div class="menu-item" onclick="openProfile()"><i class="fas fa-user-cog"></i> إعدادات الحساب</div>
-        </nav>
-
-        <div class="absolute bottom-10 left-0 right-0 px-6">
-             <div class="flex items-center gap-3 border-t pt-4">
-                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white font-black border-2 border-black">S</div>
-                <span class="font-black">Servemaroc</span>
-            </div>
-        </div>
-    </aside>
-
-    <div id="main-screen" class="p-4 max-w-[500px] mx-auto">
-        <header class="flex justify-between items-center bg-white dark:bg-[#1a1a1a] p-3 rounded-2xl border-2 border-black mb-6 transition-all">
-            <div class="flex items-center gap-3">
-                <button onclick="toggleMenu()" class="w-10 h-10 bg-blue-600 text-white rounded-xl border-2 border-black shadow-md flex items-center justify-center"><i class="fas fa-bars"></i></button>
-                <div class="dark-mode-container" onclick="toggleDarkMode()">
-                    <div class="toggle-track"><div class="toggle-ball"></div></div>
-                </div>
-            </div>
-            
-            <div class="flex items-center gap-3 cursor-pointer" onclick="openProfile()">
-                <div class="text-right">
-                    <p id="nav-name" class="text-xs font-black italic">جاري التحميل...</p>
-                    <p class="text-[8px] text-green-500 font-bold uppercase">متصل الآن</p>
-                </div>
-                <div class="w-10 h-10 rounded-xl border-2 border-black overflow-hidden bg-white">
-                    <img id="nav-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
-                </div>
-            </div>
-        </header>
-
-        <div class="banner-yellow">
-            <h1 class="text-xl font-black italic">في Smmcpan!</h1> 
-            <p class="text-[10px] font-bold mt-2">أفضل الحلول السريعة لتسويق حساباتكم.</p>
-        </div>
-
-        <div class="card-neo text-center">
-            <p class="mb-4 font-bold">مرحباً بكم مجدداً في لوحة التحكم</p>
-            <button class="w-full bg-yellow-400 border-2 border-black rounded-2xl p-4 font-black shadow-[5px_5px_0px_#000] active:translate-y-1 transition-all text-black">تأكيد الطلب الآن</button>
-        </div>
+        <select class="neo-input"><option>فيسبوك خدمة 15</option></select>
+        <input type="text" placeholder="رابط الخدمة" class="neo-input">
+        <input type="number" placeholder="الكمية المطلوبة" class="neo-input text-center mt-2">
+        <span class="limit-label">الحد الأدنى: 100 | الحد الأقصى: 10000000</span>
+        <button class="w-full bg-blue-600 border-2 border-white p-4 rounded-2xl font-black">إرسال الطلب</button>
     </div>
-
-    <div id="profile-screen">
-        <div class="w-full max-w-[480px]">
-            <button onclick="closeProfile()" class="mb-6 font-black text-sm flex items-center gap-2">
-                رجوع <i class="fas fa-arrow-left"></i>
-            </button>
-            <div class="profile-container">
-                <div class="top-yellow">
-                    <div class="avatar-frame">
-                        <img id="main-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
-                    </div>
-                </div>
-                <div class="gender-switch" onclick="toggleGender()">
-                    <div class="switch-btn">
-                        <span id="m-lab" style="opacity: 1;">♂ ذكر</span>
-                        <span style="opacity: 0.2;">|</span>
-                        <span id="f-lab" style="opacity: 0.3;">♀ أنثى</span>
-                    </div>
-                </div>
-                <div class="flex gap-3 px-6 mt-8">
-                    <div class="flex-1 border-2 border-black rounded-xl p-3 text-center relative bg-white dark:bg-zinc-900 overflow-hidden">
-                        <span class="absolute -top-2 right-4 bg-yellow-400 border-2 border-black text-[8px] px-2 rounded font-black text-black">مستخدم</span>
-                        <span id="user-display" class="font-bold text-[10px] block truncate">--</span>
-                    </div>
-                    <div class="flex-1 border-2 border-black rounded-xl p-3 text-center relative bg-white dark:bg-zinc-900 overflow-hidden text-black">
-                        <span class="absolute -top-2 right-4 bg-white border-2 border-black text-[8px] px-2 rounded font-black italic uppercase">البريد</span>
-                        <span id="email-display" class="font-bold text-[9px] block truncate text-slate-500">--</span>
-                    </div>
-                </div>
-                <div class="p-6 mt-4">
-                    <input type="password" id="p1" placeholder="كلمة المرور الحالية" class="neo-input">
-                    <input type="password" id="p2" placeholder="كلمة المرور الجديدة" class="neo-input">
-                    <button onclick="handleUpdate()" class="btn-action">حفظ التغييرات</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let isMale = true;
-        const maleImg = "https://i.ibb.co/LhCJ7SjR/image.png"; 
-        const femaleImg = "https://i.ibb.co/xqphDc46/image.png"; 
-
-        const SCRIPT_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE";
-
-        function toggleMenu() { 
-            document.getElementById('sidebar').classList.toggle('active'); 
-            document.getElementById('overlay').classList.toggle('active'); 
-        }
-
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark');
-            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
-        }
-
-        function openProfile() { 
-            document.getElementById('profile-screen').style.display = 'flex';
-            document.getElementById('main-screen').style.display = 'none';
-        }
-
-        function closeProfile() { 
-            document.getElementById('profile-screen').style.display = 'none';
-            document.getElementById('main-screen').style.display = 'block';
-        }
-
-        function toggleGender() {
-            isMale = !isMale;
-            document.getElementById('m-lab').style.opacity = isMale ? "1" : "0.3";
-            document.getElementById('f-lab').style.opacity = isMale ? "0.3" : "1";
-            const currentImg = isMale ? maleImg : femaleImg;
-            document.getElementById('main-avatar').src = currentImg;
-            document.getElementById('nav-avatar').src = currentImg;
-            document.getElementById('side-avatar').src = currentImg;
-        }
-
-        window.onload = function() {
-            if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
-
-            const data = JSON.parse(localStorage.getItem("userSession"));
-            if (data) {
-                let name = data.username || data.email.split('@')[0];
-                let cleanName = name.charAt(0).toUpperCase() + name.slice(1);
-                document.getElementById("nav-name").innerText = cleanName;
-                document.getElementById("side-name").innerText = cleanName;
-                document.getElementById("user-display").innerText = cleanName;
-                document.getElementById("email-display").innerText = data.email || "بدون بريد";
-            }
-        };
-
-        async function handleUpdate() {
-            const oldP = document.getElementById('p1').value;
-            const newP = document.getElementById('p2').value;
-            const user = document.getElementById("user-display").innerText;
-            const email = document.getElementById("email-display").innerText;
-
-            if(!oldP || !newP) { alert("يرجى ملء جميع الحقول!"); return; }
-
-            const formData = new URLSearchParams();
-            formData.append("username", user);
-            formData.append("email", email);
-            formData.append("old_password", oldP);
-            formData.append("new_password", newP);
-
-            try {
-                await fetch(SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: formData });
-                alert("تم إرسال طلب التحديث بنجاح! ✅");
-                document.getElementById('p1').value = "";
-                document.getElementById('p2').value = "";
-            } catch (e) {
-                alert("حدث خطأ في الاتصال.");
-            }
-        }
-    </script>
 </body>
 </html>
