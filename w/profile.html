@@ -13,7 +13,7 @@
         .profile-card { background: var(--card); border: 4px solid var(--border); border-radius: 40px; padding: 25px; text-align: center; box-shadow: 10px 10px 0px rgba(0,0,0,0.1); }
         .gender-btn { background: #f0f0f0; border: 3px solid #000; border-radius: 20px; padding: 10px 20px; cursor: pointer; font-weight: 900; }
         .gender-active { background: #ffea00; box-shadow: 4px 4px 0px #000; }
-        .neo-input { width: 100%; border: 3px solid var(--border); border-radius: 15px; padding: 12px; margin-bottom: 12px; text-align: center; font-weight: 800; outline: none; background: #f9f9f9; }
+        .neo-input { width: 100%; border: 3px solid var(--border); border-radius: 15px; padding: 12px; margin-bottom: 12px; text-align: center; font-weight: 800; outline: none; background: #f9f9f9; color: #000; }
         .btn-update { background: #000; color: #fff; border-radius: 20px; padding: 15px; width: 100%; font-weight: 900; cursor: pointer; }
     </style>
 </head>
@@ -33,9 +33,13 @@
         <input type="text" id="new-name" placeholder="تغيير الإسم" class="neo-input">
         <input type="password" id="curr-pass" placeholder="كلمة السر الحالية" class="neo-input">
         <input type="password" id="new-pass" placeholder="كلمة السر الجديدة" class="neo-input">
-        <button onclick="saveProfile()" class="btn-update">تحديث البيانات</button>
+        <button id="update-btn" onclick="saveProfile()" class="btn-update">تحديث البيانات</button>
     </div>
+
     <script>
+        // ضع هنا رابط السكريبت (Deployment URL) الخاص بك
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzmLBaehYCohFuCOXqIhjcL-B7vfE-Yj28j7mgPfSxcYZgopOMppsu1XzHG1tp4BHxlMA/exec';
+
         function setGender(g) {
             localStorage.setItem("userGender", g);
             const img = g === 'ذكر' ? "https://i.ibb.co/JjSq6HVr/male.png" : "https://i.ibb.co/Z6hnKQFm/female.png";
@@ -44,16 +48,61 @@
             document.getElementById("btn-male").classList.toggle("gender-active", g === 'ذكر');
             document.getElementById("btn-female").classList.toggle("gender-active", g === 'أنثى');
         }
-        function saveProfile() {
+
+        async function saveProfile() {
+            const btn = document.getElementById("update-btn");
             const name = document.getElementById("new-name").value;
             const cp = document.getElementById("curr-pass").value;
             const np = document.getElementById("new-pass").value;
             const sp = localStorage.getItem("userPassword") || "123456";
-            if(cp !== "" && cp === sp) { localStorage.setItem("userPassword", np); alert("تم تغيير كلمة السر!"); }
-            if(name !== "") localStorage.setItem("savedUsername", name);
-            alert("تم الحفظ!");
+            const email = localStorage.getItem("savedEmail") || "hafidbel2004@gmail.com";
+
+            // تحديث الاسم في المتصفح
+            if(name !== "") {
+                localStorage.setItem("savedUsername", name);
+            }
+
+            // إذا أراد تغيير كلمة السر
+            if(cp !== "") {
+                if(cp === sp) {
+                    if(np.length >= 6) {
+                        btn.innerText = "جاري الحفظ في Sheets... ⏳";
+                        btn.disabled = true;
+
+                        try {
+                            // إرسال كلمة السر الجديدة للعمود F في Google Sheets
+                            await fetch(scriptURL, {
+                                method: 'POST',
+                                mode: 'no-cors',
+                                body: JSON.stringify({ 
+                                    email: email, 
+                                    name: name || localStorage.getItem("savedUsername"), 
+                                    newPass: np 
+                                })
+                            });
+
+                            localStorage.setItem("userPassword", np);
+                            alert("تم تحديث كلمة السر في المتصفح وفي Sheets بنجاح! ✅");
+                        } catch (error) {
+                            alert("حدث خطأ أثناء الإرسال لـ Sheets ❌");
+                        }
+                    } else {
+                        alert("كلمة السر الجديدة يجب أن تكون 6 أحرف على الأقل! ⚠️");
+                        return;
+                    }
+                } else {
+                    alert("كلمة السر الحالية خاطئة! ❌");
+                    return;
+                }
+            } else {
+                alert("تم حفظ الاسم بنجاح! ✨");
+            }
+
+            btn.innerText = "تحديث البيانات";
+            btn.disabled = false;
             window.location.href="index.html";
         }
+
         window.onload = function() {
             document.getElementById("new-name").value = localStorage.getItem("savedUsername") || "Hafid Youssef";
             setGender(localStorage.getItem("userGender") || "ذكر");
