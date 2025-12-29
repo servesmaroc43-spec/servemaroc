@@ -7,99 +7,42 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --bg: #ffffff;
-            --text: #000000;
-            --card: #ffffff;
-            --border: #000000;
-            --input-bg: #f9f9f9;
-        }
-
-        .dark-mode {
-            --bg: #000000;
-            --text: #ffffff;
-            --card: #121212;
-            --border: #ffffff;
-            --input-bg: #1e1e1e;
-        }
-
-        body { 
-            background-color: var(--bg); 
-            color: var(--text); 
-            transition: 0.4s ease; 
-            font-family: sans-serif; 
-        }
-
+        :root { --bg: #ffffff; --text: #000000; --card: #ffffff; --border: #000000; --input-bg: #f9f9f9; }
+        .dark-mode { --bg: #000000; --text: #ffffff; --card: #121212; --border: #ffffff; --input-bg: #1e1e1e; }
+        body { background-color: var(--bg); color: var(--text); transition: 0.4s ease; font-family: sans-serif; }
+        
         .header-container {
-            background: #ffffff !important; 
-            border: 3.5px solid #000;
-            border-radius: 25px;
-            padding: 8px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            color: #000 !important;
+            background: #ffffff !important; border: 3.5px solid #000; border-radius: 25px;
+            padding: 8px 15px; display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 25px; color: #000 !important;
         }
 
         .banner-yellow { 
-            background: #ffea00; 
-            border: 4px solid #000; 
-            border-radius: 25px; 
-            padding: 15px; 
-            text-align: center; 
-            color: #000; 
-            font-weight: 900; 
-            font-size: 1.3rem;
-            box-shadow: 0px 8px 0px #000;
-            margin-bottom: 30px;
+            background: #ffea00; border: 4px solid #000; border-radius: 25px; padding: 15px; 
+            text-align: center; color: #000; font-weight: 900; font-size: 1.3rem;
+            box-shadow: 0px 8px 0px #000; margin-bottom: 30px;
         }
 
         .card-neo { 
-            background: var(--card); 
-            border: 4.5px solid var(--border); 
-            border-radius: 45px; 
-            padding: 25px; 
-            box-shadow: 12px 12px 0px rgba(0,0,0,0.1);
+            background: var(--card); border: 4.5px solid var(--border); border-radius: 45px; 
+            padding: 25px; box-shadow: 12px 12px 0px rgba(0,0,0,0.1);
         }
 
         .neo-select, .neo-input { 
-            width: 100%; 
-            border: 3px solid var(--border); 
-            border-radius: 20px; 
-            padding: 15px; 
-            margin-bottom: 15px; 
-            background: var(--input-bg); 
-            color: var(--text); 
-            font-weight: 800;
-            text-align: right;
-            outline: none;
+            width: 100%; border: 3px solid var(--border); border-radius: 20px; 
+            padding: 15px; margin-bottom: 15px; background: var(--input-bg); 
+            color: var(--text); font-weight: 800; text-align: right; outline: none;
         }
 
         .btn-order { 
-            background: #1877f2; 
-            color: #fff; 
-            border: 3px solid var(--border); 
-            border-radius: 25px; 
-            padding: 18px; 
-            width: 100%; 
-            font-weight: 900; 
-            font-size: 1.2rem; 
-            box-shadow: 6px 6px 0px #000;
-            cursor: pointer;
-            transition: 0.2s;
+            background: #1877f2; color: #fff; border: 3px solid var(--border); 
+            border-radius: 25px; padding: 18px; width: 100%; font-weight: 900; 
+            font-size: 1.2rem; box-shadow: 6px 6px 0px #000; cursor: pointer; transition: 0.2s;
         }
 
         .btn-order:active { transform: translateY(4px); box-shadow: 2px 2px 0px #000; }
         .btn-order:disabled { background: #ccc; cursor: not-allowed; }
-
-        .limit-text {
-            color: #3b82f6;
-            font-size: 11px;
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 15px;
-        }
+        .limit-text { color: #3b82f6; font-size: 11px; font-weight: 900; text-align: center; margin-bottom: 15px; }
     </style>
 </head>
 <body class="p-4">
@@ -113,7 +56,6 @@
                 <i id="theme-icon" class="fas fa-moon text-black"></i>
             </div>
         </div>
-
         <div class="flex items-center gap-3">
             <div class="text-right">
                 <p id="nav-username" class="text-xs font-black italic">Loading...</p>
@@ -153,27 +95,46 @@
 
         <input type="text" id="link-input" placeholder="الرابط" class="neo-input">
         <input type="number" id="quantity-input" placeholder="الكمية" class="neo-input text-center">
-        
         <div id="limit-display" class="limit-text">الحد الأدنى: 100 | الحد الأقصى: 10,000</div>
-
         <button onclick="sendOrder()" class="btn-order">تأكيد الطلب</button>
     </div>
 
     <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzmLBaehYCohFuCOXqIhjcL-B7vfE-Yj28j7mgPfSxcYZgopOMppsu1XzHG1tp4BHxlMA/exec';
         const serviceLimits = [
-            { min: "100", max: "10,000" }, { min: "100", max: "100,000" }, { min: "10", max: "1,000,000" },
-            { min: "10", max: "30,000" }, { min: "10", max: "30,000" }, { min: "50", max: "1,000,000" },
-            { min: "10", max: "1,000,000" }, { min: "10", max: "500,000" }, { min: "20", max: "500,000" },
-            { min: "10", max: "500,000" }, { min: "10", max: "100,000" }, { min: "100", max: "2,147,483,647" },
-            { min: "100", max: "10,000" }, { min: "10", max: "50,000" }, { min: "100", max: "100,000,000" },
-            { min: "10", max: "1,000,000" }, { min: "10", max: "30,000" }, { min: "500", max: "15,000" }, { min: "500", max: "10,000" }
+            {min:"100",max:"10,000"}, {min:"100",max:"100,000"}, {min:"10",max:"1,000,000"}, {min:"10",max:"30,000"},
+            {min:"10",max:"30,000"}, {min:"50",max:"1,000,000"}, {min:"10",max:"1,000,000"}, {min:"10",max:"500,000"},
+            {min:"20",max:"500,000"}, {min:"10",max:"500,000"}, {min:"10",max:"100,000"}, {min:"100",max:"2,147,483,647"},
+            {min:"100",max:"10,000"}, {min:"10",max:"50,000"}, {min:"100",max:"100,000,000"}, {min:"10",max:"1,000,000"},
+            {min:"10",max:"30,000"}, {min:"500",max:"15,000"}, {min:"500",max:"10,000"}
         ];
 
         function updateLimits() {
             const index = document.getElementById("service-select").value;
-            const display = document.getElementById("limit-display");
             const data = serviceLimits[index];
-            display.innerText = `الحد الأدنى: ${data.min} | الحد الأقصى: ${data.max}`;
+            document.getElementById("limit-display").innerText = `الحد الأدنى: ${data.min} | الحد الأقصى: ${data.max}`;
+        }
+
+        async function sendOrder() {
+            const btn = document.querySelector('.btn-order');
+            const service = document.getElementById("service-select").options[document.getElementById("service-select").selectedIndex].text;
+            const link = document.getElementById("link-input").value;
+            const quantity = document.getElementById("quantity-input").value;
+            const email = "hafidbel2004@gmail.com";
+
+            if (!link || !quantity) { alert("عمر الخانات كاملة! ⚠️"); return; }
+            btn.innerText = "جاري الإرسال... ⏳"; btn.disabled = true;
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST', mode: 'no-cors',
+                    body: JSON.stringify({ email, service, link, quantity })
+                });
+                alert("تم إرسال طلبك بنجاح للورقة 2! ✅");
+                document.getElementById("link-input").value = "";
+                document.getElementById("quantity-input").value = "";
+            } catch (e) { alert("خطأ في الاتصال ❌"); }
+            finally { btn.innerText = "تأكيد الطلب"; btn.disabled = false; }
         }
 
         function toggleTheme() {
@@ -183,56 +144,11 @@
             document.getElementById('theme-icon').className = isDark ? 'fas fa-sun text-yellow-400' : 'fas fa-moon text-black';
         }
 
-        // --- وظيفة الربط مع Google Sheets ---
-        async function sendOrder() {
-            const btn = document.querySelector('.btn-order');
-            const serviceSelect = document.getElementById("service-select");
-            const serviceText = serviceSelect.options[serviceSelect.selectedIndex].text;
-            const linkVal = document.getElementById("link-input").value;
-            const quantityVal = document.getElementById("quantity-input").value;
-            const userEmail = "hafidbel2004@gmail.com"; // البريد الافتراضي
-
-            if (!linkVal || !quantityVal) {
-                alert("المرجو ملء جميع الخانات! ⚠️");
-                return;
-            }
-
-            btn.innerText = "جاري الإرسال... ⏳";
-            btn.disabled = true;
-
-            // استبدل هذا الرابط برابط الـ Web App الخاص بك من Google Apps Script
-            const scriptURL = 'ضع_رابط_SCRIPT_هنا';
-
-            try {
-                await fetch(scriptURL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    body: JSON.stringify({
-                        email: userEmail,
-                        service: serviceText,
-                        link: linkVal,
-                        quantity: quantityVal
-                    })
-                });
-
-                alert("تم إرسال طلبك بنجاح وسوف يظهر في Feuille 1! ✅");
-                document.getElementById("link-input").value = "";
-                document.getElementById("quantity-input").value = "";
-            } catch (error) {
-                alert("حدث خطأ أثناء الإرسال ❌");
-            } finally {
-                btn.innerText = "تأكيد الطلب";
-                btn.disabled = false;
-            }
-        }
-
         window.onload = function() {
             const savedName = localStorage.getItem("savedUsername") || "Hafid Youssef";
             const savedAvatar = localStorage.getItem("savedAvatar");
             document.getElementById("nav-username").innerText = savedName;
             if (savedAvatar) document.getElementById("nav-avatar").src = savedAvatar;
-
             if (localStorage.getItem('myTheme') === 'dark') {
                 document.body.classList.add('dark-mode');
                 document.getElementById('theme-icon').className = 'fas fa-sun text-yellow-400';
