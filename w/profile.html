@@ -3,84 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SMM Dashboard | Servemaroc</title>
+    <title>Servemaroc | البروفايل</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .profile-container { background: white; width: 100%; max-width: 480px; border-radius: 40px; border: 3px solid #000; overflow: hidden; box-shadow: 12px 12px 0px rgba(0,0,0,0.1); position: relative; }
-        .top-yellow { background: #ffea00; height: 120px; border-bottom: 3px solid #000; position: relative; display: flex; justify-content: center; }
-        .avatar-frame { width: 110px; height: 110px; background: #fff; border: 4px solid #000; border-radius: 30px; position: absolute; bottom: -55px; overflow: hidden; }
-        .gender-switch { margin-top: 70px; display: flex; justify-content: center; }
-        .switch-btn { background: #000; color: #fff; border-radius: 50px; padding: 6px 25px; font-weight: 900; font-size: 13px; display: flex; gap: 15px; border: 2px solid #000; cursor: pointer; }
-        .pass-area { margin: 10px 25px 30px; border: 3px solid #000; border-radius: 35px; padding: 35px 20px 20px; position: relative; background: #fff; }
-        .pass-header { background: #000; color: #fff; position: absolute; top: -18px; left: 50%; transform: translateX(-50%); padding: 6px 35px; border-radius: 18px; font-size: 11px; font-weight: 900; white-space: nowrap; font-style: italic; }
-        .neo-input { width: 100%; border: 2px solid #000; border-radius: 15px; padding: 12px; margin-bottom: 15px; outline: none; font-size: 13px; text-align: right; font-weight: 700; background: #f9f9f9; }
-        .btn-action { background: #ffea00; border: 2px solid #000; border-radius: 18px; padding: 14px; width: 100%; font-weight: 900; font-size: 16px; box-shadow: 5px 5px 0px #000; cursor: pointer; }
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --card: #ffffff;
+            --border: #000000;
+            --input-bg: #f9f9f9;
+        }
+
+        .dark-mode {
+            --bg: #000000;
+            --text: #ffffff;
+            --card: #121212;
+            --border: #ffffff;
+            --input-bg: #1e1e1e;
+        }
+
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            transition: 0.4s ease; 
+            font-family: sans-serif; 
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            font-weight: 900;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .profile-header {
+            background: #ffea00;
+            height: 140px;
+            border: 3.5px solid #000;
+            border-radius: 35px;
+            position: relative;
+            margin-bottom: 60px;
+            box-shadow: 8px 8px 0px #000;
+        }
+
+        .avatar-box {
+            position: absolute;
+            bottom: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            border: 3.5px solid #000;
+            border-radius: 25px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .card-neo { 
+            background: var(--card); 
+            border: 3.5px solid var(--border); 
+            border-radius: 40px; 
+            padding: 25px; 
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+        }
+
+        .neo-input { 
+            width: 100%; 
+            border: 2.5px solid var(--border); 
+            border-radius: 18px; 
+            padding: 14px; 
+            margin-bottom: 15px; 
+            background: var(--input-bg); 
+            color: var(--text); 
+            text-align: center; 
+            font-weight: 800;
+            outline: none;
+        }
+
+        /* الجيميل يجي كبير */
+        .email-box {
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            border-width: 3px;
+        }
+
+        .btn-save { 
+            background: #ffea00; 
+            color: #000; 
+            border: 3.5px solid #000; 
+            border-radius: 20px; 
+            padding: 16px; 
+            width: 100%; 
+            font-weight: 900; 
+            font-size: 1.2rem; 
+            box-shadow: 6px 6px 0px #000;
+        }
+
+        .gender-select {
+            background: #000;
+            color: #fff;
+            border-radius: 20px;
+            padding: 8px 25px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
     </style>
 </head>
-<body>
+<body class="p-4">
 
-    <button onclick="window.location.href='index.html'" class="mb-6 font-black text-sm self-start mr-[10%]">رجوع ←</button>
+    <a href="index.html" class="back-link">
+        العودة <i class="fas fa-arrow-left"></i>
+    </a>
 
-    <div class="profile-container text-black">
-        <div class="top-yellow">
-            <div class="avatar-frame">
-                <img id="main-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
-            </div>
-        </div>
-        
-        <div class="gender-switch" onclick="toggleGender()">
-            <div class="switch-btn"><span id="m-lab">♂ ذكر</span> | <span id="f-lab" style="opacity:0.3">♀ أنثى</span></div>
-        </div>
-
-        <div class="flex gap-3 px-6 mt-8">
-            <input type="text" id="username-input" placeholder="تغيير الإسم" class="flex-1 border-2 border-black rounded-xl p-2 text-center text-xs font-bold outline-none">
-            <div class="flex-1 border-2 border-black rounded-xl p-3 text-center bg-white"><span id="email-display" class="font-bold text-[10px] text-slate-500">example@mail.com</span></div>
-        </div>
-
-        <div class="pass-area">
-            <div class="pass-header italic">Servemaroc Update</div>
-            <input type="password" id="p1" placeholder="كلمة السر الحالية" class="neo-input">
-            <input type="password" id="p2" placeholder="كلمة السر الجديدة" class="neo-input">
-            <button onclick="saveAll()" class="btn-action">حفظ البيانات</button>
+    <div class="profile-header">
+        <div class="avatar-box">
+            <img id="profile-img" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
         </div>
     </div>
 
+    <div class="flex justify-center">
+        <div class="gender-select">
+            <span onclick="setGender('male')" class="cursor-pointer opacity-50" id="m-btn">♂ ذكر</span>
+            <span>|</span>
+            <span onclick="setGender('female')" class="cursor-pointer opacity-50" id="f-btn">♀ أنثى</span>
+        </div>
+    </div>
+
+    <div class="card-neo">
+        <input type="email" value="hafidbel2004@gmail.com" class="neo-input email-box mb-6" readonly>
+        
+        <div class="relative mb-6">
+            <hr class="border-t-2 border-dashed border-gray-400">
+            <span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black text-white px-4 py-1 rounded-full text-[10px] italic font-black">Servemaroc Update</span>
+        </div>
+
+        <input type="password" id="current-pass" placeholder="كلمة المرور الحالية" class="neo-input">
+        <input type="password" id="new-pass" placeholder="كلمة المرور الجديدة" class="neo-input">
+
+        <button onclick="saveData()" class="btn-save active:translate-y-1 transition-transform">حفظ البيانات</button>
+    </div>
+
     <script>
-        let isMale = true;
-        const maleImg = "https://i.ibb.co/LhCJ7SjR/image.png";
-        const femaleImg = "https://i.ibb.co/xqphDc46/image.png";
+        function setGender(type) {
+            const img = document.getElementById('profile-img');
+            const mBtn = document.getElementById('m-btn');
+            const fBtn = document.getElementById('f-btn');
 
-        function toggleGender() {
-            isMale = !isMale;
-            document.getElementById('m-lab').style.opacity = isMale ? "1" : "0.3";
-            document.getElementById('f-lab').style.opacity = isMale ? "0.3" : "1";
-            document.getElementById('main-avatar').src = isMale ? maleImg : femaleImg;
+            if(type === 'male') {
+                img.src = "https://i.ibb.co/wZ6S6S0X/image.png"; 
+                mBtn.style.opacity = "1";
+                fBtn.style.opacity = "0.5";
+            } else {
+                img.src = "https://i.ibb.co/LhCJ7SjR/image.png"; 
+                fBtn.style.opacity = "1";
+                mBtn.style.opacity = "0.5";
+            }
+            localStorage.setItem('savedAvatar', img.src);
         }
 
-        function saveAll() {
-            const name = document.getElementById('username-input').value;
-            const avatar = document.getElementById('main-avatar').src;
-            
-            // حفظ السمية والتصويرة في الذاكرة
-            if(name) localStorage.setItem("savedUsername", name);
-            localStorage.setItem("savedAvatar", avatar);
-            
-            alert("تم حفظ البيانات بنجاح! ✅");
+        function saveData() {
+            const newPass = document.getElementById('new-pass').value;
+            if(newPass) {
+                localStorage.setItem('userPassword', newPass); // حفظ كلمة السر
+                alert('تم تحديث البيانات بنجاح! ✅');
+            } else {
+                alert('المرجو إدخال كلمة المرور الجديدة');
+            }
         }
 
-        // تحميل البيانات المحفوظة عند فتح الصفحة
         window.onload = function() {
-            const savedName = localStorage.getItem("savedUsername");
+            if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+            
             const savedAvatar = localStorage.getItem("savedAvatar");
-            if(savedName) document.getElementById('username-input').value = savedName;
-            if(savedAvatar) {
-                document.getElementById('main-avatar').src = savedAvatar;
-                isMale = savedAvatar.includes("LhCJ7SjR");
-                document.getElementById('m-lab').style.opacity = isMale ? "1" : "0.3";
-                document.getElementById('f-lab').style.opacity = isMale ? "0.3" : "1";
+            if (savedAvatar) {
+                document.getElementById("profile-img").src = savedAvatar;
+                if(savedAvatar.includes("wZ6S6S0X")) {
+                    document.getElementById('m-btn').style.opacity = "1";
+                } else {
+                    document.getElementById('f-btn').style.opacity = "1";
+                }
             }
         };
     </script>
