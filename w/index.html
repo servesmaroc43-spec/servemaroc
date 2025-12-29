@@ -37,11 +37,9 @@
         .btn-order { 
             background: #1877f2; color: #fff; border: 3px solid var(--border); 
             border-radius: 25px; padding: 18px; width: 100%; font-weight: 900; 
-            font-size: 1.2rem; box-shadow: 6px 6px 0px #000; cursor: pointer; transition: 0.2s;
+            font-size: 1.2rem; box-shadow: 6px 6px 0px #000; cursor: pointer;
         }
 
-        .btn-order:active { transform: translateY(4px); box-shadow: 2px 2px 0px #000; }
-        .btn-order:disabled { background: #ccc; cursor: not-allowed; }
         .limit-text { color: #3b82f6; font-size: 11px; font-weight: 900; text-align: center; margin-bottom: 15px; }
     </style>
 </head>
@@ -70,48 +68,77 @@
     <div class="banner-yellow">تـنـفـيـذ طـلـب</div>
 
     <div class="card-neo">
-        <label class="block text-right mb-2 font-black text-xs">إختر الخدمة :</label>
-        <select id="service-select" class="neo-select shadow-sm" onchange="updateLimits()">
-            <option value="0">🔵 فيسبوك - المتابعون [ بيانات البوت ] [الأرخص NEW]</option>
-            <option value="1">🔵 فيسبوك - متابعون [ جودة بوت ]</option>
-            <option value="2">🔵 فيسبوك - عدد المتابعين حقيقي ]</option>
-            <option value="3">🔵 فيسبوك - ردود الفعل على المنشورات [ أسماء إنجليزية ]</option>
-            <option value="4">🔵 فيسبوك - الخدمات [الأسماء الإنجليزية ]</option>
-            <option value="5">🔵 فيسبوك - المتابعون</option>
-            <option value="6">🔵 فيسبوك - إعجابات الصفحة + المتابعين [الأرخص NEW]</option>
-            <option value="7">🔵 فيسبوك - عدد الإعجابات والمتابعين</option>
-            <option value="8">🔵 فيسبوك - الإعجابات على المنشورات</option>
-            <option value="9">🔵 فيسبوك - ردود الفعل على المنشورات رخيصة ]</option>
-            <option value="10">🔵 فيسبوك - ردود الفعل على المنشآت</option>
-            <option value="11">🔵 فيسبوك - المشاهدات</option>
-            <option value="12">🔵 فيسبوك - مشاهدات القصص</option>
-            <option value="13">🔵 فيسبوك - ردود الفعل على القصة</option>
-            <option value="14">🔵 فيسبوك - مشاركة المنشور</option>
-            <option value="15">🔵 فيسبوك - أعضاء المجموعة</option>
-            <option value="16">🔵 فيسبوك - مشاهدات مباشرة</option>
-            <option value="17">🔵 فيسبوك - خدمات الفلبين | حقيقي]</option>
-            <option value="18">🔵 فيسبوك - خدمات الفلبين | عالية ]</option>
+        <label class="block text-right mb-1 font-black text-xs">إختر المنصة :</label>
+        <select id="platform-select" class="neo-select" onchange="loadServices()">
+            <option value="fb">فيسبوك - Facebook</option>
+            <option value="ig">إنستغرام - Instagram</option>
         </select>
+
+        <label class="block text-right mb-1 font-black text-xs">إختر الخدمة :</label>
+        <select id="service-select" class="neo-select shadow-sm" onchange="updateLimits()">
+            </select>
 
         <input type="text" id="link-input" placeholder="الرابط" class="neo-input">
         <input type="number" id="quantity-input" placeholder="الكمية" class="neo-input text-center">
-        <div id="limit-display" class="limit-text">الحد الأدنى: 100 | الحد الأقصى: 10,000</div>
+        <div id="limit-display" class="limit-text">الحد الأدنى: -- | الحد الأقصى: --</div>
         <button onclick="sendOrder()" class="btn-order">تأكيد الطلب</button>
     </div>
 
     <script>
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzmLBaehYCohFuCOXqIhjcL-B7vfE-Yj28j7mgPfSxcYZgopOMppsu1XzHG1tp4BHxlMA/exec';
-        const serviceLimits = [
-            {min:"100",max:"10,000"}, {min:"100",max:"100,000"}, {min:"10",max:"1,000,000"}, {min:"10",max:"30,000"},
-            {min:"10",max:"30,000"}, {min:"50",max:"1,000,000"}, {min:"10",max:"1,000,000"}, {min:"10",max:"500,000"},
-            {min:"20",max:"500,000"}, {min:"10",max:"500,000"}, {min:"10",max:"100,000"}, {min:"100",max:"2,147,483,647"},
-            {min:"100",max:"10,000"}, {min:"10",max:"50,000"}, {min:"100",max:"100,000,000"}, {min:"10",max:"1,000,000"},
-            {min:"10",max:"30,000"}, {min:"500",max:"15,000"}, {min:"500",max:"10,000"}
-        ];
+        
+        const servicesData = {
+            fb: [
+                { name: "🔵 فيسبوك - المتابعون [ بيانات البوت ]", min: "100", max: "10,000" },
+                { name: "🔵 فيسبوك - متابعون [ جودة بوت ]", min: "100", max: "100,000" },
+                { name: "🔵 فيسبوك - عدد المتابعين حقيقي", min: "10", max: "1,000,000" },
+                { name: "🔵 فيسبوك - ردود الفعل [ أسماء إنجليزية ]", min: "10", max: "30,000" },
+                { name: "🔵 فيسبوك - الخدمات [الأسماء الإنجليزية ]", min: "10", max: "30,000" },
+                { name: "🔵 فيسبوك - المتابعون", min: "50", max: "1,000,000" },
+                { name: "🔵 فيسبوك - إعجابات الصفحة + المتابعين", min: "10", max: "1,000,000" },
+                { name: "🔵 فيسبوك - عدد الإعجابات والمتابعين", min: "10", max: "500,000" },
+                { name: "🔵 فيسبوك - الإعجابات على المنشورات", min: "20", max: "500,000" },
+                { name: "🔵 فيسبوك - ردود الفعل رخيصة", min: "10", max: "500,000" },
+                { name: "🔵 فيسبوك - ردود الفعل على المنشآت", min: "10", max: "100,000" },
+                { name: "🔵 فيسبوك - المشاهدات", min: "100", max: "2,147,483,647" },
+                { name: "🔵 فيسبوك - مشاهدات القصص", min: "100", max: "10,000" },
+                { name: "🔵 فيسبوك - ردود الفعل على القصة", min: "10", max: "50,000" },
+                { name: "🔵 فيسبوك - مشاركة المنشور", min: "100", max: "100,000,000" },
+                { name: "🔵 فيسبوك - أعضاء المجموعة", min: "10", max: "1,000,000" },
+                { name: "🔵 فيسبوك - مشاهدات مباشرة", min: "10", max: "30,000" },
+                { name: "🔵 فيسبوك - خدمات الفلبين | حقيقي", min: "500", max: "15,000" },
+                { name: "🔵 فيسبوك - خدمات الفلبين | عالية", min: "500", max: "10,000" }
+            ],
+            ig: [
+                { name: "📸 إنستغرام - المتابعون", min: "10", max: "5,000,000" },
+                { name: "📸 إنستغرام - المتابعون [حسابات قديمة]", min: "10", max: "5,000,000" },
+                { name: "📸 إنستغرام - الإعجابات", min: "10", max: "500,000" },
+                { name: "📸 إنستغرام - عدد المشاهدات", min: "100", max: "2,147,483,647" },
+                { name: "📸 إنستغرام - يحفظ", min: "10", max: "400,000" },
+                { name: "📸 إنستغرام - التعليقات", min: "10", max: "10,000" },
+                { name: "📸 إنستغرام - مشاهدات القصص", min: "100", max: "200,000" },
+                { name: "📸 إنستجرام - الإعجابات الجديدة", min: "100", max: "50,000" },
+                { name: "📸 إنستغرام - مشاهدات مباشرة", min: "5", max: "5,000" }
+            ]
+        };
+
+        function loadServices() {
+            const platform = document.getElementById("platform-select").value;
+            const serviceSelect = document.getElementById("service-select");
+            serviceSelect.innerHTML = "";
+            servicesData[platform].forEach((service, index) => {
+                const opt = document.createElement("option");
+                opt.value = index;
+                opt.innerText = service.name;
+                serviceSelect.appendChild(opt);
+            });
+            updateLimits();
+        }
 
         function updateLimits() {
+            const platform = document.getElementById("platform-select").value;
             const index = document.getElementById("service-select").value;
-            const data = serviceLimits[index];
+            const data = servicesData[platform][index];
             document.getElementById("limit-display").innerText = `الحد الأدنى: ${data.min} | الحد الأقصى: ${data.max}`;
         }
 
@@ -120,7 +147,7 @@
             const service = document.getElementById("service-select").options[document.getElementById("service-select").selectedIndex].text;
             const link = document.getElementById("link-input").value;
             const quantity = document.getElementById("quantity-input").value;
-            const email = "hafidbel2004@gmail.com";
+            const email = localStorage.getItem("savedEmail") || "hafidbel2004@gmail.com";
 
             if (!link || !quantity) { alert("عمر الخانات كاملة! ⚠️"); return; }
             btn.innerText = "جاري الإرسال... ⏳"; btn.disabled = true;
@@ -130,7 +157,7 @@
                     method: 'POST', mode: 'no-cors',
                     body: JSON.stringify({ email, service, link, quantity })
                 });
-                alert("تم إرسال طلبك بنجاح للورقة 2! ✅");
+                alert("تم إرسال طلبك بنجاح! ✅");
                 document.getElementById("link-input").value = "";
                 document.getElementById("quantity-input").value = "";
             } catch (e) { alert("خطأ في الاتصال ❌"); }
@@ -153,7 +180,7 @@
                 document.body.classList.add('dark-mode');
                 document.getElementById('theme-icon').className = 'fas fa-sun text-yellow-400';
             }
-            updateLimits();
+            loadServices();
         };
     </script>
 </body>
