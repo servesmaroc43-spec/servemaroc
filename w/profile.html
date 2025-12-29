@@ -2,33 +2,98 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>الإعدادات | Servemaroc</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servemaroc | الإعدادات</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #fff; font-family: 'Tajawal', sans-serif; }
-        .profile-container { border: 4px solid #000; border-radius: 50px; overflow: hidden; max-width: 400px; margin: 40px auto; box-shadow: 10px 10px 0px #000; }
-        .yellow-header { background: #ffea00; height: 160px; border-bottom: 4px solid #000; position: relative; display: flex; justify-content: center; }
-        .avatar { width: 110px; height: 110px; border: 4px solid #000; border-radius: 30px; position: absolute; bottom: -55px; background: #fff; overflow: hidden; }
-        .input-p { width: 100%; border: 3px solid #000; border-radius: 20px; padding: 15px; margin-bottom: 15px; text-align: right; font-weight: 800; }
-        .btn-save { background: #ffea00; border: 4px solid #000; border-radius: 25px; width: 100%; padding: 18px; font-weight: 900; box-shadow: 6px 6px 0px #000; }
+        body { background-color: #fff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        
+        /* الكادر الرئيسي اللي فيه اللون الأصفر */
+        .profile-card { 
+            width: 90%; 
+            max-width: 400px; 
+            border: 4px solid #000; 
+            border-radius: 50px; 
+            overflow: hidden; 
+            background: #fff; 
+            box-shadow: 12px 12px 0px #000; /* الظل الأسود اللي في التصويرة */
+        }
+
+        .header-yellow { 
+            background: #ffea00; 
+            height: 140px; 
+            border-bottom: 4px solid #000; 
+            position: relative; 
+            display: flex; 
+            justify-content: center; 
+        }
+
+        /* صورة البروفايل (بنت ودري) */
+        .avatar-box { 
+            width: 110px; 
+            height: 110px; 
+            border: 4px solid #000; 
+            border-radius: 30px; 
+            position: absolute; 
+            bottom: -55px; 
+            background: #fff; 
+            overflow: hidden; 
+        }
+
+        .avatar-box img { width: 100%; height: 100%; object-cover: cover; }
+
+        .form-content { padding: 70px 25px 30px 25px; }
+
+        .input-style { 
+            width: 100%; 
+            border: 3px solid #000; 
+            border-radius: 18px; 
+            padding: 12px; 
+            margin-bottom: 12px; 
+            text-align: right; 
+            font-weight: 900; 
+            font-size: 14px;
+        }
+
+        .btn-save { 
+            background: #ffea00; 
+            border: 4px solid #000; 
+            border-radius: 22px; 
+            width: 100%; 
+            padding: 15px; 
+            font-weight: 900; 
+            font-size: 18px; 
+            box-shadow: 5px 5px 0px #000; 
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .back-link { font-weight: 900; color: #000; text-decoration: none; margin-bottom: 20px; align-self: flex-start; margin-right: 10%; }
     </style>
 </head>
-<body class="p-6">
-    <a href="index.html" class="font-black text-black block mb-4">← العودة</a>
-    <div class="profile-container">
-        <div class="yellow-header">
-            <div class="avatar"><img src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover"></div>
-        </div>
-        <div class="p-8 mt-14">
-            <div class="flex gap-3 mb-4">
-                <div class="flex-1 input-p bg-zinc-800 text-white border-black text-center">User</div>
-                <div class="flex-1 input-p text-gray-400 text-center">Email</div>
+<body>
+
+    <a href="index.html" class="back-link">← العودة</a>
+
+    <div class="profile-card">
+        <div class="header-yellow">
+            <div class="avatar-box">
+                <img src="https://i.ibb.co/LhCJ7SjR/image.png" alt="Avatar">
             </div>
-            <input type="password" placeholder="كلمة المرور الحالية" class="input-p">
-            <input type="password" placeholder="كلمة المرور الجديدة" class="input-p">
+        </div>
+
+        <div class="form-content text-center">
+            <div class="flex gap-2 mb-4">
+                <div class="flex-1 input-style bg-zinc-800 text-white border-black">User</div>
+                <div class="flex-1 input-style text-gray-400 border-gray-300">Email</div>
+            </div>
+            
+            <input type="password" placeholder="كلمة المرور الحالية" class="input-style">
+            <input type="password" placeholder="كلمة المرور الجديدة" class="input-style">
+            
             <button class="btn-save">حفظ البيانات</button>
         </div>
     </div>
+
 </body>
 </html>
-
