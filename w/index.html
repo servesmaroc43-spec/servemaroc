@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servemaroc | الرئيسية</title>
+    <title>Servemaroc | تنفيذ طلب</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* نظام الألوان للوضعين */
         :root {
             --bg: #ffffff;
             --text: #000000;
@@ -27,17 +26,15 @@
         body { 
             background-color: var(--bg); 
             color: var(--text); 
-            transition: 0.3s ease; 
+            transition: 0.4s ease; 
             font-family: sans-serif; 
-            overflow-x: hidden;
         }
 
-        /* الهيدر بستايل السكرين 13154 */
         .header-container {
-            background: #ffffff !important; /* كيبقى أبيض ديما بحال السكرين */
-            border: 3px solid #000;
+            background: #ffffff !important; 
+            border: 3.5px solid #000;
             border-radius: 25px;
-            padding: 10px 15px;
+            padding: 8px 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -45,107 +42,81 @@
             color: #000 !important;
         }
 
-        /* ديكور "تـنـفـيـذ طـلـب" المطور */
-        .banner-container {
-            perspective: 1000px;
-            margin-bottom: 30px;
-        }
-
         .banner-yellow { 
             background: #ffea00; 
             border: 4px solid #000; 
             border-radius: 25px; 
-            padding: 18px; 
+            padding: 15px; 
             text-align: center; 
             color: #000; 
             font-weight: 900; 
-            font-size: 1.4rem;
-            letter-spacing: 2px;
-            position: relative;
-            box-shadow: 0px 8px 0px #000; /* ظل صلب بحال البروفايل */
-            transform: rotateX(10deg);
-            transition: 0.3s ease;
+            font-size: 1.3rem;
+            box-shadow: 0px 8px 0px #000;
+            margin-bottom: 30px;
         }
 
-        .banner-yellow::before, .banner-yellow::after {
-            content: '⚡';
-            position: absolute;
-            font-size: 1.2rem;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .banner-yellow::before { right: 20px; }
-        .banner-yellow::after { left: 20px; }
-
-        /* كادر الطلب */
         .card-neo { 
             background: var(--card); 
-            border: 3px solid var(--border); 
-            border-radius: 40px; 
+            border: 4.5px solid var(--border); 
+            border-radius: 45px; 
             padding: 25px; 
-            box-shadow: 10px 10px 0px rgba(0,0,0,0.1);
+            box-shadow: 12px 12px 0px rgba(0,0,0,0.1);
         }
 
-        .neo-input { 
+        .neo-select, .neo-input { 
             width: 100%; 
             border: 3px solid var(--border); 
             border-radius: 20px; 
             padding: 15px; 
-            margin-bottom: 12px; 
+            margin-bottom: 15px; 
             background: var(--input-bg); 
             color: var(--text); 
-            text-align: right; 
             font-weight: 800;
+            text-align: right;
             outline: none;
         }
 
-        .limit-label { 
-            font-size: 11px; 
-            font-weight: 900; 
-            color: #55acee; 
-            text-align: center; 
-            display: block; 
-            margin-bottom: 15px; 
-        }
-
-        /* زر فيسبوك بستايل السكرين */
         .btn-order { 
             background: #1877f2; 
             color: #fff; 
             border: 3px solid var(--border); 
-            border-radius: 22px; 
-            padding: 16px; 
+            border-radius: 25px; 
+            padding: 18px; 
             width: 100%; 
             font-weight: 900; 
             font-size: 1.2rem; 
             box-shadow: 6px 6px 0px #000;
             cursor: pointer;
+            transition: 0.2s;
         }
 
-        .btn-order:active {
-            transform: translate(3px, 3px);
-            box-shadow: 2px 2px 0px #000;
-        }
+        .btn-order:active { transform: translateY(4px); box-shadow: 2px 2px 0px #000; }
+        .btn-order:disabled { background: #ccc; cursor: not-allowed; }
 
-        .theme-toggle { cursor: pointer; font-size: 1.4rem; color: #000; }
+        .limit-text {
+            color: #3b82f6;
+            font-size: 11px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body class="p-4">
 
     <div class="header-container shadow-[6px_6px_0px_#000]">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-3">
             <button class="w-10 h-10 bg-[#4f70ff] text-white rounded-xl border-2 border-black flex items-center justify-center">
                 <i class="fas fa-bars"></i>
             </button>
-            
-            <div class="theme-toggle w-10 h-10 flex items-center justify-center" onclick="toggleTheme()">
-                <i id="theme-icon" class="fas fa-moon"></i>
+            <div onclick="toggleTheme()" class="cursor-pointer text-xl">
+                <i id="theme-icon" class="fas fa-moon text-black"></i>
             </div>
         </div>
 
         <div class="flex items-center gap-3">
             <div class="text-right">
-                <p id="nav-username" class="text-xs font-black italic">...Loading</p>
+                <p id="nav-username" class="text-xs font-black italic">Loading...</p>
                 <span class="text-[9px] text-green-500 font-bold">ONLINE</span>
             </div>
             <a href="profile.html" class="w-11 h-11 border-2 border-black rounded-xl overflow-hidden bg-white">
@@ -154,54 +125,119 @@
         </div>
     </div>
 
-    <div class="banner-container">
-        <div class="banner-yellow">تـنـفـيـذ طـلـب</div>
-    </div>
+    <div class="banner-yellow">تـنـفـيـذ طـلـب</div>
 
     <div class="card-neo">
-        <select class="neo-input">
-            <option>🔵 فيسبوك - متابعين</option>
-            <option>🔵 فيسبوك - لايكات منشورات</option>
-            <option>🔵 فيسبوك - مشاهدات ريلز</option>
+        <label class="block text-right mb-2 font-black text-xs">إختر الخدمة :</label>
+        <select id="service-select" class="neo-select shadow-sm" onchange="updateLimits()">
+            <option value="0">🔵 فيسبوك - المتابعون [ بيانات البوت ] [الأرخص NEW]</option>
+            <option value="1">🔵 فيسبوك - متابعون [ جودة بوت ]</option>
+            <option value="2">🔵 فيسبوك - عدد المتابعين حقيقي ]</option>
+            <option value="3">🔵 فيسبوك - ردود الفعل على المنشورات [ أسماء إنجليزية ]</option>
+            <option value="4">🔵 فيسبوك - الخدمات [الأسماء الإنجليزية ]</option>
+            <option value="5">🔵 فيسبوك - المتابعون</option>
+            <option value="6">🔵 فيسبوك - إعجابات الصفحة + المتابعين [الأرخص NEW]</option>
+            <option value="7">🔵 فيسبوك - عدد الإعجابات والمتابعين</option>
+            <option value="8">🔵 فيسبوك - الإعجابات على المنشورات</option>
+            <option value="9">🔵 فيسبوك - ردود الفعل على المنشورات رخيصة ]</option>
+            <option value="10">🔵 فيسبوك - ردود الفعل على المنشآت</option>
+            <option value="11">🔵 فيسبوك - المشاهدات</option>
+            <option value="12">🔵 فيسبوك - مشاهدات القصص</option>
+            <option value="13">🔵 فيسبوك - ردود الفعل على القصة</option>
+            <option value="14">🔵 فيسبوك - مشاركة المنشور</option>
+            <option value="15">🔵 فيسبوك - أعضاء المجموعة</option>
+            <option value="16">🔵 فيسبوك - مشاهدات مباشرة</option>
+            <option value="17">🔵 فيسبوك - خدمات الفلبين | حقيقي]</option>
+            <option value="18">🔵 فيسبوك - خدمات الفلبين | عالية ]</option>
         </select>
 
-        <input type="text" placeholder="الرابط" class="neo-input">
+        <input type="text" id="link-input" placeholder="الرابط" class="neo-input">
+        <input type="number" id="quantity-input" placeholder="الكمية" class="neo-input text-center">
         
-        <input type="number" placeholder="الكمية" class="neo-input text-center">
-        <span class="limit-label">الحد الأدنى: 100 | الحد الأقصى: 1,000,000</span>
+        <div id="limit-display" class="limit-text">الحد الأدنى: 100 | الحد الأقصى: 10,000</div>
 
-        <button class="btn-order">تأكيد الطلب</button>
+        <button onclick="sendOrder()" class="btn-order">تأكيد الطلب</button>
     </div>
 
     <script>
-        // دالة تبديل الدارك مود
+        const serviceLimits = [
+            { min: "100", max: "10,000" }, { min: "100", max: "100,000" }, { min: "10", max: "1,000,000" },
+            { min: "10", max: "30,000" }, { min: "10", max: "30,000" }, { min: "50", max: "1,000,000" },
+            { min: "10", max: "1,000,000" }, { min: "10", max: "500,000" }, { min: "20", max: "500,000" },
+            { min: "10", max: "500,000" }, { min: "10", max: "100,000" }, { min: "100", max: "2,147,483,647" },
+            { min: "100", max: "10,000" }, { min: "10", max: "50,000" }, { min: "100", max: "100,000,000" },
+            { min: "10", max: "1,000,000" }, { min: "10", max: "30,000" }, { min: "500", max: "15,000" }, { min: "500", max: "10,000" }
+        ];
+
+        function updateLimits() {
+            const index = document.getElementById("service-select").value;
+            const display = document.getElementById("limit-display");
+            const data = serviceLimits[index];
+            display.innerText = `الحد الأدنى: ${data.min} | الحد الأقصى: ${data.max}`;
+        }
+
         function toggleTheme() {
-            const body = document.body;
-            const icon = document.getElementById('theme-icon');
-            body.classList.toggle('dark-mode');
-            
-            if (body.classList.contains('dark-mode')) {
-                icon.classList.replace('fa-moon', 'fa-sun');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                icon.classList.replace('fa-sun', 'fa-moon');
-                localStorage.setItem('theme', 'light');
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('myTheme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-icon').className = isDark ? 'fas fa-sun text-yellow-400' : 'fas fa-moon text-black';
+        }
+
+        // --- وظيفة الربط مع Google Sheets ---
+        async function sendOrder() {
+            const btn = document.querySelector('.btn-order');
+            const serviceSelect = document.getElementById("service-select");
+            const serviceText = serviceSelect.options[serviceSelect.selectedIndex].text;
+            const linkVal = document.getElementById("link-input").value;
+            const quantityVal = document.getElementById("quantity-input").value;
+            const userEmail = "hafidbel2004@gmail.com"; // البريد الافتراضي
+
+            if (!linkVal || !quantityVal) {
+                alert("المرجو ملء جميع الخانات! ⚠️");
+                return;
+            }
+
+            btn.innerText = "جاري الإرسال... ⏳";
+            btn.disabled = true;
+
+            // استبدل هذا الرابط برابط الـ Web App الخاص بك من Google Apps Script
+            const scriptURL = 'ضع_رابط_SCRIPT_هنا';
+
+            try {
+                await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-cache',
+                    body: JSON.stringify({
+                        email: userEmail,
+                        service: serviceText,
+                        link: linkVal,
+                        quantity: quantityVal
+                    })
+                });
+
+                alert("تم إرسال طلبك بنجاح وسوف يظهر في Feuille 1! ✅");
+                document.getElementById("link-input").value = "";
+                document.getElementById("quantity-input").value = "";
+            } catch (error) {
+                alert("حدث خطأ أثناء الإرسال ❌");
+            } finally {
+                btn.innerText = "تأكيد الطلب";
+                btn.disabled = false;
             }
         }
 
-        // جلب البيانات والحفاظ على الثيم عند التحميل
         window.onload = function() {
-            // جلب البيانات من localStorage
-            const savedName = localStorage.getItem("savedUsername");
+            const savedName = localStorage.getItem("savedUsername") || "Hafid Youssef";
             const savedAvatar = localStorage.getItem("savedAvatar");
-            if (savedName) document.getElementById("nav-username").innerText = savedName;
+            document.getElementById("nav-username").innerText = savedName;
             if (savedAvatar) document.getElementById("nav-avatar").src = savedAvatar;
 
-            // جلب الثيم المختار
-            if (localStorage.getItem('theme') === 'dark') {
+            if (localStorage.getItem('myTheme') === 'dark') {
                 document.body.classList.add('dark-mode');
-                document.getElementById('theme-icon').classList.replace('fa-moon', 'fa-sun');
+                document.getElementById('theme-icon').className = 'fas fa-sun text-yellow-400';
             }
+            updateLimits();
         };
     </script>
 </body>
