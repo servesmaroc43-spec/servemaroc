@@ -8,34 +8,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; overflow-x: hidden; color: #000; }
+        /* إعدادات الألوان المتغيرة */
+        :root { --bg: #f8fafc; --text: #000; --card: #fff; --border: #000; --input-bg: #f9f9f9; }
+        .dark { --bg: #000000; --text: #fff; --card: #121212; --border: #fff; --input-bg: #1e1e1e; }
+
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg); color: var(--text); transition: 0.3s ease; overflow-x: hidden; }
         
         /* Sidebar Design */
-        .sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: #fff; z-index: 1000; transition: 0.3s ease; border-left: 3px solid #000; padding: 20px; }
+        .sidebar { position: fixed; top: 0; right: -280px; width: 280px; height: 100%; background: var(--card); z-index: 1000; transition: 0.3s ease; border-left: 3px solid var(--border); padding: 20px; }
         .sidebar.active { right: 0; }
         .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; display: none; }
         .sidebar-overlay.active { display: block; }
         
-        /* Profile inside Sidebar */
-        .sidebar-profile { background: #f1f5f9; padding: 15px; border-radius: 20px; border: 2px solid #000; margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
+        .sidebar-profile { background: rgba(0,0,0,0.05); padding: 15px; border-radius: 20px; border: 2px solid var(--border); margin-bottom: 25px; display: flex; align-items: center; gap: 12px; }
+        .dark .sidebar-profile { background: rgba(255,255,255,0.05); }
 
         .menu-item { display: flex; align-items: center; gap: 15px; padding: 12px; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 5px; }
         .menu-item:hover, .menu-item.active { background: #4f70ff; color: white; }
 
         /* Main Dashboard Cards */
-        .card-neo { background: white; border: 3px solid #000; border-radius: 30px; padding: 20px; margin-bottom: 20px; box-shadow: 6px 6px 0px #000; }
-        .banner-yellow { background: #ffea00; border: 3px solid #000; border-radius: 30px; padding: 25px; text-align: center; margin-bottom: 20px; box-shadow: 6px 6px 0px rgba(0,0,0,0.1); }
+        .card-neo { background: var(--card); border: 3px solid var(--border); border-radius: 30px; padding: 20px; margin-bottom: 20px; box-shadow: 6px 6px 0px var(--border); }
+        .banner-yellow { background: #ffea00; border: 3px solid #000; border-radius: 30px; padding: 25px; text-align: center; margin-bottom: 20px; color: #000; }
         
+        /* تصميم مفتاح الدارك مود - مستطيل أبيض دائم */
+        .dark-mode-container { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .toggle-track { width: 44px; height: 22px; background: #fff; border-radius: 50px; border: 2px solid #000; position: relative; transition: 0.3s; }
+        .dark .toggle-track { border-color: #fff; }
+        .toggle-ball { width: 14px; height: 14px; background: #000; border-radius: 50%; position: absolute; top: 2px; right: 2px; transition: 0.3s; }
+        .dark .toggle-ball { right: 24px; background: #4f70ff; }
+
         /* Profile Screen Design */
-        #profile-screen { position: fixed; inset: 0; background: #f8fafc; z-index: 2000; display: none; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
-        .profile-container { background: white; width: 100%; max-width: 480px; border-radius: 40px; border: 3px solid #000; overflow: hidden; box-shadow: 12px 12px 0px rgba(0,0,0,0.1); position: relative; }
+        #profile-screen { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: none; flex-direction: column; align-items: center; padding: 20px; overflow-y: auto; }
+        .profile-container { background: var(--card); width: 100%; max-width: 480px; border-radius: 40px; border: 3px solid var(--border); overflow: hidden; box-shadow: 12px 12px 0px rgba(0,0,0,0.1); position: relative; }
         .top-yellow { background: #ffea00; height: 120px; border-bottom: 3px solid #000; position: relative; display: flex; justify-content: center; }
-        .avatar-frame { width: 110px; height: 110px; background: #fff; border: 4px solid #000; border-radius: 30px; position: absolute; bottom: -55px; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .avatar-frame { width: 110px; height: 110px; background: #fff; border: 4px solid #000; border-radius: 30px; position: absolute; bottom: -55px; overflow: hidden; }
+        
         .gender-switch { margin-top: 70px; display: flex; justify-content: center; }
         .switch-btn { background: #000; color: #fff; border-radius: 50px; padding: 6px 25px; font-weight: 900; font-size: 13px; display: flex; gap: 15px; border: 2px solid #000; cursor: pointer; }
-        
-        .neo-input { width: 100%; border: 2px solid #000; border-radius: 15px; padding: 12px; margin-bottom: 15px; outline: none; font-size: 13px; text-align: right; font-weight: 700; background: #f9f9f9; }
-        .btn-action { background: #ffea00; border: 2px solid #000; border-radius: 18px; padding: 14px; width: 100%; font-weight: 900; font-size: 16px; box-shadow: 5px 5px 0px #000; cursor: pointer; }
+        .dark .switch-btn { background: #fff; color: #000; border-color: #fff; }
+
+        .neo-input { width: 100%; border: 2px solid var(--border); border-radius: 15px; padding: 12px; margin-bottom: 15px; outline: none; font-size: 13px; text-align: right; font-weight: 700; background: var(--input-bg); color: var(--text); }
+        .btn-action { background: #ffea00; border: 2px solid #000; border-radius: 18px; padding: 14px; width: 100%; font-weight: 900; font-size: 16px; box-shadow: 5px 5px 0px #000; cursor: pointer; color: #000; }
     </style>
 </head>
 <body>
@@ -44,18 +57,18 @@
     
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-profile">
-            <div class="w-12 h-12 rounded-xl border-2 border-black overflow-hidden">
+            <div class="w-12 h-12 rounded-xl border-2 border-black overflow-hidden bg-white">
                 <img id="side-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
             </div>
             <div>
-                <p id="side-name" class="text-sm font-black italic">User</p>
+                <p id="side-name" class="text-sm font-black italic">مستخدم</p>
                 <p class="text-[9px] text-blue-600 font-bold">الحساب النشط</p>
             </div>
         </div>
 
         <nav>
-            <div class="menu-item active" onclick="toggleMenu()"><i class="fas fa-cart-plus"></i> New order</div>
-            <div class="menu-item" onclick="openProfile()"><i class="fas fa-user-cog"></i> Account Settings</div>
+            <div class="menu-item active" onclick="toggleMenu()"><i class="fas fa-cart-plus"></i> طلب جديد</div>
+            <div class="menu-item" onclick="openProfile()"><i class="fas fa-user-cog"></i> إعدادات الحساب</div>
         </nav>
 
         <div class="absolute bottom-10 left-0 right-0 px-6">
@@ -67,33 +80,39 @@
     </aside>
 
     <div id="main-screen" class="p-4 max-w-[500px] mx-auto">
-        <header class="flex justify-between items-center bg-white p-3 rounded-2xl border-2 border-black mb-6">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="openProfile()">
-                <div class="w-10 h-10 rounded-xl border-2 border-black overflow-hidden bg-indigo-50">
-                    <img id="nav-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
-                </div>
-                <div class="text-right">
-                    <p id="nav-name" class="text-xs font-black italic text-black">Loading...</p>
-                    <p class="text-[8px] text-green-500 font-bold uppercase">Online</p>
+        <header class="flex justify-between items-center bg-white dark:bg-[#1a1a1a] p-3 rounded-2xl border-2 border-black mb-6 transition-all">
+            <div class="flex items-center gap-3">
+                <button onclick="toggleMenu()" class="w-10 h-10 bg-blue-600 text-white rounded-xl border-2 border-black shadow-md flex items-center justify-center"><i class="fas fa-bars"></i></button>
+                <div class="dark-mode-container" onclick="toggleDarkMode()">
+                    <div class="toggle-track"><div class="toggle-ball"></div></div>
                 </div>
             </div>
-            <button onclick="toggleMenu()" class="w-10 h-10 bg-blue-600 text-white rounded-xl border-2 border-black shadow-md"><i class="fas fa-bars"></i></button>
+            
+            <div class="flex items-center gap-3 cursor-pointer" onclick="openProfile()">
+                <div class="text-right">
+                    <p id="nav-name" class="text-xs font-black italic">جاري التحميل...</p>
+                    <p class="text-[8px] text-green-500 font-bold uppercase">متصل الآن</p>
+                </div>
+                <div class="w-10 h-10 rounded-xl border-2 border-black overflow-hidden bg-white">
+                    <img id="nav-avatar" src="https://i.ibb.co/LhCJ7SjR/image.png" class="w-full h-full object-cover">
+                </div>
+            </div>
         </header>
 
         <div class="banner-yellow">
             <h1 class="text-xl font-black italic">في Smmcpan!</h1> 
-            <p class="text-[10px] font-bold mt-2">أفضل الحلول السريعة لتسويق حساباتك.</p>
+            <p class="text-[10px] font-bold mt-2">أفضل الحلول السريعة لتسويق حساباتكم.</p>
         </div>
 
         <div class="card-neo text-center">
-            <p class="mb-4 font-bold">مرحباً بك مرة أخرى في لوحة التحكم</p>
-            <button class="w-full bg-yellow-400 border-2 border-black rounded-2xl p-4 font-black shadow-[5px_5px_0px_#000] active:translate-y-1 active:shadow-none transition-all text-black">تأكيد الطلب الآن</button>
+            <p class="mb-4 font-bold">مرحباً بكم مجدداً في لوحة التحكم</p>
+            <button class="w-full bg-yellow-400 border-2 border-black rounded-2xl p-4 font-black shadow-[5px_5px_0px_#000] active:translate-y-1 transition-all text-black">تأكيد الطلب الآن</button>
         </div>
     </div>
 
     <div id="profile-screen">
         <div class="w-full max-w-[480px]">
-            <button onclick="closeProfile()" class="mb-6 font-black text-sm flex items-center gap-2 text-black">
+            <button onclick="closeProfile()" class="mb-6 font-black text-sm flex items-center gap-2">
                 رجوع <i class="fas fa-arrow-left"></i>
             </button>
             <div class="profile-container">
@@ -110,19 +129,19 @@
                     </div>
                 </div>
                 <div class="flex gap-3 px-6 mt-8">
-                    <div class="flex-1 border-2 border-black rounded-xl p-3 text-center relative bg-white overflow-hidden">
-                        <span class="absolute -top-2 right-4 bg-yellow-400 border-2 border-black text-[8px] px-2 rounded font-black">User</span>
-                        <span id="user-display" class="font-bold text-[10px] block truncate text-black">--</span>
+                    <div class="flex-1 border-2 border-black rounded-xl p-3 text-center relative bg-white dark:bg-zinc-900 overflow-hidden">
+                        <span class="absolute -top-2 right-4 bg-yellow-400 border-2 border-black text-[8px] px-2 rounded font-black text-black">مستخدم</span>
+                        <span id="user-display" class="font-bold text-[10px] block truncate">--</span>
                     </div>
-                    <div class="flex-1 border-2 border-black rounded-xl p-3 text-center relative bg-white overflow-hidden text-black">
-                        <span class="absolute -top-2 right-4 bg-white border-2 border-black text-[8px] px-2 rounded font-black italic uppercase">Email</span>
+                    <div class="flex-1 border-2 border-black rounded-xl p-3 text-center relative bg-white dark:bg-zinc-900 overflow-hidden text-black">
+                        <span class="absolute -top-2 right-4 bg-white border-2 border-black text-[8px] px-2 rounded font-black italic uppercase">البريد</span>
                         <span id="email-display" class="font-bold text-[9px] block truncate text-slate-500">--</span>
                     </div>
                 </div>
                 <div class="p-6 mt-4">
-                    <input type="password" id="p1" placeholder="كلمة السر الحالية" class="neo-input text-black">
-                    <input type="password" id="p2" placeholder="كلمة السر الجديدة" class="neo-input text-black">
-                    <button onclick="handleUpdate()" class="btn-action text-black">حفظ التغييرات</button>
+                    <input type="password" id="p1" placeholder="كلمة المرور الحالية" class="neo-input">
+                    <input type="password" id="p2" placeholder="كلمة المرور الجديدة" class="neo-input">
+                    <button onclick="handleUpdate()" class="btn-action">حفظ التغييرات</button>
                 </div>
             </div>
         </div>
@@ -140,10 +159,14 @@
             document.getElementById('overlay').classList.toggle('active'); 
         }
 
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+
         function openProfile() { 
             document.getElementById('profile-screen').style.display = 'flex';
             document.getElementById('main-screen').style.display = 'none';
-            toggleMenu(); // إغلاق القائمة بعد الفتح
         }
 
         function closeProfile() { 
@@ -156,34 +179,32 @@
             document.getElementById('m-lab').style.opacity = isMale ? "1" : "0.3";
             document.getElementById('f-lab').style.opacity = isMale ? "0.3" : "1";
             const currentImg = isMale ? maleImg : femaleImg;
-            
-            // تحديث الصورة في جميع الأماكن (الهيدر، البروفايل، والقائمة الجانبية)
             document.getElementById('main-avatar').src = currentImg;
             document.getElementById('nav-avatar').src = currentImg;
             document.getElementById('side-avatar').src = currentImg;
         }
 
         window.onload = function() {
+            if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
             const data = JSON.parse(localStorage.getItem("userSession"));
             if (data) {
                 let name = data.username || data.email.split('@')[0];
                 let cleanName = name.charAt(0).toUpperCase() + name.slice(1);
-                
-                // عرض الاسم في كل الأماكن
                 document.getElementById("nav-name").innerText = cleanName;
                 document.getElementById("side-name").innerText = cleanName;
                 document.getElementById("user-display").innerText = cleanName;
-                document.getElementById("email-display").innerText = data.email || "No Email";
+                document.getElementById("email-display").innerText = data.email || "بدون بريد";
             }
         };
 
         async function handleUpdate() {
             const oldP = document.getElementById('p1').value;
             const newP = document.getElementById('p2').value;
-            const user = document.getElementById('user-display').innerText;
-            const email = document.getElementById('email-display').innerText;
+            const user = document.getElementById("user-display").innerText;
+            const email = document.getElementById("email-display").innerText;
 
-            if(!oldP || !newP) { alert("عافاك عمر الخانات!"); return; }
+            if(!oldP || !newP) { alert("يرجى ملء جميع الحقول!"); return; }
 
             const formData = new URLSearchParams();
             formData.append("username", user);
@@ -197,10 +218,9 @@
                 document.getElementById('p1').value = "";
                 document.getElementById('p2').value = "";
             } catch (e) {
-                alert("خطأ في الاتصال.");
+                alert("حدث خطأ في الاتصال.");
             }
         }
     </script>
 </body>
 </html>
-هذا الكود ما تقاسوش زيد فيه غير دارك مود ما دير لا لا مساله والو في مستطيل الدارك مود يكون ابيض حتى تبدل له الشاشه غادي تبدل هو
