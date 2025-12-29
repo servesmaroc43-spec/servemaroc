@@ -3,66 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account | SERVEMAROC</title>
+    <title>حسابي | SERVEMAROC</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Tajawal', sans-serif; background-color: #f4f7fe; }
-        /* ستايل البطاقة من الصور المرفقة */
-        .card-neo { background: white; border: 3px solid #000; border-radius: 35px; overflow: hidden; box-shadow: 10px 10px 0px rgba(0,0,0,0.05); }
-        .yellow-bg { background: #ffea00; height: 120px; border-bottom: 3px solid #000; display: flex; justify-content: center; align-items: flex-end; }
-        .profile-pic { width: 100px; height: 100px; background: #000; border: 4px solid #fff; border-radius: 25px; margin-bottom: -50px; shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .input-neo { border: 3px solid #000; border-radius: 20px; padding: 15px; background: #fff; width: 100%; outline: none; font-weight: 700; }
-        .label-tag { background: #ffea00; border: 2px solid #000; border-radius: 8px; padding: 2px 10px; font-size: 10px; font-weight: 900; position: absolute; top: -12px; right: 20px; }
-        .btn-main { background: #ffea00; border: 3px solid #000; border-radius: 20px; padding: 15px; width: 100%; font-weight: 900; box-shadow: 5px 5px 0px #000; transition: 0.2s; }
-        .btn-main:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0px #000; }
-        .gender-box { background: #000; color: #fff; border-radius: 50px; padding: 5px 20px; display: inline-flex; gap: 15px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        /* تصميم البطاقة الاحترافي */
+        .card-profile { background: white; border: 3px solid #000; border-radius: 40px; overflow: hidden; box-shadow: 12px 12px 0px rgba(0,0,0,0.05); }
+        .banner-yellow { background: #ffea00; height: 130px; border-bottom: 3px solid #000; display: flex; justify-content: center; align-items: flex-end; }
+        .avatar-container { width: 110px; height: 110px; background: #fff; border: 4px solid #000; border-radius: 30px; margin-bottom: -55px; overflow: hidden; }
+        .input-group { border: 3px solid #000; border-radius: 20px; padding: 15px; background: #fff; width: 100%; position: relative; }
+        .tag-label { background: #ffea00; border: 2px solid #000; border-radius: 8px; padding: 2px 12px; font-size: 10px; font-weight: 900; position: absolute; top: -12px; right: 20px; z-index: 10; }
+        .btn-confirm { background: #ffea00; border: 3px solid #000; border-radius: 22px; padding: 16px; width: 100%; font-weight: 900; font-size: 18px; box-shadow: 6px 6px 0px #000; transition: 0.2s; cursor: pointer; }
+        .btn-confirm:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0px #000; }
+        .gender-toggle { background: #000; color: #fff; border-radius: 50px; padding: 6px 25px; display: inline-flex; gap: 15px; font-size: 13px; font-weight: 900; cursor: pointer; }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 md:p-10">
 
-    <header class="max-w-xl mx-auto flex justify-between items-center mb-8 bg-white p-4 rounded-[30px] border-2 border-slate-100 shadow-sm">
-        <div class="w-10 h-10 bg-blue-500 rounded-2xl flex items-center justify-center text-white font-bold text-xl">☰</div>
+    <header class="max-w-xl mx-auto flex justify-between items-center mb-10 bg-white p-4 rounded-[35px] border-2 border-slate-100 shadow-sm">
+        <div class="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-black text-2xl shadow-lg">S</div>
         <div class="flex items-center gap-3">
             <div class="text-right">
-                <p id="nav-user" class="text-xs font-black italic">Loading...</p>
+                <p id="top-username" class="text-sm font-black italic text-slate-800">Member_User</p>
                 <p class="text-[10px] text-green-500 font-bold">نشط الآن</p>
             </div>
-            <div class="w-11 h-11 bg-slate-200 rounded-2xl overflow-hidden border-2 border-white shadow-md">
-                <img id="head-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-full h-full">
+            <div class="w-12 h-12 bg-slate-100 rounded-2xl overflow-hidden border-2 border-white shadow-md">
+                <img id="nav-img" src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix" class="w-full h-full object-cover">
             </div>
         </div>
     </header>
 
-    <div class="max-w-xl mx-auto card-neo">
-        <div class="yellow-bg">
-            <div class="profile-pic overflow-hidden">
-                <img id="main-img" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="w-full h-full">
+    <div class="max-w-xl mx-auto card-profile">
+        <div class="banner-yellow">
+            <div class="avatar-container shadow-xl">
+                <img id="main-avatar" src="https://api.dicebear.com/7.x/notionists/svg?seed=Felix" class="w-full h-full bg-slate-50">
             </div>
         </div>
 
-        <div class="p-8 mt-12 text-center">
-            <div class="gender-box mb-8" onclick="changeGender()">
-                <span id="m-label">♂ ذكر</span> | <span id="f-label" class="opacity-40">♀ أنثى</span>
+        <div class="p-10 mt-14 text-center">
+            <div class="gender-toggle mb-10" onclick="switchGender()">
+                <span id="m-btn">♂ ذكر</span> | <span id="f-btn" class="opacity-40">♀ أنثى</span>
             </div>
 
-            <div class="relative mb-6">
-                <span class="label-tag">اسم المستخدم</span>
-                <div class="input-neo text-right" id="display-username">Member_User</div>
+            <div class="input-group text-right mb-6">
+                <span class="tag-label">اسم المستخدم</span>
+                <p id="acc-name" class="text-md font-black text-slate-800">Member_User</p>
             </div>
 
-            <div class="relative mb-8">
-                <span class="label-tag" style="background: white;">الحساب</span>
-                <div class="input-neo text-right italic text-slate-500">Member</div>
+            <div class="input-group text-right mb-10">
+                <span class="tag-label" style="background: #fff;">نوع الحساب</span>
+                <p class="text-md font-black text-slate-500 italic">Member / ممبر</p>
             </div>
 
-            <div class="border-4 border-black rounded-[35px] p-6 bg-slate-50 shadow-[8px_8px_0px_rgba(0,0,0,1)]">
-                <div class="bg-black text-white py-2 rounded-xl text-xs font-black mb-6 italic">Change Password</div>
-                <div class="space-y-5">
-                    <input type="password" placeholder="كلمة السر الحالية" class="input-neo text-sm">
-                    <input type="password" placeholder="كلمة السر الجديدة" class="input-neo text-sm">
-                    <input type="password" placeholder="تأكيد كلمة السر" class="input-neo text-sm">
-                    <button class="btn-main">تحديث الحساب</button>
+            <div class="border-4 border-black rounded-[40px] p-8 bg-slate-50 shadow-[10px_10px_0px_rgba(0,0,0,1)]">
+                <div class="bg-black text-white py-3 rounded-2xl text-[11px] font-black mb-8 italic tracking-[3px]">CHANGE PASSWORD</div>
+                <div class="space-y-6">
+                    <input type="password" placeholder="كلمة السر الحالية" class="input-group text-sm border-2 border-black outline-none focus:bg-white transition">
+                    <input type="password" placeholder="كلمة السر الجديدة" class="input-group text-sm border-2 border-black outline-none focus:bg-white transition">
+                    <input type="password" placeholder="تأكيد كلمة السر الجديدة" class="input-group text-sm border-2 border-black outline-none focus:bg-white transition">
+                    <button class="btn-confirm mt-4">تحديث بيانات الحساب</button>
                 </div>
             </div>
         </div>
@@ -71,29 +71,30 @@
     <script>
         let isMale = true;
 
-        // جلب البيانات من التخزين (الصفحة الأولى)
         window.onload = function() {
-            const data = JSON.parse(localStorage.getItem("userSession"));
-            if (data) {
-                // نأخذ الاسم (Username) وإذا لم يوجد نأخذ أول جزء من الإيميل
-                const name = data.username || data.email.split('@')[0];
-                document.getElementById("nav-user").innerText = name;
-                document.getElementById("display-username").innerText = name;
+            // استرجاع البيانات من localStorage
+            const session = JSON.parse(localStorage.getItem("userSession"));
+            if (session) {
+                // استخراج الاسم: إذا كان موجوداً نستعمله، وإلا نأخذ الجزء الأول من الإيميل
+                const finalName = session.username || (session.email ? session.email.split('@')[0] : "Member_User");
+                document.getElementById("top-username").innerText = finalName;
+                document.getElementById("acc-name").innerText = finalName;
             } else {
                 window.location.href = "../index.html";
             }
         };
 
-        function changeGender() {
+        function switchGender() {
             isMale = !isMale;
-            document.getElementById("m-label").classList.toggle("opacity-40", !isMale);
-            document.getElementById("f-label").classList.toggle("opacity-40", isMale);
+            document.getElementById("m-btn").classList.toggle("opacity-40", !isMale);
+            document.getElementById("f-btn").classList.toggle("opacity-40", isMale);
             
-            // تغيير البروفايل بجودة عالية
-            const avatar = isMale ? "Felix" : "Aneka";
-            const url = `https://api.dicebear.com/7.x/avataaars/svg?seed=${avatar}`;
-            document.getElementById("main-img").src = url;
-            document.getElementById("head-img").src = url;
+            // تم اختيار "notionists" لأنها تعطي شخصيات عادية وطبيعية بجودة عالية
+            const avatarSeed = isMale ? "Felix" : "Justine";
+            const newUrl = `https://api.dicebear.com/7.x/notionists/svg?seed=${avatarSeed}`;
+            
+            document.getElementById("main-avatar").src = newUrl;
+            document.getElementById("nav-img").src = newUrl;
         }
     </script>
 </body>
