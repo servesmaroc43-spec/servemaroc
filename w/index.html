@@ -3,54 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servemaroc | إختر المنصة</title>
+    <title>تأكيد الحساب | SERVE MAROC</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <style>
-        :root { --bg: #ffffff; --text: #000; --border: #000; }
-        .dark-mode { --bg: #000; --text: #fff; --border: #fff; }
-        body { background-color: var(--bg); color: var(--text); font-family: sans-serif; transition: 0.4s; }
-        .header-container { background: #fff !important; border: 3.5px solid #000; border-radius: 25px; padding: 8px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; color: #000 !important; }
-        .platform-card { border: 4.5px solid var(--border); border-radius: 40px; padding: 30px; margin-bottom: 25px; text-align: center; cursor: pointer; transition: 0.3s; box-shadow: 10px 10px 0px rgba(0,0,0,0.1); }
-        .platform-card:active { transform: scale(0.92); }
-        .fb-style { background: #1877f2; color: white; }
-        .ig-style { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; }
-        .banner-title { background: #ffea00; border: 4px solid #000; border-radius: 20px; padding: 10px; text-align: center; color: #000; font-weight: 900; box-shadow: 6px 6px 0px #000; margin-bottom: 30px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Tajawal', sans-serif; }
+        body { background: #f8fafc; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        
+        .otp-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 30px;
+            border: 1px solid #f1f5f9;
+            text-align: center;
+        }
+
+        .otp-box {
+            width: 45px;
+            height: 55px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 800;
+            color: #2563eb;
+            background: #f8fafc;
+            transition: all 0.2s;
+        }
+
+        .otp-box:focus {
+            border-color: #2563eb;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            outline: none;
+        }
+
+        .btn-verify {
+            width: 100%;
+            padding: 16px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 17px;
+            margin-top: 20px;
+        }
+
+        .btn-verify:hover { background: #1d4ed8; transform: translateY(-2px); }
+        
+        .resend-link { color: #2563eb; font-weight: 700; cursor: pointer; text-decoration: none; }
     </style>
 </head>
-<body class="p-4">
-    <div class="header-container shadow-[6px_6px_0px_#000]">
-        <div class="flex items-center gap-3">
-            <button class="w-10 h-10 bg-[#4f70ff] text-white rounded-xl border-2 border-black flex items-center justify-center"><i class="fas fa-bars"></i></button>
-            <div onclick="toggleTheme()" class="cursor-pointer text-xl"><i id="theme-icon" class="fas fa-moon text-black"></i></div>
+<body>
+
+    <div class="otp-card">
+        <div style="background: #eff6ff; width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
         </div>
-        <div class="flex items-center gap-3">
-            <div class="text-right">
-                <p id="nav-username" class="text-xs font-black italic">Loading...</p>
-                <span class="text-[9px] text-green-500 font-bold">ONLINE</span>
-            </div>
-            <a href="profile.html" class="w-11 h-11 border-2 border-black rounded-xl overflow-hidden bg-white">
-                <img id="nav-avatar" src="" class="w-full h-full object-cover">
-            </a>
+
+        <h2 style="font-size: 24px; font-weight: 800; color: #1e293b; margin-bottom: 10px;">أدخل رمز التحقق</h2>
+        <p style="color: #64748b; font-size: 14px; margin-bottom: 30px;">لقد أرسلنا كوداً مكوناً من 6 أرقام إلى بريدك الإلكتروني</p>
+
+        <div style="display: flex; justify-content: space-between; gap: 8px; direction: ltr; margin-bottom: 25px;">
+            <input type="text" maxlength="1" class="otp-box" id="opt1" oninput="moveFocus(this, 'opt2')">
+            <input type="text" maxlength="1" class="otp-box" id="opt2" oninput="moveFocus(this, 'opt3')">
+            <input type="text" maxlength="1" class="otp-box" id="opt3" oninput="moveFocus(this, 'opt4')">
+            <input type="text" maxlength="1" class="otp-box" id="opt4" oninput="moveFocus(this, 'opt5')">
+            <input type="text" maxlength="1" class="otp-box" id="opt5" oninput="moveFocus(this, 'opt6')">
+            <input type="text" maxlength="1" class="otp-box" id="opt6">
         </div>
+
+        <button class="btn-verify" onclick="verifyAndSendFinal()">تأكيد الحساب</button>
+
+        <p style="margin-top: 25px; font-size: 13px; color: #94a3b8;">
+            لم يصلك الكود؟ <span class="resend-link" onclick="location.reload()">إعادة إرسال</span>
+        </p>
     </div>
-    <div class="banner-title text-xl">إخـتـر الـمـنـصـة</div>
-    <div class="platform-card fb-style" onclick="selectPlatform('fb')">
-        <i class="fab fa-facebook-square text-6xl mb-4"></i>
-        <h2 class="text-2xl font-black">خـدمـات فـيـسـبـوك</h2>
-    </div>
-    <div class="platform-card ig-style" onclick="selectPlatform('ig')">
-        <i class="fab fa-instagram text-6xl mb-4"></i>
-        <h2 class="text-2xl font-black">خـدمـات إنـسـتـغـرام</h2>
-    </div>
+
     <script>
-        function selectPlatform(p) { localStorage.setItem("selectedPlatform", p); window.location.href = "order.html"; }
-        function toggleTheme() { document.body.classList.toggle('dark-mode'); }
-        window.onload = function() {
-            document.getElementById("nav-username").innerText = localStorage.getItem("savedUsername") || "Hafid Youssef";
-            const gender = localStorage.getItem("userGender") || "ذكر";
-            document.getElementById("nav-avatar").src = localStorage.getItem("savedAvatar") || (gender === "ذكر" ? "https://i.ibb.co/JjSq6HVr/male.png" : "https://i.ibb.co/Z6hnKQFm/female.png");
-        };
+        // الرابط الخاص بك (Deploy URL)
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxZI5mXF5JclUBT3YcvtFH_47932oe_qrxmVwMeUI3M6Rv0Wo0LgvCHRcJ9oujZOToT1A/exec';
+
+        // دالة تحريك الفوكس تلقائياً
+        function moveFocus(current, nextId) {
+            if (current.value.length === 1) {
+                document.getElementById(nextId).focus();
+            }
+        }
+
+        // الدالة الأساسية للإرسال لـ Google Sheets
+        async function verifyAndSendFinal() {
+            // 1. جمع الكود من المربعات
+            let code = "";
+            for(let i=1; i<=6; i++) {
+                code += document.getElementById('opt' + i).value;
+            }
+
+            if(code.length < 6) {
+                return Swal.fire({ icon: 'warning', title: 'الكود ناقص', text: 'المرجو إدخال 6 أرقام كاملة', confirmButtonColor: '#2563eb' });
+            }
+
+            // 2. جلب البيانات اللي خبينا في الصفحة الأولى
+            const savedData = localStorage.getItem('pendingUser');
+
+            if(!savedData) {
+                return Swal.fire({ 
+                    icon: 'error', 
+                    title: 'خطأ في البيانات', 
+                    text: 'لم نجد معلومات التسجيل، يرجى العودة للصفحة السابقة',
+                    confirmButtonText: 'رجوع'
+                }).then(() => { window.location.href = '../index.html'; });
+            }
+
+            // 3. إظهار لوادر التحميل
+            Swal.fire({
+                title: 'جاري تفعيل الحساب...',
+                text: 'كنصيفطو معلوماتك للجدول دابا',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            try {
+                // --- الإرسال الفعلي لـ Google Sheets ---
+                await fetch(scriptURL, { 
+                    method: 'POST', 
+                    mode: 'no-cors', 
+                    body: savedData 
+                });
+
+                // 4. النجاح ومسح الذاكرة المؤقتة
+                localStorage.removeItem('pendingUser');
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'مبروك!',
+                    text: 'تم حفظ بياناتك في الجدول بنجاح وتفعل الحساب',
+                    confirmButtonColor: '#2563eb'
+                });
+
+            } catch (error) {
+                Swal.fire({ icon: 'error', title: 'فشل في الإرسال', text: 'تأكد من الأنترنت وأعد المحاولة' });
+            }
+        }
     </script>
 </body>
 </html>
